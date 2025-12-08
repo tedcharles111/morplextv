@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { HashRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { 
   ShoppingCart, Menu, X, Phone, Mail, MapPin, Search, 
   Upload, CheckCircle, AlertCircle, PlayCircle, Monitor, Tv,
-  Star, Shield, Clock, Users, Zap, Lock
+  Star, Shield, Clock, Users, Zap, Lock, User, LogOut, LayoutDashboard, History, Settings
 } from 'lucide-react';
-import { COMPANY_INFO, PRODUCTS, SUBSCRIPTION_PLANS, TERMS_TEXT, TESTIMONIALS, ADMIN_AUTH } from './constants';
-import { Product, CartItem, Order, SubscriptionPlan, ReceiptData } from './types';
+import { COMPANY_INFO, PRODUCTS, SUBSCRIPTION_PLANS, TERMS_TEXT, TESTIMONIALS, ADMIN_AUTH, INITIAL_USERS } from './constants';
+import { Product, CartItem, Order, SubscriptionPlan, ReceiptData, User as UserType } from './types';
 import { analyzeReceipt } from './services/geminiService';
 
-// --- Global Context for Cart ---
+// --- Global Context ---
 interface AppContextType {
   cart: CartItem[];
   addToCart: (product: Product) => void;
@@ -17,6 +17,11 @@ interface AppContextType {
   clearCart: () => void;
   orders: Order[];
   addOrder: (order: Order) => void;
+  users: UserType[];
+  currentUser: UserType | null;
+  registerUser: (user: UserType) => boolean;
+  loginUser: (email: string, pass: string) => boolean;
+  logoutUser: () => void;
 }
 
 const AppContext = React.createContext<AppContextType | null>(null);
@@ -30,11 +35,18 @@ const useAppContext = () => {
 // --- Components ---
 
 const Navbar = () => {
-  const { cart } = useAppContext();
+  const { cart, currentUser, logoutUser } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActive = (path: string) => location.pathname === path ? "text-brand" : "text-white hover:text-brand-light";
+
+  const handleLogout = () => {
+      logoutUser();
+      navigate('/');
+      setIsOpen(false);
+  }
 
   return (
     <nav className="bg-charcoal text-white sticky top-0 z-50 shadow-lg">
@@ -52,12 +64,29 @@ const Navbar = () => {
             <Link to="/shop" className={isActive('/shop')}>Shop</Link>
             <Link to="/subscribe" className={isActive('/subscribe')}>Subscription</Link>
             <Link to="/support" className={isActive('/support')}>Support</Link>
-            <Link to="/contact" className={isActive('/contact')}>Contact</Link>
             <Link to="/admin" className={isActive('/admin')}>Admin</Link> 
           </div>
 
-          {/* Cart & Mobile Toggle */}
+          {/* Auth & Cart */}
           <div className="flex items-center space-x-4">
+            {currentUser ? (
+                 <div className="hidden md:flex items-center space-x-4">
+                     <Link to="/portal" className="flex items-center hover:text-brand">
+                        <User className="h-5 w-5 mr-1" />
+                        <span className="text-sm font-semibold truncate max-w-[100px]">{currentUser.name.split(' ')[0]}</span>
+                     </Link>
+                     <button onClick={handleLogout} className="text-gray-400 hover:text-white" title="Logout">
+                        <LogOut className="h-5 w-5" />
+                     </button>
+                 </div>
+            ) : (
+                <div className="hidden md:flex items-center space-x-2 text-sm">
+                    <Link to="/login" className="hover:text-brand">Login</Link>
+                    <span className="text-gray-600">|</span>
+                    <Link to="/signup" className="bg-brand hover:bg-brand-dark text-white px-3 py-1.5 rounded-full transition">Join</Link>
+                </div>
+            )}
+
             <Link to="/cart" className="relative group">
               <ShoppingCart className="h-6 w-6 text-white group-hover:text-brand transition" />
               {cart.length > 0 && (
@@ -80,8 +109,21 @@ const Navbar = () => {
             <Link to="/" onClick={() => setIsOpen(false)} className="block py-2 text-gray-300 hover:text-white">Home</Link>
             <Link to="/shop" onClick={() => setIsOpen(false)} className="block py-2 text-gray-300 hover:text-white">Shop</Link>
             <Link to="/subscribe" onClick={() => setIsOpen(false)} className="block py-2 text-gray-300 hover:text-white">Subscription</Link>
-            <Link to="/support" onClick={() => setIsOpen(false)} className="block py-2 text-gray-300 hover:text-white">Support</Link>
-            <Link to="/contact" onClick={() => setIsOpen(false)} className="block py-2 text-gray-300 hover:text-white">Contact</Link>
+            
+            <div className="border-t border-gray-700 pt-4">
+                 {currentUser ? (
+                     <>
+                        <div className="text-brand font-bold mb-2">Hello, {currentUser.name}</div>
+                        <Link to="/portal" onClick={() => setIsOpen(false)} className="block py-2 text-white">My Portal</Link>
+                        <button onClick={handleLogout} className="block py-2 text-gray-400 w-full text-left">Logout</button>
+                     </>
+                 ) : (
+                     <>
+                        <Link to="/login" onClick={() => setIsOpen(false)} className="block py-2 text-white">Login</Link>
+                        <Link to="/signup" onClick={() => setIsOpen(false)} className="block py-2 text-brand">Create Account</Link>
+                     </>
+                 )}
+            </div>
           </div>
         </div>
       )}
@@ -184,6 +226,313 @@ const ChatWidget = () => {
         </div>
     )
 }
+
+// --- Auth Components ---
+
+const SignupPage = () => {
+    const { registerUser } = useAppContext();
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({ name: '', email: '', phone: '', password: '', decoderCode: '' });
+    const [error, setError] = useState('');
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const success = registerUser({
+            id: `user-${Date.now()}`,
+            role: 'customer',
+            joinedDate: new Date(),
+            ...formData
+        });
+        
+        if (success) {
+            navigate('/portal');
+        } else {
+            setError('Email already exists. Please login.');
+        }
+    };
+
+    return (
+        <div className="container mx-auto px-4 py-16 flex justify-center">
+            <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                <h2 className="text-2xl font-bold text-center mb-6 text-charcoal">Create Account</h2>
+                {error && <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm">{error}</div>}
+                
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Full Name</label>
+                        <input required type="text" className="w-full border p-2 rounded focus:ring-brand focus:border-brand" 
+                            value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Email Address</label>
+                        <input required type="email" className="w-full border p-2 rounded focus:ring-brand focus:border-brand" 
+                            value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input required type="tel" className="w-full border p-2 rounded focus:ring-brand focus:border-brand" 
+                            value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
+                    </div>
+                    <div className="bg-gray-50 p-3 rounded border border-gray-200">
+                        <label className="block text-sm font-bold text-gray-800 mb-1">Decoder Number</label>
+                        <p className="text-xs text-gray-500 mb-2">Found on the bottom of your device (e.g., MPX-12345). Leave blank if you don't have one yet.</p>
+                        <input type="text" className="w-full border p-2 rounded focus:ring-brand focus:border-brand uppercase placeholder-gray-400" 
+                            placeholder="MPX-XXXXXX"
+                            value={formData.decoderCode} onChange={e => setFormData({...formData, decoderCode: e.target.value})} />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Password</label>
+                        <input required type="password" className="w-full border p-2 rounded focus:ring-brand focus:border-brand" 
+                            value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} />
+                    </div>
+                    <button type="submit" className="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 rounded transition shadow-lg mt-2">
+                        Sign Up
+                    </button>
+                </form>
+                <div className="mt-6 text-center text-sm">
+                    Already have an account? <Link to="/login" className="text-brand font-bold hover:underline">Login here</Link>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const LoginPage = () => {
+    const { loginUser } = useAppContext();
+    const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const success = loginUser(email, password);
+        if (success) {
+            navigate('/portal');
+        } else {
+            setError('Invalid email or password.');
+        }
+    };
+
+    return (
+        <div className="container mx-auto px-4 py-16 flex justify-center">
+            <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                <h2 className="text-2xl font-bold text-center mb-6 text-charcoal">Login to Your Portal</h2>
+                {error && <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm">{error}</div>}
+                
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Email Address</label>
+                        <input required type="email" className="w-full border p-2 rounded focus:ring-brand focus:border-brand" 
+                            value={email} onChange={e => setEmail(e.target.value)} />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Password</label>
+                        <input required type="password" className="w-full border p-2 rounded focus:ring-brand focus:border-brand" 
+                            value={password} onChange={e => setPassword(e.target.value)} />
+                    </div>
+                    <button type="submit" className="w-full bg-charcoal hover:bg-gray-900 text-white font-bold py-3 rounded transition shadow-lg mt-2">
+                        Login
+                    </button>
+                </form>
+                <div className="mt-6 text-center text-sm">
+                    Don't have an account? <Link to="/signup" className="text-brand font-bold hover:underline">Join Moreplex</Link>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const UserPortal = () => {
+    const { currentUser, orders } = useAppContext();
+    const [activeTab, setActiveTab] = useState<'dashboard' | 'orders' | 'support'>('dashboard');
+    const userOrders = orders.filter(o => o.userId === currentUser?.id);
+
+    if (!currentUser) return <Navigate to="/login" />;
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <div className="flex flex-col md:flex-row gap-8">
+                {/* Sidebar */}
+                <div className="md:w-64 flex-shrink-0">
+                    <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
+                        <div className="flex flex-col items-center mb-4">
+                            <div className="w-20 h-20 bg-brand text-white rounded-full flex items-center justify-center text-3xl font-bold mb-2">
+                                {currentUser.name.charAt(0)}
+                            </div>
+                            <h2 className="font-bold text-lg">{currentUser.name}</h2>
+                            <p className="text-sm text-gray-500">{currentUser.email}</p>
+                        </div>
+                        <nav className="space-y-2">
+                            <button onClick={() => setActiveTab('dashboard')} className={`w-full text-left px-4 py-2 rounded flex items-center ${activeTab === 'dashboard' ? 'bg-gray-100 text-brand font-bold' : 'hover:bg-gray-50'}`}>
+                                <LayoutDashboard className="w-4 h-4 mr-2" /> Dashboard
+                            </button>
+                            <button onClick={() => setActiveTab('orders')} className={`w-full text-left px-4 py-2 rounded flex items-center ${activeTab === 'orders' ? 'bg-gray-100 text-brand font-bold' : 'hover:bg-gray-50'}`}>
+                                <History className="w-4 h-4 mr-2" /> Order History
+                            </button>
+                            <button onClick={() => setActiveTab('support')} className={`w-full text-left px-4 py-2 rounded flex items-center ${activeTab === 'support' ? 'bg-gray-100 text-brand font-bold' : 'hover:bg-gray-50'}`}>
+                                <Phone className="w-4 h-4 mr-2" /> Support
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+
+                {/* Main Content */}
+                <div className="flex-grow">
+                    {activeTab === 'dashboard' && (
+                        <div className="space-y-6">
+                            <h1 className="text-2xl font-bold">Welcome back, {currentUser.name.split(' ')[0]}</h1>
+                            
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div className="bg-gradient-to-br from-charcoal to-gray-900 text-white p-6 rounded-xl shadow-lg relative overflow-hidden">
+                                    <h3 className="text-gray-400 text-sm font-medium mb-1">My Decoder</h3>
+                                    <div className="text-3xl font-mono tracking-wider mb-4">
+                                        {currentUser.decoderCode || 'NO DECODER LINKED'}
+                                    </div>
+                                    {currentUser.decoderCode ? (
+                                        <div className="flex space-x-2">
+                                            <span className="bg-green-500 text-xs px-2 py-1 rounded">Active</span>
+                                            <Link to="/subscribe" className="bg-white/20 hover:bg-white/30 text-xs px-3 py-1 rounded transition">Renew Sub</Link>
+                                        </div>
+                                    ) : (
+                                        <Link to="/shop" className="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded text-sm inline-block">Buy Decoder</Link>
+                                    )}
+                                </div>
+                                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                                    <h3 className="font-bold mb-4">Quick Actions</h3>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <Link to="/subscribe" className="p-3 border rounded hover:border-brand hover:text-brand text-center text-sm transition">
+                                            Pay Subscription
+                                        </Link>
+                                        <button onClick={() => setActiveTab('support')} className="p-3 border rounded hover:border-brand hover:text-brand text-center text-sm transition">
+                                            Contact Support
+                                        </button>
+                                        <Link to="/shop" className="p-3 border rounded hover:border-brand hover:text-brand text-center text-sm transition">
+                                            Buy Accessories
+                                        </Link>
+                                        <button className="p-3 border rounded hover:border-brand hover:text-brand text-center text-sm transition">
+                                            Edit Profile
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Recent Activity Mini View */}
+                            <div className="bg-white p-6 rounded-lg shadow-sm">
+                                <h3 className="font-bold mb-4">Recent Orders</h3>
+                                {userOrders.length > 0 ? (
+                                    <ul className="space-y-3">
+                                        {userOrders.slice(0, 3).map(order => (
+                                            <li key={order.id} className="flex justify-between items-center border-b pb-2 last:border-0">
+                                                <div>
+                                                    <span className="font-medium">#{order.id}</span>
+                                                    <span className="text-xs text-gray-500 block">{new Date(order.timestamp).toLocaleDateString()}</span>
+                                                </div>
+                                                <span className={`px-2 py-1 rounded text-xs ${order.status === 'verified' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                                                    {order.status.replace('_', ' ')}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p className="text-gray-500 text-sm">No recent activity.</p>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'orders' && (
+                        <div className="bg-white p-6 rounded-lg shadow-sm min-h-[400px]">
+                            <h2 className="text-xl font-bold mb-6">Order History</h2>
+                            {userOrders.length === 0 ? (
+                                <div className="text-center py-10">
+                                    <ShoppingCart className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                    <p className="text-gray-500">You haven't placed any orders yet.</p>
+                                    <Link to="/shop" className="text-brand font-bold hover:underline mt-2 inline-block">Start Shopping</Link>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {userOrders.map(order => (
+                                        <div key={order.id} className="border rounded-lg p-4 hover:shadow-md transition">
+                                            <div className="flex justify-between items-start mb-2">
+                                                <div>
+                                                    <div className="font-bold">Order #{order.id}</div>
+                                                    <div className="text-sm text-gray-500">{new Date(order.timestamp).toDateString()}</div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <div className="font-bold text-brand">₦{order.total.toLocaleString()}</div>
+                                                    <span className={`inline-block px-2 py-0.5 rounded text-xs mt-1 capitalize ${
+                                                        order.status === 'verified' ? 'bg-green-100 text-green-800' : 
+                                                        order.status === 'shipped' ? 'bg-blue-100 text-blue-800' : 
+                                                        'bg-yellow-100 text-yellow-800'
+                                                    }`}>
+                                                        {order.status.replace('_', ' ')}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="text-sm text-gray-600 border-t pt-2 mt-2">
+                                                {order.items.map((item, idx) => (
+                                                    <div key={idx} className="flex justify-between">
+                                                        <span>{item.quantity}x {item.name}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            {order.status === 'awaiting_ocr' && (
+                                                <div className="mt-3 bg-blue-50 text-blue-700 text-xs p-2 rounded">
+                                                    We are verifying your payment receipt. This usually takes 1-2 hours.
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {activeTab === 'support' && (
+                        <div className="bg-white p-6 rounded-lg shadow-sm">
+                            <h2 className="text-xl font-bold mb-6">Support Center</h2>
+                            <p className="mb-6 text-gray-600">Need help with your decoder or account? Upload a screenshot or describe your issue.</p>
+                            
+                            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); alert("Support ticket created!"); }}>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Subject</label>
+                                    <select className="w-full border p-2 rounded">
+                                        <option>Payment Issue</option>
+                                        <option>No Signal</option>
+                                        <option>Activation Delay</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Message</label>
+                                    <textarea rows={4} className="w-full border p-2 rounded" placeholder="Describe the problem..."></textarea>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Attach Image (Optional)</label>
+                                    <input type="file" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-light file:text-brand-dark hover:file:bg-brand-light/50"/>
+                                </div>
+                                <button className="bg-charcoal text-white px-6 py-2 rounded font-bold hover:bg-gray-800">Submit Ticket</button>
+                            </form>
+                            
+                            <div className="mt-8 border-t pt-6">
+                                <h3 className="font-bold mb-4">Direct Contacts</h3>
+                                <div className="flex gap-4">
+                                    <a href={COMPANY_INFO.whatsappUrl} target="_blank" rel="noreferrer" className="flex items-center text-green-600 font-bold border border-green-600 px-4 py-2 rounded hover:bg-green-50">
+                                        Chat on WhatsApp
+                                    </a>
+                                    <a href={`tel:${COMPANY_INFO.phone}`} className="flex items-center text-charcoal font-bold border border-charcoal px-4 py-2 rounded hover:bg-gray-50">
+                                        Call Us
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
 
 // --- Pages ---
 
@@ -432,7 +781,7 @@ const ShopPage = () => {
 };
 
 const CartPage = () => {
-    const { cart, removeFromCart, clearCart, addOrder } = useAppContext();
+    const { cart, removeFromCart, clearCart, addOrder, currentUser } = useAppContext();
     const navigate = useNavigate();
     const [step, setStep] = useState<'cart' | 'details' | 'payment'>('cart');
     const [customer, setCustomer] = useState({ name: '', email: '', phone: '', address: '', city: '' });
@@ -441,6 +790,19 @@ const CartPage = () => {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [ocrData, setOcrData] = useState<ReceiptData | null>(null);
     const [decoderCode, setDecoderCode] = useState('');
+
+    useEffect(() => {
+        // Auto-fill for logged-in user
+        if (currentUser) {
+            setCustomer(prev => ({
+                ...prev,
+                name: currentUser.name,
+                email: currentUser.email,
+                phone: currentUser.phone,
+            }));
+            if (currentUser.decoderCode) setDecoderCode(currentUser.decoderCode);
+        }
+    }, [currentUser]);
 
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const installTotal = needInstall ? cart.reduce((sum, item) => sum + ((item.installationFee || 0) * item.quantity), 0) : 0;
@@ -455,7 +817,8 @@ const CartPage = () => {
                 const data = await analyzeReceipt(file);
                 if (data) {
                     setOcrData(data);
-                    if (data.decoderCode) setDecoderCode(data.decoderCode);
+                    // Only override if we don't have one from profile or manual entry
+                    if (data.decoderCode && !decoderCode) setDecoderCode(data.decoderCode);
                 }
             } catch (err) {
                 console.error(err);
@@ -469,6 +832,7 @@ const CartPage = () => {
     const handlePlaceOrder = () => {
         const newOrder: Order = {
             id: `ORD-${Date.now()}`,
+            userId: currentUser?.id,
             items: cart,
             total,
             customerName: customer.name,
@@ -480,7 +844,7 @@ const CartPage = () => {
         addOrder(newOrder);
         clearCart();
         alert("Order placed successfully! We have received your payment proof.");
-        navigate('/');
+        navigate(currentUser ? '/portal' : '/'); // Redirect to portal if logged in
     };
 
     if (cart.length === 0 && step === 'cart') {
@@ -557,6 +921,12 @@ const CartPage = () => {
             {step === 'details' && (
                 <div className="bg-white p-6 rounded-lg shadow-sm">
                     <h2 className="text-2xl font-bold mb-6">Delivery Details</h2>
+                    {!currentUser && (
+                        <div className="bg-blue-50 p-3 mb-6 rounded text-sm flex justify-between items-center">
+                            <span>Already have an account? Login to auto-fill details.</span>
+                            <Link to="/login" className="font-bold text-blue-700 hover:underline">Login</Link>
+                        </div>
+                    )}
                     <div className="grid md:grid-cols-2 gap-4 mb-4">
                         <input type="text" placeholder="Full Name" value={customer.name} onChange={e => setCustomer({...customer, name: e.target.value})} className="border p-3 rounded" />
                         <input type="email" placeholder="Email" value={customer.email} onChange={e => setCustomer({...customer, email: e.target.value})} className="border p-3 rounded" />
@@ -664,15 +1034,20 @@ const CartPage = () => {
 };
 
 const SubscriptionPage = () => {
+    const { currentUser } = useAppContext();
     const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
     const [decoderCode, setDecoderCode] = useState('');
     const [step, setStep] = useState(1);
     const [receipt, setReceipt] = useState<File | null>(null);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (currentUser?.decoderCode) setDecoderCode(currentUser.decoderCode);
+    }, [currentUser]);
+
     const handleSubscribe = () => {
         alert("Subscription request submitted! Admin will verify payment and activate.");
-        navigate('/');
+        navigate(currentUser ? '/portal' : '/');
     };
 
     return (
@@ -800,9 +1175,9 @@ const AdminLogin = ({ onLogin }: { onLogin: () => void }) => {
 }
 
 const AdminPage = () => {
-    const { orders } = useAppContext();
+    const { orders, users } = useAppContext();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [activeTab, setActiveTab] = useState<'orders' | 'verification'>('orders');
+    const [activeTab, setActiveTab] = useState<'orders' | 'verification' | 'customers'>('orders');
 
     if (!isAuthenticated) {
         return <AdminLogin onLogin={() => setIsAuthenticated(true)} />;
@@ -815,9 +1190,10 @@ const AdminPage = () => {
                 <button onClick={() => setIsAuthenticated(false)} className="text-sm text-red-500 hover:underline">Logout</button>
             </div>
             
-            <div className="flex space-x-4 mb-6">
-                <button onClick={() => setActiveTab('orders')} className={`px-4 py-2 rounded ${activeTab === 'orders' ? 'bg-charcoal text-white' : 'bg-gray-200'}`}>Orders</button>
-                <button onClick={() => setActiveTab('verification')} className={`px-4 py-2 rounded ${activeTab === 'verification' ? 'bg-charcoal text-white' : 'bg-gray-200'}`}>Receipt Verification</button>
+            <div className="flex space-x-4 mb-6 border-b pb-1">
+                <button onClick={() => setActiveTab('orders')} className={`px-4 py-2 rounded-t font-medium ${activeTab === 'orders' ? 'bg-charcoal text-white' : 'bg-gray-100 hover:bg-gray-200'}`}>Orders</button>
+                <button onClick={() => setActiveTab('verification')} className={`px-4 py-2 rounded-t font-medium ${activeTab === 'verification' ? 'bg-charcoal text-white' : 'bg-gray-100 hover:bg-gray-200'}`}>Receipt Verification</button>
+                <button onClick={() => setActiveTab('customers')} className={`px-4 py-2 rounded-t font-medium ${activeTab === 'customers' ? 'bg-charcoal text-white' : 'bg-gray-100 hover:bg-gray-200'}`}>Customers</button>
             </div>
 
             {activeTab === 'orders' && (
@@ -880,6 +1256,39 @@ const AdminPage = () => {
                      {orders.filter(o => o.status === 'awaiting_ocr').length === 0 && <p className="text-gray-500">No receipts pending verification.</p>}
                  </div>
              )}
+
+             {activeTab === 'customers' && (
+                <div className="bg-white rounded shadow overflow-hidden">
+                    <table className="min-w-full">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Decoder Number</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined Date</th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {users.filter(u => u.role === 'customer').length === 0 ? (
+                                <tr><td colSpan={5} className="px-6 py-4 text-center text-gray-500">No registered customers yet</td></tr>
+                            ) : (
+                                users.filter(u => u.role === 'customer').map(user => (
+                                    <tr key={user.id}>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-brand">
+                                            {user.decoderCode || <span className="text-gray-300 italic">None linked</span>}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.phone}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(user.joinedDate).toLocaleDateString()}</td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     );
 };
@@ -957,6 +1366,8 @@ const ContactPage = () => (
 const App = () => {
     const [cart, setCart] = useState<CartItem[]>([]);
     const [orders, setOrders] = useState<Order[]>([]);
+    const [users, setUsers] = useState<UserType[]>(INITIAL_USERS);
+    const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
     const addToCart = (product: Product) => {
         setCart(prev => {
@@ -978,8 +1389,33 @@ const App = () => {
         setOrders(prev => [order, ...prev]);
     };
 
+    // Auth Actions
+    const registerUser = (user: UserType) => {
+        if (users.find(u => u.email === user.email)) return false;
+        const newUser = { ...user, role: 'customer' as const };
+        setUsers([...users, newUser]);
+        setCurrentUser(newUser); // Auto login
+        return true;
+    };
+
+    const loginUser = (email: string, pass: string) => {
+        const user = users.find(u => u.email === email && u.password === pass);
+        if (user) {
+            setCurrentUser(user);
+            return true;
+        }
+        return false;
+    };
+
+    const logoutUser = () => {
+        setCurrentUser(null);
+    };
+
     return (
-        <AppContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, orders, addOrder }}>
+        <AppContext.Provider value={{ 
+            cart, addToCart, removeFromCart, clearCart, orders, addOrder,
+            users, currentUser, registerUser, loginUser, logoutUser 
+        }}>
             <Router>
                 <div className="flex flex-col min-h-screen">
                     <Navbar />
@@ -991,8 +1427,13 @@ const App = () => {
                             <Route path="/subscribe" element={<SubscriptionPage />} />
                             <Route path="/admin" element={<AdminPage />} />
                             <Route path="/contact" element={<ContactPage />} />
-                            <Route path="/support" element={<ContactPage />} /> {/* Reusing contact for support request */}
+                            <Route path="/support" element={<ContactPage />} />
                             <Route path="/terms" element={<TermsPage />} />
+                            
+                            {/* Auth Routes */}
+                            <Route path="/signup" element={<SignupPage />} />
+                            <Route path="/login" element={<LoginPage />} />
+                            <Route path="/portal" element={<UserPortal />} />
                         </Routes>
                     </main>
                     <Footer />

@@ -31,8 +31,20 @@ export interface ReceiptData {
   senderName?: string;
 }
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  decoderCode?: string;
+  password?: string; // In a real app, this would be hashed
+  role: 'customer';
+  joinedDate: Date;
+}
+
 export interface Order {
   id: string;
+  userId?: string; // Link to registered user
   items: CartItem[];
   total: number;
   customerName: string;

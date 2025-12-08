@@ -1,4 +1,4 @@
-import { Product, SubscriptionPlan } from './types';
+import { Product, SubscriptionPlan, User } from './types';
 
 export const COMPANY_INFO = {
   name: "Moreplex TV",
@@ -20,6 +20,20 @@ export const ADMIN_AUTH = {
   username: "admin",
   password: "moreplex2025"
 };
+
+// Mock Initial Users
+export const INITIAL_USERS: User[] = [
+  {
+    id: 'user-1',
+    name: 'John Doe',
+    email: 'john@example.com',
+    phone: '08012345678',
+    decoderCode: 'MPX-882910',
+    password: 'password123',
+    role: 'customer',
+    joinedDate: new Date('2024-01-15')
+  }
+];
 
 export const PRODUCTS: Product[] = [
   {
