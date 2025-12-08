@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   ShoppingCart, Menu, X, Phone, Mail, MapPin, Search, 
-  Upload, CheckCircle, AlertCircle, PlayCircle, Monitor, Tv 
+  Upload, CheckCircle, AlertCircle, PlayCircle, Monitor, Tv,
+  Star, Shield, Clock, Users, Zap, Lock
 } from 'lucide-react';
-import { COMPANY_INFO, PRODUCTS, SUBSCRIPTION_PLANS, TERMS_TEXT } from './constants';
+import { COMPANY_INFO, PRODUCTS, SUBSCRIPTION_PLANS, TERMS_TEXT, TESTIMONIALS, ADMIN_AUTH } from './constants';
 import { Product, CartItem, Order, SubscriptionPlan, ReceiptData } from './types';
 import { analyzeReceipt } from './services/geminiService';
 
@@ -52,7 +53,7 @@ const Navbar = () => {
             <Link to="/subscribe" className={isActive('/subscribe')}>Subscription</Link>
             <Link to="/support" className={isActive('/support')}>Support</Link>
             <Link to="/contact" className={isActive('/contact')}>Contact</Link>
-            <Link to="/admin" className={isActive('/admin')}>Admin</Link> {/* Visible for demo */}
+            <Link to="/admin" className={isActive('/admin')}>Admin</Link> 
           </div>
 
           {/* Cart & Mobile Toggle */}
@@ -241,6 +242,52 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Why Choose Us */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center text-charcoal mb-12">Why Choose Moreplex?</h2>
+            <div className="grid md:grid-cols-4 gap-6">
+                <div className="text-center p-4">
+                    <Shield className="w-12 h-12 text-brand mx-auto mb-4" />
+                    <h4 className="font-bold text-lg mb-2">Reliable Signal</h4>
+                    <p className="text-sm text-gray-600">99.9% uptime guaranteed with our advanced Ku-Band satellites.</p>
+                </div>
+                <div className="text-center p-4">
+                    <Zap className="w-12 h-12 text-brand mx-auto mb-4" />
+                    <h4 className="font-bold text-lg mb-2">Instant Activation</h4>
+                    <p className="text-sm text-gray-600">Automatic activation within minutes of verified payment.</p>
+                </div>
+                <div className="text-center p-4">
+                    <Users className="w-12 h-12 text-brand mx-auto mb-4" />
+                    <h4 className="font-bold text-lg mb-2">Family Friendly</h4>
+                    <p className="text-sm text-gray-600">Parental controls and dedicated kids channels available.</p>
+                </div>
+                <div className="text-center p-4">
+                    <Clock className="w-12 h-12 text-brand mx-auto mb-4" />
+                    <h4 className="font-bold text-lg mb-2">24/7 Support</h4>
+                    <p className="text-sm text-gray-600">Our dedicated support team is always ready to assist you.</p>
+                </div>
+            </div>
+        </div>
+      </section>
+
+      {/* Channel Preview */}
+      <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 text-center">
+              <h2 className="text-3xl font-bold text-charcoal mb-4">Unlimited Entertainment</h2>
+              <p className="text-gray-600 mb-10">From blockbuster movies to live sports and news.</p>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {['Sports', 'Movies', 'News', 'Kids', 'Music', 'Lifestyle', 'Documentary', 'Local'].map((cat, idx) => (
+                      <div key={idx} className="bg-gray-100 rounded-lg p-6 hover:bg-brand hover:text-white transition cursor-pointer group">
+                          <h4 className="font-bold text-lg">{cat}</h4>
+                          <p className="text-xs mt-2 group-hover:text-white text-gray-500">View Channels</p>
+                      </div>
+                  ))}
+              </div>
+          </div>
+      </section>
+
       {/* Featured Products */}
       <section className="py-16 bg-gray-100">
         <div className="container mx-auto px-4">
@@ -263,6 +310,43 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+      {/* Testimonials */}
+      <section className="py-16 bg-charcoal text-white">
+          <div className="container mx-auto px-4">
+              <h2 className="text-3xl font-bold text-center mb-12">What Our Customers Say</h2>
+              <div className="grid md:grid-cols-3 gap-8">
+                  {TESTIMONIALS.map(t => (
+                      <div key={t.id} className="bg-gray-800 p-6 rounded-xl relative">
+                          <div className="flex text-yellow-400 mb-4">
+                              {[...Array(t.rating)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
+                          </div>
+                          <p className="text-gray-300 italic mb-4">"{t.text}"</p>
+                          <div className="flex items-center">
+                              <div className="w-10 h-10 bg-brand rounded-full flex items-center justify-center font-bold mr-3">
+                                  {t.name.charAt(0)}
+                              </div>
+                              <div>
+                                  <h5 className="font-bold text-sm">{t.name}</h5>
+                                  <p className="text-xs text-gray-500">{t.location}</p>
+                              </div>
+                          </div>
+                      </div>
+                  ))}
+              </div>
+          </div>
+      </section>
+
+      {/* CTA - Dealer */}
+      <section className="py-20 bg-brand">
+          <div className="container mx-auto px-4 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Become a Moreplex Dealer</h2>
+              <p className="text-white/90 text-xl max-w-2xl mx-auto mb-8">Join our growing network of distributors across Nigeria. High commissions and technical training provided.</p>
+              <Link to="/contact" className="bg-white text-brand font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition">
+                  Apply Now
+              </Link>
+          </div>
+      </section>
     </div>
   );
 };
@@ -277,10 +361,28 @@ const ShopPage = () => {
 
     return (
         <div className="container mx-auto px-4 py-8">
+            {/* Promo Banner */}
+            <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white rounded-2xl p-8 mb-10 flex flex-col md:flex-row items-center justify-between">
+                <div className="mb-6 md:mb-0">
+                    <span className="bg-brand text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Limited Offer</span>
+                    <h2 className="text-3xl font-bold mt-3 mb-2">Get the Full Moreplex Experience</h2>
+                    <p className="text-gray-300">Purchase a decoder combo and get 1 month Premium subscription FREE.</p>
+                </div>
+                <button 
+                    onClick={() => {
+                         const combo = PRODUCTS.find(p => p.sku === 'MPX-COMBO-01');
+                         if(combo) addToCart(combo);
+                    }}
+                    className="bg-white text-charcoal font-bold py-3 px-6 rounded-lg hover:bg-brand hover:text-white transition"
+                >
+                    Add Combo to Cart - ₦22,000
+                </button>
+            </div>
+
             <h1 className="text-3xl font-bold mb-8 text-charcoal">Moreplex Store</h1>
             
             <div className="flex flex-wrap gap-4 mb-8">
-                {['all', 'decoder', 'dish', 'accessory'].map(cat => (
+                {['all', 'decoder', 'dish', 'accessory', 'service'].map(cat => (
                     <button 
                         key={cat}
                         onClick={() => setFilter(cat)}
@@ -636,13 +738,83 @@ const SubscriptionPage = () => {
     );
 };
 
+const AdminLogin = ({ onLogin }: { onLogin: () => void }) => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (username === ADMIN_AUTH.username && password === ADMIN_AUTH.password) {
+            onLogin();
+        } else {
+            setError('Invalid credentials');
+        }
+    };
+
+    return (
+        <div className="min-h-[60vh] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
+                <div className="text-center">
+                    <div className="mx-auto h-12 w-12 bg-gray-900 rounded-full flex items-center justify-center text-white">
+                        <Lock className="h-6 w-6" />
+                    </div>
+                    <h2 className="mt-6 text-3xl font-extrabold text-gray-900">Admin Login</h2>
+                    <p className="mt-2 text-sm text-gray-600">Please sign in to access dashboard</p>
+                </div>
+                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                    <div className="rounded-md shadow-sm -space-y-px">
+                        <div>
+                            <input 
+                                type="text" 
+                                required 
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" 
+                                placeholder="Username"
+                                value={username}
+                                onChange={e => setUsername(e.target.value)}
+                            />
+                        </div>
+                        <div>
+                            <input 
+                                type="password" 
+                                required 
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" 
+                                placeholder="Password"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    {error && <div className="text-red-500 text-sm text-center">{error}</div>}
+
+                    <div>
+                        <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-charcoal hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                            Sign in
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}
+
 const AdminPage = () => {
     const { orders } = useAppContext();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [activeTab, setActiveTab] = useState<'orders' | 'verification'>('orders');
+
+    if (!isAuthenticated) {
+        return <AdminLogin onLogin={() => setIsAuthenticated(true)} />;
+    }
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+                <button onClick={() => setIsAuthenticated(false)} className="text-sm text-red-500 hover:underline">Logout</button>
+            </div>
+            
             <div className="flex space-x-4 mb-6">
                 <button onClick={() => setActiveTab('orders')} className={`px-4 py-2 rounded ${activeTab === 'orders' ? 'bg-charcoal text-white' : 'bg-gray-200'}`}>Orders</button>
                 <button onClick={() => setActiveTab('verification')} className={`px-4 py-2 rounded ${activeTab === 'verification' ? 'bg-charcoal text-white' : 'bg-gray-200'}`}>Receipt Verification</button>
@@ -705,7 +877,7 @@ const AdminPage = () => {
                              </div>
                          </div>
                      ))}
-                     {orders.filter(o => o.status === 'awaiting_ocr').length === 0 && <p>No receipts pending verification.</p>}
+                     {orders.filter(o => o.status === 'awaiting_ocr').length === 0 && <p className="text-gray-500">No receipts pending verification.</p>}
                  </div>
              )}
         </div>
