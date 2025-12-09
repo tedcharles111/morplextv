@@ -53,9 +53,12 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <Tv className="h-8 w-8 text-brand" />
-            <span className="text-2xl font-bold tracking-tight">MOREPLEX<span className="text-brand">TV</span></span>
+          <Link to="/" className="flex items-center">
+            <img 
+              src="https://moreplextv.com/wp-content/uploads/2021/04/Moreplex-TV-Logo.png" 
+              alt="Moreplex TV" 
+              className="h-12 w-auto bg-white rounded-lg p-1.5" 
+            />
           </Link>
 
           {/* Desktop Menu */}
@@ -135,7 +138,11 @@ const Footer = () => (
   <footer className="bg-charcoal text-gray-400 py-12">
     <div className="container mx-auto px-4 grid md:grid-cols-4 gap-8">
       <div>
-        <h3 className="text-white text-lg font-bold mb-4">Moreplex TV</h3>
+        <img 
+          src="https://moreplextv.com/wp-content/uploads/2021/04/Moreplex-TV-Logo.png" 
+          alt="Moreplex TV" 
+          className="h-10 w-auto bg-white rounded-lg p-1.5 mb-4" 
+        />
         <p className="text-sm leading-relaxed mb-4">{COMPANY_INFO.tagline}</p>
         <div className="flex space-x-2">
            {/* Socials placeholders */}
