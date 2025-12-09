@@ -32,6 +32,25 @@ const useAppContext = () => {
   return context;
 };
 
+// --- Constants ---
+const JOLLY_FEATURES = [
+  "DVB-S/S2/S2 AVS+, VCM/ACM (error protection)",
+  "Supports BISS auto roll, Biss key",
+  "Supports Unicable, DiSEqC1.0/1.1/1.2/USALS Motor",
+  "Supports Full speed USB 3/4G dongle and USB wifi dongle",
+  "Supports Cccam, Newcam",
+  "Supports Online Movie (Youtube, Mytube, and other Apps)",
+  "Universal LNB, NIT search supports",
+  "EPG, PVR, Timeshift",
+  "Supports YouTube, Mytube, and other Apps",
+  "Lower power consumption 5W (typical), 0.12W (Standby)",
+  "Up to 5000 IPTV/OTT channels",
+  "HEVC, H.264/MPEG-4",
+  "Video Resolution: 1080P/i, 720P, 576P, 480P, 576i, 480i",
+  "PAL/NTSC: Automatic PAL/NTSC conversion",
+  "Aspect Ratio: Auto, 16:9 Pillar box, 4:3 Pan & Scan, 4:3 Letter Box"
+];
+
 // --- Components ---
 
 const Logo = ({ className }: { className?: string }) => (
@@ -781,6 +800,73 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* JOLLY DECODER FEATURE SECTION */}
+      <section className="bg-gradient-to-b from-red-600 to-red-800 text-white py-16 overflow-hidden relative">
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="text-center mb-10">
+              <div className="inline-block bg-white px-4 py-2 rounded-lg mb-6 transform -rotate-2">
+                <span className="text-red-600 font-black text-xl tracking-tighter">m MOREPLEX TV</span>
+                <span className="block text-gray-500 text-xs font-serif italic">...for us, by us</span>
+              </div>
+              <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-4 drop-shadow-2xl" 
+                  style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
+                JOLLY DECODER
+              </h2>
+            </div>
+
+            <div className="flex flex-col items-center mb-12">
+                {/* Placeholder for the user's uploaded image. 
+                    Since I cannot reference the upload directly, I'll use a visual placeholder 
+                    that looks like the decoder in the image */}
+                <div className="relative w-full max-w-4xl mx-auto">
+                     <div className="aspect-video bg-black/20 rounded-xl flex items-center justify-center backdrop-blur-sm border-2 border-white/20 p-8">
+                        <div className="text-center">
+                            <Tv className="w-24 h-24 mx-auto mb-4 text-white/80" />
+                            <p className="text-xl font-bold">New Jolly Decoder</p>
+                            <p className="text-sm opacity-75">High Definition Satellite Receiver</p>
+                        </div>
+                        {/* 
+                           If the user had provided a URL, it would go here. 
+                           I will add a comment for them to replace it.
+                        */}
+                     </div>
+                     {/* Creating the 'Remote' look with CSS just for fun/boldness if image missing */}
+                     <div className="absolute -bottom-10 -right-10 md:right-0 w-32 md:w-48 h-auto bg-gray-900 rounded-lg p-2 transform rotate-12 shadow-2xl border border-gray-700 hidden md:block">
+                        <div className="grid grid-cols-3 gap-1">
+                            {[...Array(12)].map((_,i) => <div key={i} className="h-2 bg-gray-700 rounded-full"></div>)}
+                        </div>
+                     </div>
+                </div>
+            </div>
+
+            <div className="max-w-6xl mx-auto">
+                <h3 className="text-center text-2xl font-black uppercase mb-6 bg-red-900/50 py-2 rounded-lg backdrop-blur-sm border border-red-500/30">
+                    Jolly Decoder Features
+                </h3>
+                <div className="grid md:grid-cols-2 gap-px bg-red-500/30 border-2 border-white/20 rounded-xl overflow-hidden shadow-2xl">
+                    {JOLLY_FEATURES.map((feature, i) => (
+                        <div key={i} className="bg-white/95 text-red-900 px-6 py-4 font-bold text-sm md:text-base flex items-center hover:bg-white transition duration-300">
+                            <CheckCircle className="w-5 h-5 mr-3 text-red-600 shrink-0" />
+                            {feature}
+                        </div>
+                    ))}
+                </div>
+            </div>
+            
+            <div className="text-center mt-12">
+                <Link to="/shop" className="inline-block bg-white text-red-700 font-black text-xl py-4 px-12 rounded-full shadow-2xl hover:scale-105 hover:bg-gray-100 transition transform duration-300 uppercase tracking-wide">
+                    Buy Now
+                </Link>
+            </div>
+          </div>
+          
+          {/* Decorative elements */}
+          <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
+               <div className="absolute top-10 left-10 w-64 h-64 bg-yellow-500 rounded-full mix-blend-overlay filter blur-3xl"></div>
+               <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-500 rounded-full mix-blend-overlay filter blur-3xl"></div>
+          </div>
+      </section>
+
       {/* Services Highlights */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
@@ -1184,7 +1270,7 @@ const CartPage = () => {
                         <p className="text-sm text-gray-500 mb-2">We will scan this to verify your payment and identify your decoder code if applicable.</p>
                         
                         {!receipt ? (
-                            <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                            <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                     <Upload className="w-8 h-8 mb-2 text-gray-500" />
                                     <p className="text-sm text-gray-500"><span className="font-semibold">Click to upload</span> payment proof</p>
