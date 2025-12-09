@@ -34,6 +34,24 @@ const useAppContext = () => {
 
 // --- Components ---
 
+const Logo = ({ className }: { className?: string }) => (
+  <div className={`bg-white rounded-lg p-1 inline-block ${className}`}>
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      viewBox="0 0 220 60" 
+      className="w-full h-full"
+      role="img" 
+      aria-label="Moreplex TV Logo"
+    >
+      <rect width="220" height="60" rx="8" fill="#dc2626" />
+      {/* Abstract 'M' / Play Icon */}
+      <path d="M20 15 H 30 L 40 30 L 50 15 H 60 V 45 H 50 V 25 L 40 40 L 30 25 V 45 H 20 Z" fill="white" />
+      <text x="70" y="42" fontFamily="sans-serif" fontWeight="900" fontSize="32" fill="white" letterSpacing="-0.5">MOREPLEX</text>
+      <text x="195" y="24" fontFamily="sans-serif" fontWeight="bold" fontSize="14" fill="white">TV</text>
+    </svg>
+  </div>
+);
+
 const Navbar = () => {
   const { cart, currentUser, logoutUser } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
@@ -54,11 +72,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <img 
-              src="https://moreplextv.com/wp-content/uploads/2021/04/Moreplex-TV-Logo.png" 
-              alt="Moreplex TV" 
-              className="h-12 w-auto bg-white rounded-lg p-1.5" 
-            />
+            <Logo className="h-12 w-auto" />
           </Link>
 
           {/* Desktop Menu */}
@@ -138,11 +152,7 @@ const Footer = () => (
   <footer className="bg-charcoal text-gray-400 py-12">
     <div className="container mx-auto px-4 grid md:grid-cols-4 gap-8">
       <div>
-        <img 
-          src="https://moreplextv.com/wp-content/uploads/2021/04/Moreplex-TV-Logo.png" 
-          alt="Moreplex TV" 
-          className="h-10 w-auto bg-white rounded-lg p-1.5 mb-4" 
-        />
+        <Logo className="h-10 w-auto mb-4" />
         <p className="text-sm leading-relaxed mb-4">{COMPANY_INFO.tagline}</p>
         <div className="flex space-x-2">
            {/* Socials placeholders */}
@@ -1502,72 +1512,62 @@ const AdminPage = () => {
     );
 };
 
-const TermsPage = () => (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
-        <h1 className="text-3xl font-bold mb-6">Terms and Conditions</h1>
-        <div className="prose prose-sm md:prose-base bg-white p-8 rounded shadow">
-            <pre className="whitespace-pre-wrap font-sans">{TERMS_TEXT}</pre>
-        </div>
-        <div className="mt-6 text-center">
-            <button onClick={() => window.print()} className="bg-charcoal text-white px-6 py-2 rounded">Print / Save as PDF</button>
-        </div>
-    </div>
-);
-
 const ContactPage = () => (
   <div className="container mx-auto px-4 py-12">
-    <h1 className="text-3xl font-bold mb-8 text-center">Contact Us</h1>
-    <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
-      <div className="bg-white p-8 rounded-lg shadow-sm">
-        <h2 className="text-xl font-bold mb-6">Get in Touch</h2>
-        <div className="space-y-6">
-          <div className="flex items-start">
-            <MapPin className="h-6 w-6 text-brand mr-4 mt-1" />
-            <div>
-              <h4 className="font-bold">Visit Us</h4>
-              <p className="text-gray-600">{COMPANY_INFO.address}</p>
+    <h1 className="text-3xl font-bold mb-8">Contact Us</h1>
+    <div className="grid md:grid-cols-2 gap-12">
+        <div className="bg-white p-8 rounded-lg shadow-sm">
+            <h2 className="text-xl font-bold mb-6">Get in Touch</h2>
+            <ul className="space-y-4">
+                <li className="flex items-start">
+                    <MapPin className="h-6 w-6 mr-4 text-brand shrink-0" />
+                    <div>
+                        <h4 className="font-bold">Head Office</h4>
+                        <p className="text-gray-600">{COMPANY_INFO.address}</p>
+                    </div>
+                </li>
+                <li className="flex items-center">
+                    <Phone className="h-6 w-6 mr-4 text-brand shrink-0" />
+                    <div>
+                        <h4 className="font-bold">Phone Support</h4>
+                        <p className="text-gray-600">{COMPANY_INFO.phone}</p>
+                    </div>
+                </li>
+                <li className="flex items-center">
+                    <Mail className="h-6 w-6 mr-4 text-brand shrink-0" />
+                    <div>
+                        <h4 className="font-bold">Email</h4>
+                        <p className="text-gray-600">{COMPANY_INFO.email}</p>
+                    </div>
+                </li>
+            </ul>
+
+            <div className="mt-8 pt-8 border-t">
+                 <h3 className="font-bold mb-4">Send us a message</h3>
+                 <form className="space-y-4" onSubmit={(e) => {e.preventDefault(); alert("Message Sent!")}}>
+                    <input type="text" placeholder="Your Name" className="w-full border p-3 rounded" />
+                    <input type="email" placeholder="Your Email" className="w-full border p-3 rounded" />
+                    <textarea rows={4} placeholder="How can we help?" className="w-full border p-3 rounded"></textarea>
+                    <button className="bg-brand hover:bg-brand-dark text-white font-bold py-3 px-6 rounded transition">Send Message</button>
+                 </form>
             </div>
-          </div>
-          <div className="flex items-center">
-            <Phone className="h-6 w-6 text-brand mr-4" />
-            <div>
-              <h4 className="font-bold">Call Us</h4>
-              <a href={`tel:${COMPANY_INFO.phone.replace(/\s/g, '')}`} className="text-gray-600 hover:text-brand">{COMPANY_INFO.phone}</a>
-            </div>
-          </div>
-          <div className="flex items-center">
-            <div className="w-6 h-6 mr-4 flex items-center justify-center bg-green-500 rounded-full text-black font-bold text-xs">W</div>
-            <div>
-              <h4 className="font-bold">WhatsApp</h4>
-              <a href={COMPANY_INFO.whatsappUrl} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-brand">{COMPANY_INFO.whatsapp}</a>
-            </div>
-          </div>
-          <div className="flex items-center">
-            <Mail className="h-6 w-6 text-brand mr-4" />
-            <div>
-              <h4 className="font-bold">Email Us</h4>
-              <a href={`mailto:${COMPANY_INFO.email}`} className="text-gray-600 hover:text-brand">{COMPANY_INFO.email}</a>
-            </div>
-          </div>
         </div>
-      </div>
-      
-      <div className="bg-white p-8 rounded-lg shadow-sm">
-        <h2 className="text-xl font-bold mb-6">Send a Message</h2>
-        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); alert("Message sent!"); }}>
-          <input type="text" placeholder="Your Name" className="w-full border p-3 rounded focus:outline-none focus:border-brand" required />
-          <input type="email" placeholder="Your Email" className="w-full border p-3 rounded focus:outline-none focus:border-brand" required />
-          <select className="w-full border p-3 rounded focus:outline-none focus:border-brand">
-             <option>General Inquiry</option>
-             <option>Maintenance Request</option>
-             <option>Dealer Application</option>
-          </select>
-          <textarea rows={4} placeholder="Your Message" className="w-full border p-3 rounded focus:outline-none focus:border-brand" required></textarea>
-          <button type="submit" className="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 rounded transition">Send Message</button>
-        </form>
-      </div>
+        <div className="bg-gray-200 rounded-lg h-96 md:h-auto flex items-center justify-center text-gray-500">
+            Map Placeholder
+        </div>
     </div>
   </div>
+);
+
+const TermsPage = () => (
+    <div className="container mx-auto px-4 py-12 max-w-3xl">
+        <h1 className="text-3xl font-bold mb-8">Terms and Conditions</h1>
+        <div className="bg-white p-8 rounded-lg shadow-sm prose max-w-none">
+            <div className="whitespace-pre-wrap font-sans text-gray-700 leading-relaxed">
+                {TERMS_TEXT}
+            </div>
+        </div>
+    </div>
 );
 
 // --- Main App Logic ---
