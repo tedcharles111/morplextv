@@ -3,7 +3,7 @@ import { HashRouter as Router, Routes, Route, Link, useLocation, useNavigate, Na
 import { 
   ShoppingCart, Menu, X, Phone, Mail, MapPin, Search, 
   Upload, CheckCircle, AlertCircle, PlayCircle, Monitor, Tv,
-  Star, Shield, Clock, Users, Zap, Lock, User, LogOut, LayoutDashboard, History, Settings
+  Star, Shield, Clock, Users, Zap, Lock, User, LogOut, LayoutDashboard, History, Settings, CreditCard, FileText
 } from 'lucide-react';
 import { COMPANY_INFO, PRODUCTS, SUBSCRIPTION_PLANS, TERMS_TEXT, TESTIMONIALS, ADMIN_AUTH, INITIAL_USERS } from './constants';
 import { Product, CartItem, Order, SubscriptionPlan, ReceiptData, User as UserType } from './types';
@@ -344,9 +344,96 @@ const LoginPage = () => {
 };
 
 const UserPortal = () => {
-    const { currentUser, orders } = useAppContext();
-    const [activeTab, setActiveTab] = useState<'dashboard' | 'orders' | 'support'>('dashboard');
+    const { currentUser, orders, addOrder } = useAppContext();
+    const [activeTab, setActiveTab] = useState<'dashboard' | 'orders' | 'support' | 'payments'>('dashboard');
     const userOrders = orders.filter(o => o.userId === currentUser?.id);
+    
+    // Payment Proof State
+    const [receiptFile, setReceiptFile] = useState<File | null>(null);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [ocrData, setOcrData] = useState<ReceiptData | null>(null);
+    const [paymentType, setPaymentType] = useState<'subscription' | 'existing_order'>('subscription');
+    const [selectedOrderId, setSelectedOrderId] = useState('');
+    const [manualDecoderCode, setManualDecoderCode] = useState('');
+
+    useEffect(() => {
+        if(currentUser?.decoderCode) setManualDecoderCode(currentUser.decoderCode);
+    }, [currentUser]);
+
+    const handleReceiptUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            setReceiptFile(file);
+            setIsAnalyzing(true);
+            try {
+                const data = await analyzeReceipt(file);
+                if (data) {
+                    setOcrData(data);
+                    if(data.decoderCode) setManualDecoderCode(data.decoderCode);
+                }
+            } catch (err) {
+                console.error(err);
+                alert("OCR Analysis failed. Please enter details manually.");
+            } finally {
+                setIsAnalyzing(false);
+            }
+        }
+    };
+
+    const submitPaymentProof = () => {
+        if (!currentUser) return;
+        
+        let orderPayload: Order;
+        const timestamp = new Date();
+
+        if (paymentType === 'existing_order' && selectedOrderId) {
+            // In a real app we would update the existing order. 
+            // Here, we'll simulate by finding it and maybe adding a note or re-adding it?
+            // For simplicity, we create a new entry referencing the old one or just alert.
+            // Let's create a "Verification Request" item.
+            const existing = orders.find(o => o.id === selectedOrderId);
+            orderPayload = {
+                id: `VERIFY-${Date.now()}`,
+                userId: currentUser.id,
+                items: existing ? existing.items : [{ id: 're-verify', name: 'Payment Verification', price: 0, quantity: 1, sku: 'VERIFY', category: 'service', description: `Verification for Order #${selectedOrderId}`, stock: 0, image: '' }],
+                total: existing ? existing.total : (ocrData?.amount || 0),
+                customerName: currentUser.name,
+                customerEmail: currentUser.email,
+                status: 'awaiting_ocr',
+                extractedDecoderCode: manualDecoderCode,
+                timestamp
+            };
+        } else {
+            // New Subscription Payment
+            orderPayload = {
+                id: `SUB-PAY-${Date.now()}`,
+                userId: currentUser.id,
+                items: [{
+                    id: 'sub-renewal',
+                    name: 'Subscription Payment',
+                    sku: 'SUB-RENEWAL',
+                    price: ocrData?.amount || 0,
+                    category: 'service',
+                    description: 'Manual subscription renewal payment',
+                    quantity: 1,
+                    image: 'https://picsum.photos/200',
+                    stock: 999
+                }],
+                total: ocrData?.amount || 0,
+                customerName: currentUser.name,
+                customerEmail: currentUser.email,
+                status: 'awaiting_ocr',
+                extractedDecoderCode: manualDecoderCode,
+                timestamp
+            };
+        }
+
+        addOrder(orderPayload);
+        alert("Payment proof uploaded successfully! Admin will verify shortly.");
+        setActiveTab('orders');
+        setReceiptFile(null);
+        setOcrData(null);
+    };
 
     if (!currentUser) return <Navigate to="/login" />;
 
@@ -369,6 +456,9 @@ const UserPortal = () => {
                             </button>
                             <button onClick={() => setActiveTab('orders')} className={`w-full text-left px-4 py-2 rounded flex items-center ${activeTab === 'orders' ? 'bg-gray-100 text-brand font-bold' : 'hover:bg-gray-50'}`}>
                                 <History className="w-4 h-4 mr-2" /> Order History
+                            </button>
+                            <button onClick={() => setActiveTab('payments')} className={`w-full text-left px-4 py-2 rounded flex items-center ${activeTab === 'payments' ? 'bg-gray-100 text-brand font-bold' : 'hover:bg-gray-50'}`}>
+                                <CreditCard className="w-4 h-4 mr-2" /> Payment Proofs
                             </button>
                             <button onClick={() => setActiveTab('support')} className={`w-full text-left px-4 py-2 rounded flex items-center ${activeTab === 'support' ? 'bg-gray-100 text-brand font-bold' : 'hover:bg-gray-50'}`}>
                                 <Phone className="w-4 h-4 mr-2" /> Support
@@ -404,14 +494,14 @@ const UserPortal = () => {
                                         <Link to="/subscribe" className="p-3 border rounded hover:border-brand hover:text-brand text-center text-sm transition">
                                             Pay Subscription
                                         </Link>
-                                        <button onClick={() => setActiveTab('support')} className="p-3 border rounded hover:border-brand hover:text-brand text-center text-sm transition">
-                                            Contact Support
+                                        <button onClick={() => setActiveTab('payments')} className="p-3 border rounded hover:border-brand hover:text-brand text-center text-sm transition">
+                                            Upload Receipt
                                         </button>
                                         <Link to="/shop" className="p-3 border rounded hover:border-brand hover:text-brand text-center text-sm transition">
                                             Buy Accessories
                                         </Link>
-                                        <button className="p-3 border rounded hover:border-brand hover:text-brand text-center text-sm transition">
-                                            Edit Profile
+                                        <button onClick={() => setActiveTab('support')} className="p-3 border rounded hover:border-brand hover:text-brand text-center text-sm transition">
+                                            Contact Support
                                         </button>
                                     </div>
                                 </div>
@@ -437,6 +527,118 @@ const UserPortal = () => {
                                 ) : (
                                     <p className="text-gray-500 text-sm">No recent activity.</p>
                                 )}
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'payments' && (
+                        <div className="bg-white p-6 rounded-lg shadow-sm">
+                            <h2 className="text-xl font-bold mb-6">Upload Payment Proof</h2>
+                            <p className="text-gray-600 mb-6 text-sm">
+                                Upload a screenshot or photo of your bank transfer receipt (JPG, PNG or PDF). 
+                                We use AI to verify the transaction details automatically.
+                            </p>
+
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Upload File</label>
+                                    {!receiptFile ? (
+                                        <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
+                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                <Upload className="w-10 h-10 mb-3 text-gray-400" />
+                                                <p className="text-sm text-gray-500"><span className="font-semibold">Click to upload</span> payment proof</p>
+                                                <p className="text-xs text-gray-500 mt-1">MAX 10MB</p>
+                                            </div>
+                                            <input type="file" className="hidden" accept="image/*,.pdf" onChange={handleReceiptUpload} />
+                                        </label>
+                                    ) : (
+                                        <div className="border rounded-lg p-4 bg-gray-50 relative">
+                                            <div className="flex items-center space-x-3 mb-3">
+                                                <FileText className="w-8 h-8 text-brand" />
+                                                <div className="overflow-hidden">
+                                                    <p className="text-sm font-bold truncate">{receiptFile.name}</p>
+                                                    <p className="text-xs text-gray-500">{(receiptFile.size / 1024).toFixed(0)} KB</p>
+                                                </div>
+                                            </div>
+                                            <button 
+                                                onClick={() => { setReceiptFile(null); setOcrData(null); }}
+                                                className="text-xs text-red-500 hover:text-red-700 underline"
+                                            >
+                                                Remove File
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="space-y-4">
+                                    {isAnalyzing && (
+                                        <div className="flex items-center text-brand animate-pulse">
+                                            <Zap className="w-5 h-5 mr-2" />
+                                            <span>Analyzing receipt with AI...</span>
+                                        </div>
+                                    )}
+
+                                    {receiptFile && !isAnalyzing && (
+                                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                            <h4 className="font-bold text-blue-900 mb-2 flex items-center">
+                                                <CheckCircle className="w-4 h-4 mr-2" /> Extracted Details
+                                            </h4>
+                                            <div className="grid grid-cols-2 gap-2 text-sm">
+                                                <div><span className="text-gray-500">Amount:</span> <span className="font-mono font-bold">₦{ocrData?.amount || '---'}</span></div>
+                                                <div><span className="text-gray-500">Date:</span> <span>{ocrData?.date || '---'}</span></div>
+                                                <div className="col-span-2"><span className="text-gray-500">Ref:</span> <span className="font-mono text-xs">{ocrData?.transactionRef || '---'}</span></div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1">What is this payment for?</label>
+                                        <select 
+                                            value={paymentType} 
+                                            onChange={(e) => setPaymentType(e.target.value as any)}
+                                            className="w-full border p-2 rounded"
+                                        >
+                                            <option value="subscription">Subscription Renewal</option>
+                                            <option value="existing_order">Existing Pending Order</option>
+                                        </select>
+                                    </div>
+
+                                    {paymentType === 'existing_order' && (
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Select Pending Order</label>
+                                            <select 
+                                                value={selectedOrderId} 
+                                                onChange={(e) => setSelectedOrderId(e.target.value)}
+                                                className="w-full border p-2 rounded"
+                                            >
+                                                <option value="">-- Select Order --</option>
+                                                {userOrders.filter(o => o.status !== 'verified' && o.status !== 'shipped').map(o => (
+                                                    <option key={o.id} value={o.id}>Order #{o.id} - ₦{o.total.toLocaleString()}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
+
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1">Decoder / Smart Card Number</label>
+                                        <input 
+                                            type="text" 
+                                            value={manualDecoderCode}
+                                            onChange={(e) => setManualDecoderCode(e.target.value)}
+                                            placeholder="MPX-..."
+                                            className="w-full border p-2 rounded uppercase"
+                                        />
+                                        {ocrData?.decoderCode && <p className="text-xs text-green-600 mt-1">Detected from receipt</p>}
+                                    </div>
+
+                                    <button 
+                                        onClick={submitPaymentProof}
+                                        disabled={!receiptFile || isAnalyzing || (paymentType === 'existing_order' && !selectedOrderId)}
+                                        className="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 rounded disabled:opacity-50 transition"
+                                    >
+                                        Submit for Verification
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )}

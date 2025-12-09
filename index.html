@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Moreplex TV - Entertainment with Sheer Delight</title>
     <meta name="description" content="Moreplex TV Direct To Home (DTH) platform. Buy decoders, subscribe to plans, and enjoy premium entertainment." />
+    <script>
+      // Polyfill process.env for browser environments to prevent ReferenceError crashes
+      // when accessing process.env.API_KEY in the SDK.
+      window.process = window.process || { env: {} };
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -37,5 +42,6 @@
 </head>
   <body class="bg-gray-50 text-gray-900 font-sans antialiased">
     <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>
