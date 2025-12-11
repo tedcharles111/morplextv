@@ -1,7 +1,18 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ReceiptData } from '../types';
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Lazy initialization holder
+let aiClient: GoogleGenAI | null = null;
+
+const getAiClient = () => {
+  if (!aiClient) {
+    const apiKey = process.env.API_KEY || '';
+    // We initialize even if empty to let SDK throw specific error later if used, 
+    // or we can handle it here.
+    aiClient = new GoogleGenAI({ apiKey });
+  }
+  return aiClient;
+};
 
 const fileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -19,6 +30,7 @@ const fileToBase64 = (file: File): Promise<string> => {
 
 export const analyzeReceipt = async (file: File): Promise<ReceiptData | null> => {
   try {
+    const ai = getAiClient();
     const base64Data = await fileToBase64(file);
 
     const prompt = `
@@ -68,6 +80,7 @@ export const analyzeReceipt = async (file: File): Promise<ReceiptData | null> =>
 
   } catch (error) {
     console.error("OCR Error:", error);
-    throw new Error("Failed to analyze receipt.");
+    // Return null instead of throwing to prevent UI crash
+    return null;
   }
 };
