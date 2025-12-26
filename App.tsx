@@ -808,7 +808,7 @@ const HomePage = () => {
                 <span className="text-red-600 font-black text-xl tracking-tighter">m MOREPLEX TV</span>
                 <span className="block text-gray-500 text-xs font-serif italic">...for us, by us</span>
               </div>
-              <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-4 drop-shadow-2xl" 
+              <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-4 drop-shadow-2xl animate-swing" 
                   style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
                 JOLLY DECODER
               </h2>

@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Moreplex TV - Entertainment with Sheer Delight</title>
     <meta name="description" content="Moreplex TV Direct To Home (DTH) platform. Buy decoders, subscribe to plans, and enjoy premium entertainment." />
+    <style>
+      @keyframes swing {
+        0% { transform: rotate(-2deg); }
+        50% { transform: rotate(2deg); }
+        100% { transform: rotate(-2deg); }
+      }
+      .animate-swing {
+        display: inline-block;
+        animation: swing 4s ease-in-out infinite;
+        transform-origin: top center;
+      }
+    </style>
     <script>
       // Polyfill process.env for browser environments to prevent ReferenceError crashes
       // when accessing process.env.API_KEY in the SDK.
