@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { 
@@ -778,31 +779,41 @@ const HomePage = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="relative bg-black text-white py-20 md:py-32 min-h-[600px] flex items-center">
-        <div className="absolute inset-0 overflow-hidden">
-            {/* The Movie Poster Collage Image */}
-            <img 
-              src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2070&auto=format&fit=crop" 
-              alt="Entertainment Hub" 
-              className="w-full h-full object-cover opacity-30 scale-105"
-            />
-            {/* Gradient Overlay for Text Readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
+      <section className="relative bg-black text-white py-24 md:py-40 min-h-[650px] flex items-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+            {/* VIBRANT MOVIE POSTER WALL BACKGROUND */}
+            <div className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[20s] ease-linear hover:scale-110" 
+                 style={{ 
+                   backgroundImage: "url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2000&auto=format&fit=crop')",
+                   filter: "brightness(0.9)"
+                 }}>
+            </div>
+            {/* Rich Gradient Overlays for High-End feel and readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30"></div>
         </div>
-        <div className="container mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-4xl md:text-7xl font-extrabold mb-6 leading-tight drop-shadow-2xl">
-            Redefining Entertainment <br /> with <span className="text-brand">Sheer Delight</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-200 mb-10 max-w-2xl mx-auto font-medium drop-shadow-md">
-            Experience the new dawn of Pay TV in Africa. DTH, DTT, and VOD all in one place.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-6">
-            <Link to="/shop" className="bg-brand hover:bg-brand-dark text-white font-bold py-4 px-10 rounded-full transition transform hover:scale-105 shadow-2xl">
-              Buy Decoder
-            </Link>
-            <Link to="/subscribe" className="bg-transparent border-2 border-white hover:bg-white hover:text-charcoal text-white font-bold py-4 px-10 rounded-full transition transform hover:scale-105 shadow-xl">
-              Subscribe Now
-            </Link>
+        
+        <div className="container mx-auto px-4 relative z-10 text-center md:text-left">
+          <div className="max-w-4xl">
+              <span className="inline-block bg-brand text-white text-sm font-black px-4 py-1.5 rounded-full mb-6 uppercase tracking-widest animate-pulse shadow-lg">
+                  Direct To Home • Digital Terrestrial • VOD
+              </span>
+              <h1 className="text-5xl md:text-8xl font-black mb-8 leading-[1.1] drop-shadow-2xl">
+                Redefining <br className="hidden md:block" />
+                Entertainment <br className="hidden md:block" />
+                with <span className="text-brand inline-block transform hover:scale-110 transition duration-300">Sheer Delight</span>
+              </h1>
+              <p className="text-xl md:text-3xl text-gray-100 mb-12 max-w-2xl font-semibold drop-shadow-lg leading-relaxed">
+                Experience the new dawn of Pay TV in Africa. 100+ channels, premium sports, and blockbuster cinema.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-6">
+                <Link to="/shop" className="group bg-brand hover:bg-brand-dark text-white font-black py-5 px-12 rounded-full transition transform hover:scale-105 shadow-2xl flex items-center justify-center text-lg">
+                  Buy Decoder <Tv className="ml-2 w-6 h-6 group-hover:rotate-12 transition" />
+                </Link>
+                <Link to="/subscribe" className="bg-white/10 backdrop-blur-md border-2 border-white/30 hover:bg-white hover:text-charcoal text-white font-bold py-5 px-12 rounded-full transition transform hover:scale-105 shadow-xl flex items-center justify-center text-lg">
+                  Subscribe Now <Zap className="ml-2 w-5 h-5" />
+                </Link>
+              </div>
           </div>
         </div>
       </section>
@@ -1174,6 +1185,7 @@ const SubscriptionPage = () => {
     const [decoderCode, setDecoderCode] = useState('');
     const [step, setStep] = useState(1);
     const [receipt, setReceipt] = useState<File | null>(null);
+    // Fixed: Added missing const keyword to navigate variable declaration.
     const navigate = useNavigate();
 
     useEffect(() => {

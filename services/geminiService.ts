@@ -1,19 +1,10 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { ReceiptData } from '../types';
 
-// Lazy initialization holder
-let aiClient: GoogleGenAI | null = null;
-
-const getAiClient = () => {
-  if (!aiClient) {
-    const apiKey = process.env.API_KEY || '';
-    // We initialize even if empty to let SDK throw specific error later if used, 
-    // or we can handle it here.
-    aiClient = new GoogleGenAI({ apiKey });
-  }
-  return aiClient;
-};
-
+/**
+ * Converts a file object to a base64 encoded string.
+ */
 const fileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -28,9 +19,13 @@ const fileToBase64 = (file: File): Promise<string> => {
   });
 };
 
+/**
+ * Analyzes a bank receipt image using Gemini 3 Flash to extract transaction details.
+ */
 export const analyzeReceipt = async (file: File): Promise<ReceiptData | null> => {
   try {
-    const ai = getAiClient();
+    // Initialize GoogleGenAI directly with the API key from environment variables.
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const base64Data = await fileToBase64(file);
 
     const prompt = `
@@ -45,8 +40,9 @@ export const analyzeReceipt = async (file: File): Promise<ReceiptData | null> =>
       If any field is not found, set it to null.
     `;
 
+    // Using 'gemini-3-flash-preview' for efficient and accurate vision/text processing.
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3-flash-preview',
       contents: {
         parts: [
           {
@@ -63,24 +59,42 @@ export const analyzeReceipt = async (file: File): Promise<ReceiptData | null> =>
         responseSchema: {
             type: Type.OBJECT,
             properties: {
-                transactionRef: { type: Type.STRING, nullable: true },
-                amount: { type: Type.NUMBER, nullable: true },
-                date: { type: Type.STRING, nullable: true },
-                senderName: { type: Type.STRING, nullable: true },
-                decoderCode: { type: Type.STRING, nullable: true },
-            }
+                transactionRef: { 
+                  type: Type.STRING,
+                  description: 'The unique reference number of the bank transaction.'
+                },
+                amount: { 
+                  type: Type.NUMBER,
+                  description: 'The total amount transferred.'
+                },
+                date: { 
+                  type: Type.STRING,
+                  description: 'The date and time of the transaction.'
+                },
+                senderName: { 
+                  type: Type.STRING,
+                  description: 'The name of the person or entity who sent the money.'
+                },
+                decoderCode: { 
+                  type: Type.STRING,
+                  description: 'The Moreplex decoder IUC or smart card number (e.g., MPX-123456).'
+                },
+            },
+            propertyOrdering: ["transactionRef", "amount", "date", "senderName", "decoderCode"]
         }
       }
     });
 
-    if (response.text) {
-        return JSON.parse(response.text) as ReceiptData;
+    // Directly access the text property as per the latest SDK guidelines.
+    const textOutput = response.text;
+    if (textOutput) {
+        return JSON.parse(textOutput.trim()) as ReceiptData;
     }
     return null;
 
   } catch (error) {
-    console.error("OCR Error:", error);
-    // Return null instead of throwing to prevent UI crash
+    console.error("OCR Analysis Error:", error);
+    // Gracefully handle API errors by returning null.
     return null;
   }
 };
