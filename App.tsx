@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { 
@@ -175,7 +174,6 @@ const Footer = () => (
         <Logo className="h-10 w-auto mb-4" />
         <p className="text-sm leading-relaxed mb-4">{COMPANY_INFO.tagline}</p>
         <div className="flex space-x-2">
-           {/* Socials placeholders */}
            <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center cursor-pointer hover:bg-brand">F</div>
            <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center cursor-pointer hover:bg-brand">T</div>
            <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center cursor-pointer hover:bg-brand">I</div>
@@ -424,10 +422,6 @@ const UserPortal = () => {
         const timestamp = new Date();
 
         if (paymentType === 'existing_order' && selectedOrderId) {
-            // In a real app we would update the existing order. 
-            // Here, we'll simulate by finding it and maybe adding a note or re-adding it?
-            // For simplicity, we create a new entry referencing the old one or just alert.
-            // Let's create a "Verification Request" item.
             const existing = orders.find(o => o.id === selectedOrderId);
             orderPayload = {
                 id: `VERIFY-${Date.now()}`,
@@ -441,7 +435,6 @@ const UserPortal = () => {
                 timestamp
             };
         } else {
-            // New Subscription Payment
             orderPayload = {
                 id: `SUB-PAY-${Date.now()}`,
                 userId: currentUser.id,
@@ -477,7 +470,6 @@ const UserPortal = () => {
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="flex flex-col md:flex-row gap-8">
-                {/* Sidebar */}
                 <div className="md:w-64 flex-shrink-0">
                     <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
                         <div className="flex flex-col items-center mb-4">
@@ -504,12 +496,10 @@ const UserPortal = () => {
                     </div>
                 </div>
 
-                {/* Main Content */}
                 <div className="flex-grow">
                     {activeTab === 'dashboard' && (
                         <div className="space-y-6">
                             <h1 className="text-2xl font-bold">Welcome back, {currentUser.name.split(' ')[0]}</h1>
-                            
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div className="bg-gradient-to-br from-charcoal to-gray-900 text-white p-6 rounded-xl shadow-lg relative overflow-hidden">
                                     <h3 className="text-gray-400 text-sm font-medium mb-1">My Decoder</h3>
@@ -544,7 +534,6 @@ const UserPortal = () => {
                                 </div>
                             </div>
 
-                            {/* Recent Activity Mini View */}
                             <div className="bg-white p-6 rounded-lg shadow-sm">
                                 <h3 className="font-bold mb-4">Recent Orders</h3>
                                 {userOrders.length > 0 ? (
@@ -716,11 +705,6 @@ const UserPortal = () => {
                                                     </div>
                                                 ))}
                                             </div>
-                                            {order.status === 'awaiting_ocr' && (
-                                                <div className="mt-3 bg-blue-50 text-blue-700 text-xs p-2 rounded">
-                                                    We are verifying your payment receipt. This usually takes 1-2 hours.
-                                                </div>
-                                            )}
                                         </div>
                                     ))}
                                 </div>
@@ -732,7 +716,6 @@ const UserPortal = () => {
                         <div className="bg-white p-6 rounded-lg shadow-sm">
                             <h2 className="text-xl font-bold mb-6">Support Center</h2>
                             <p className="mb-6 text-gray-600">Need help with your decoder or account? Upload a screenshot or describe your issue.</p>
-                            
                             <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); alert("Support ticket created!"); }}>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Subject</label>
@@ -753,7 +736,6 @@ const UserPortal = () => {
                                 </div>
                                 <button className="bg-charcoal text-white px-6 py-2 rounded font-bold hover:bg-gray-800">Submit Ticket</button>
                             </form>
-                            
                             <div className="mt-8 border-t pt-6">
                                 <h3 className="font-bold mb-4">Direct Contacts</h3>
                                 <div className="flex gap-4">
@@ -779,39 +761,39 @@ const HomePage = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="relative bg-black text-white py-24 md:py-40 min-h-[650px] flex items-center overflow-hidden">
+      <section className="relative bg-black text-white py-24 md:py-48 min-h-[750px] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
             {/* VIBRANT MOVIE POSTER WALL BACKGROUND */}
-            <div className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[20s] ease-linear hover:scale-110" 
+            <div className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[20s] ease-linear animate-ken-burns" 
                  style={{ 
-                   backgroundImage: "url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2000&auto=format&fit=crop')",
-                   filter: "brightness(0.9)"
+                   backgroundImage: "url('https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=2070&auto=format&fit=crop')",
+                   filter: "brightness(0.7) contrast(1.1)"
                  }}>
             </div>
-            {/* Rich Gradient Overlays for High-End feel and readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30"></div>
+            {/* Multi-layered Premium Gradients */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40"></div>
         </div>
         
         <div className="container mx-auto px-4 relative z-10 text-center md:text-left">
           <div className="max-w-4xl">
-              <span className="inline-block bg-brand text-white text-sm font-black px-4 py-1.5 rounded-full mb-6 uppercase tracking-widest animate-pulse shadow-lg">
-                  Direct To Home • Digital Terrestrial • VOD
+              <span className="inline-block bg-brand text-white text-sm font-black px-4 py-1.5 rounded-full mb-6 uppercase tracking-widest animate-pulse shadow-2xl">
+                  DTH • DTT • Video On Demand
               </span>
-              <h1 className="text-5xl md:text-8xl font-black mb-8 leading-[1.1] drop-shadow-2xl">
+              <h1 className="text-5xl md:text-8xl font-black mb-8 leading-[1.05] drop-shadow-[0_8px_30px_rgb(0,0,0,0.8)] animate-slide-in-left opacity-0">
                 Redefining <br className="hidden md:block" />
                 Entertainment <br className="hidden md:block" />
-                with <span className="text-brand inline-block transform hover:scale-110 transition duration-300">Sheer Delight</span>
+                with <span className="text-brand inline-block transform hover:scale-105 transition duration-300">Sheer Delight</span>
               </h1>
-              <p className="text-xl md:text-3xl text-gray-100 mb-12 max-w-2xl font-semibold drop-shadow-lg leading-relaxed">
-                Experience the new dawn of Pay TV in Africa. 100+ channels, premium sports, and blockbuster cinema.
+              <p className="text-xl md:text-3xl text-gray-100 mb-12 max-w-2xl font-semibold drop-shadow-xl leading-relaxed">
+                Experience the new dawn of Pay TV in Africa. Premium sports, local blockbusters, and 120+ channels for the whole family.
               </p>
               <div className="flex flex-col sm:flex-row gap-6">
-                <Link to="/shop" className="group bg-brand hover:bg-brand-dark text-white font-black py-5 px-12 rounded-full transition transform hover:scale-105 shadow-2xl flex items-center justify-center text-lg">
-                  Buy Decoder <Tv className="ml-2 w-6 h-6 group-hover:rotate-12 transition" />
+                <Link to="/shop" className="group bg-brand hover:bg-brand-dark text-white font-black py-5 px-14 rounded-full transition transform hover:scale-105 shadow-2xl flex items-center justify-center text-xl">
+                  Get Decoder <Tv className="ml-2 w-7 h-7 group-hover:rotate-12 transition" />
                 </Link>
-                <Link to="/subscribe" className="bg-white/10 backdrop-blur-md border-2 border-white/30 hover:bg-white hover:text-charcoal text-white font-bold py-5 px-12 rounded-full transition transform hover:scale-105 shadow-xl flex items-center justify-center text-lg">
-                  Subscribe Now <Zap className="ml-2 w-5 h-5" />
+                <Link to="/subscribe" className="bg-white/10 backdrop-blur-xl border-2 border-white/40 hover:bg-white hover:text-charcoal text-white font-bold py-5 px-14 rounded-full transition transform hover:scale-105 shadow-2xl flex items-center justify-center text-xl">
+                  Renew Subscription <Zap className="ml-2 w-6 h-6" />
                 </Link>
               </div>
           </div>
@@ -833,7 +815,6 @@ const HomePage = () => {
             </div>
 
             <div className="flex flex-col items-center mb-12">
-                {/* Visual placeholder for the decoder */}
                 <div className="relative w-full max-w-4xl mx-auto">
                      <div className="aspect-video bg-black/20 rounded-xl flex items-center justify-center backdrop-blur-sm border-2 border-white/20 p-8">
                         <div className="text-center">
@@ -982,7 +963,6 @@ const ShopPage = () => {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            {/* Promo Banner */}
             <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white rounded-2xl p-8 mb-10 flex flex-col md:flex-row items-center justify-between">
                 <div className="mb-6 md:mb-0">
                     <span className="bg-brand text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Limited Offer</span>
@@ -1185,7 +1165,6 @@ const SubscriptionPage = () => {
     const [decoderCode, setDecoderCode] = useState('');
     const [step, setStep] = useState(1);
     const [receipt, setReceipt] = useState<File | null>(null);
-    // Fixed: Added missing const keyword to navigate variable declaration.
     const navigate = useNavigate();
 
     useEffect(() => {
