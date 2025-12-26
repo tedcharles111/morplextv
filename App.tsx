@@ -778,22 +778,29 @@ const HomePage = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="relative bg-charcoal text-white py-20 md:py-32">
+      <section className="relative bg-black text-white py-20 md:py-32 min-h-[600px] flex items-center">
         <div className="absolute inset-0 overflow-hidden">
-            <img src="https://picsum.photos/1920/1080?blur=4" alt="Background" className="w-full h-full object-cover opacity-20" />
+            {/* The Movie Poster Collage Image */}
+            <img 
+              src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2070&auto=format&fit=crop" 
+              alt="Entertainment Hub" 
+              className="w-full h-full object-cover opacity-30 scale-105"
+            />
+            {/* Gradient Overlay for Text Readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
         </div>
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+          <h1 className="text-4xl md:text-7xl font-extrabold mb-6 leading-tight drop-shadow-2xl">
             Redefining Entertainment <br /> with <span className="text-brand">Sheer Delight</span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl text-gray-200 mb-10 max-w-2xl mx-auto font-medium drop-shadow-md">
             Experience the new dawn of Pay TV in Africa. DTH, DTT, and VOD all in one place.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link to="/shop" className="bg-brand hover:bg-brand-dark text-white font-bold py-3 px-8 rounded-full transition transform hover:-translate-y-1 shadow-lg">
+          <div className="flex flex-col sm:flex-row justify-center gap-6">
+            <Link to="/shop" className="bg-brand hover:bg-brand-dark text-white font-bold py-4 px-10 rounded-full transition transform hover:scale-105 shadow-2xl">
               Buy Decoder
             </Link>
-            <Link to="/subscribe" className="bg-transparent border-2 border-white hover:bg-white hover:text-charcoal text-white font-bold py-3 px-8 rounded-full transition">
+            <Link to="/subscribe" className="bg-transparent border-2 border-white hover:bg-white hover:text-charcoal text-white font-bold py-4 px-10 rounded-full transition transform hover:scale-105 shadow-xl">
               Subscribe Now
             </Link>
           </div>
@@ -815,9 +822,7 @@ const HomePage = () => {
             </div>
 
             <div className="flex flex-col items-center mb-12">
-                {/* Placeholder for the user's uploaded image. 
-                    Since I cannot reference the upload directly, I'll use a visual placeholder 
-                    that looks like the decoder in the image */}
+                {/* Visual placeholder for the decoder */}
                 <div className="relative w-full max-w-4xl mx-auto">
                      <div className="aspect-video bg-black/20 rounded-xl flex items-center justify-center backdrop-blur-sm border-2 border-white/20 p-8">
                         <div className="text-center">
@@ -825,12 +830,7 @@ const HomePage = () => {
                             <p className="text-xl font-bold">New Jolly Decoder</p>
                             <p className="text-sm opacity-75">High Definition Satellite Receiver</p>
                         </div>
-                        {/* 
-                           If the user had provided a URL, it would go here. 
-                           I will add a comment for them to replace it.
-                        */}
                      </div>
-                     {/* Creating the 'Remote' look with CSS just for fun/boldness if image missing */}
                      <div className="absolute -bottom-10 -right-10 md:right-0 w-32 md:w-48 h-auto bg-gray-900 rounded-lg p-2 transform rotate-12 shadow-2xl border border-gray-700 hidden md:block">
                         <div className="grid grid-cols-3 gap-1">
                             {[...Array(12)].map((_,i) => <div key={i} className="h-2 bg-gray-700 rounded-full"></div>)}
@@ -860,7 +860,6 @@ const HomePage = () => {
             </div>
           </div>
           
-          {/* Decorative elements */}
           <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
                <div className="absolute top-10 left-10 w-64 h-64 bg-yellow-500 rounded-full mix-blend-overlay filter blur-3xl"></div>
                <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-500 rounded-full mix-blend-overlay filter blur-3xl"></div>
@@ -925,23 +924,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Channel Preview */}
-      <section className="py-16 bg-white">
-          <div className="container mx-auto px-4 text-center">
-              <h2 className="text-3xl font-bold text-charcoal mb-4">Unlimited Entertainment</h2>
-              <p className="text-gray-600 mb-10">From blockbuster movies to live sports and news.</p>
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {['Sports', 'Movies', 'News', 'Kids', 'Music', 'Lifestyle', 'Documentary', 'Local'].map((cat, idx) => (
-                      <div key={idx} className="bg-gray-100 rounded-lg p-6 hover:bg-brand hover:text-white transition cursor-pointer group">
-                          <h4 className="font-bold text-lg">{cat}</h4>
-                          <p className="text-xs mt-2 group-hover:text-white text-gray-500">View Channels</p>
-                      </div>
-                  ))}
-              </div>
-          </div>
-      </section>
-
       {/* Featured Products */}
       <section className="py-16 bg-gray-100">
         <div className="container mx-auto px-4">
@@ -963,32 +945,6 @@ const HomePage = () => {
             ))}
           </div>
         </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-16 bg-charcoal text-white">
-          <div className="container mx-auto px-4">
-              <h2 className="text-3xl font-bold text-center mb-12">What Our Customers Say</h2>
-              <div className="grid md:grid-cols-3 gap-8">
-                  {TESTIMONIALS.map(t => (
-                      <div key={t.id} className="bg-gray-800 p-6 rounded-xl relative">
-                          <div className="flex text-yellow-400 mb-4">
-                              {[...Array(t.rating)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
-                          </div>
-                          <p className="text-gray-300 italic mb-4">"{t.text}"</p>
-                          <div className="flex items-center">
-                              <div className="w-10 h-10 bg-brand rounded-full flex items-center justify-center font-bold mr-3">
-                                  {t.name.charAt(0)}
-                              </div>
-                              <div>
-                                  <h5 className="font-bold text-sm">{t.name}</h5>
-                                  <p className="text-xs text-gray-500">{t.location}</p>
-                              </div>
-                          </div>
-                      </div>
-                  ))}
-              </div>
-          </div>
       </section>
 
       {/* CTA - Dealer */}
@@ -1052,9 +1008,6 @@ const ShopPage = () => {
                     <div key={product.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
                         <div className="h-48 overflow-hidden relative">
                             <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-                            {product.stock < 10 && (
-                                <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">Low Stock</span>
-                            )}
                         </div>
                         <div className="p-5 flex-1 flex flex-col">
                             <h3 className="font-bold text-lg text-charcoal mb-1">{product.name}</h3>
@@ -1064,11 +1017,6 @@ const ShopPage = () => {
                             <div className="mt-auto">
                                 <div className="flex justify-between items-center mb-4">
                                     <span className="text-xl font-bold text-brand">₦{product.price.toLocaleString()}</span>
-                                    {product.installationFee && (
-                                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                                            +Install: ₦{product.installationFee.toLocaleString()}
-                                        </span>
-                                    )}
                                 </div>
                                 <button 
                                     onClick={() => addToCart(product)}
@@ -1097,7 +1045,6 @@ const CartPage = () => {
     const [decoderCode, setDecoderCode] = useState('');
 
     useEffect(() => {
-        // Auto-fill for logged-in user
         if (currentUser) {
             setCustomer(prev => ({
                 ...prev,
@@ -1122,7 +1069,6 @@ const CartPage = () => {
                 const data = await analyzeReceipt(file);
                 if (data) {
                     setOcrData(data);
-                    // Only override if we don't have one from profile or manual entry
                     if (data.decoderCode && !decoderCode) setDecoderCode(data.decoderCode);
                 }
             } catch (err) {
@@ -1142,14 +1088,14 @@ const CartPage = () => {
             total,
             customerName: customer.name,
             customerEmail: customer.email,
-            status: 'awaiting_ocr', // Since they uploaded a receipt
+            status: 'awaiting_ocr',
             extractedDecoderCode: decoderCode,
             timestamp: new Date()
         };
         addOrder(newOrder);
         clearCart();
         alert("Order placed successfully! We have received your payment proof.");
-        navigate(currentUser ? '/portal' : '/'); // Redirect to portal if logged in
+        navigate(currentUser ? '/portal' : '/');
     };
 
     if (cart.length === 0 && step === 'cart') {
@@ -1164,7 +1110,6 @@ const CartPage = () => {
 
     return (
         <div className="container mx-auto px-4 py-8 max-w-4xl">
-            {/* Steps Indicator */}
             <div className="flex justify-center mb-8">
                 <div className={`w-3 h-3 rounded-full mx-1 ${step === 'cart' ? 'bg-brand' : 'bg-gray-300'}`}></div>
                 <div className={`w-3 h-3 rounded-full mx-1 ${step === 'details' ? 'bg-brand' : 'bg-gray-300'}`}></div>
@@ -1182,42 +1127,11 @@ const CartPage = () => {
                                     <div>
                                         <h4 className="font-bold">{item.name}</h4>
                                         <p className="text-sm text-gray-500">₦{item.price.toLocaleString()} x {item.quantity}</p>
-                                        {item.installationFee && (
-                                            <p className="text-xs text-blue-600">+ Install: ₦{item.installationFee.toLocaleString()}</p>
-                                        )}
                                     </div>
                                 </div>
                                 <button onClick={() => removeFromCart(item.id)} className="text-red-500 hover:text-red-700"><X className="w-5 h-5" /></button>
                             </div>
                         ))}
-                    </div>
-                    
-                    <div className="flex items-center mb-6">
-                        <input 
-                            type="checkbox" 
-                            id="install" 
-                            checked={needInstall} 
-                            onChange={(e) => setNeedInstall(e.target.checked)} 
-                            className="mr-2 h-5 w-5 text-brand focus:ring-brand"
-                        />
-                        <label htmlFor="install" className="font-medium">Include Professional Installation</label>
-                    </div>
-
-                    <div className="border-t pt-4">
-                        <div className="flex justify-between mb-2">
-                            <span>Subtotal</span>
-                            <span>₦{subtotal.toLocaleString()}</span>
-                        </div>
-                        {needInstall && (
-                            <div className="flex justify-between mb-2 text-blue-600">
-                                <span>Installation Fees</span>
-                                <span>₦{installTotal.toLocaleString()}</span>
-                            </div>
-                        )}
-                        <div className="flex justify-between text-xl font-bold mt-4">
-                            <span>Total</span>
-                            <span>₦{total.toLocaleString()}</span>
-                        </div>
                     </div>
                     <button onClick={() => setStep('details')} className="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 rounded-lg mt-6">Checkout</button>
                 </div>
@@ -1226,12 +1140,6 @@ const CartPage = () => {
             {step === 'details' && (
                 <div className="bg-white p-6 rounded-lg shadow-sm">
                     <h2 className="text-2xl font-bold mb-6">Delivery Details</h2>
-                    {!currentUser && (
-                        <div className="bg-blue-50 p-3 mb-6 rounded text-sm flex justify-between items-center">
-                            <span>Already have an account? Login to auto-fill details.</span>
-                            <Link to="/login" className="font-bold text-blue-700 hover:underline">Login</Link>
-                        </div>
-                    )}
                     <div className="grid md:grid-cols-2 gap-4 mb-4">
                         <input type="text" placeholder="Full Name" value={customer.name} onChange={e => setCustomer({...customer, name: e.target.value})} className="border p-3 rounded" />
                         <input type="email" placeholder="Email" value={customer.email} onChange={e => setCustomer({...customer, email: e.target.value})} className="border p-3 rounded" />
@@ -1239,99 +1147,21 @@ const CartPage = () => {
                         <input type="text" placeholder="City" value={customer.city} onChange={e => setCustomer({...customer, city: e.target.value})} className="border p-3 rounded" />
                     </div>
                     <input type="text" placeholder="Full Address" value={customer.address} onChange={e => setCustomer({...customer, address: e.target.value})} className="w-full border p-3 rounded mb-6" />
-                    
-                    <div className="flex justify-between">
-                        <button onClick={() => setStep('cart')} className="text-gray-500 hover:underline">Back</button>
-                        <button 
-                            disabled={!customer.name || !customer.phone || !customer.address}
-                            onClick={() => setStep('payment')} 
-                            className="bg-brand hover:bg-brand-dark text-white font-bold py-2 px-8 rounded disabled:opacity-50"
-                        >
-                            Proceed to Payment
-                        </button>
-                    </div>
+                    <button onClick={() => setStep('payment')} className="bg-brand hover:bg-brand-dark text-white font-bold py-2 px-8 rounded">Proceed to Payment</button>
                 </div>
             )}
 
             {step === 'payment' && (
                 <div className="bg-white p-6 rounded-lg shadow-sm">
                     <h2 className="text-2xl font-bold mb-6">Payment & Verification</h2>
-                    
                     <div className="bg-blue-50 border border-blue-200 p-4 rounded mb-6">
                         <h3 className="font-bold text-blue-900 mb-2">Bank Transfer Details</h3>
                         <p className="text-sm">Bank: <span className="font-bold">{COMPANY_INFO.bankDetails.bankName}</span></p>
                         <p className="text-sm">Account: <span className="font-bold">{COMPANY_INFO.bankDetails.accountNumber}</span></p>
-                        <p className="text-sm">Name: <span className="font-bold">{COMPANY_INFO.bankDetails.accountName}</span></p>
                         <p className="text-lg font-bold text-brand mt-2">Amount to Pay: ₦{total.toLocaleString()}</p>
                     </div>
-
-                    <div className="border-t border-b py-6 mb-6">
-                        <label className="block font-bold mb-2">Upload Payment Receipt</label>
-                        <p className="text-sm text-gray-500 mb-2">We will scan this to verify your payment and identify your decoder code if applicable.</p>
-                        
-                        {!receipt ? (
-                            <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
-                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <Upload className="w-8 h-8 mb-2 text-gray-500" />
-                                    <p className="text-sm text-gray-500"><span className="font-semibold">Click to upload</span> payment proof</p>
-                                </div>
-                                <input type="file" className="hidden" accept="image/*,.pdf" onChange={handleFileUpload} />
-                            </label>
-                        ) : (
-                            <div className="bg-green-50 border border-green-200 p-4 rounded">
-                                <div className="flex items-center mb-2">
-                                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                                    <span className="font-bold text-green-700">File Uploaded</span>
-                                </div>
-                                {isAnalyzing ? (
-                                    <div className="text-sm text-gray-500 animate-pulse">Analyzing receipt with AI...</div>
-                                ) : (
-                                    <div className="space-y-2 mt-2">
-                                        <p className="text-xs text-gray-600 uppercase font-bold">Extracted Data:</p>
-                                        <div className="grid grid-cols-2 gap-2 text-sm">
-                                            <div>
-                                                <span className="text-gray-500">Amount:</span> {ocrData?.amount ? `₦${ocrData.amount}` : 'Not detected'}
-                                            </div>
-                                            <div>
-                                                <span className="text-gray-500">Date:</span> {ocrData?.date || 'Not detected'}
-                                            </div>
-                                            <div className="col-span-2">
-                                                <span className="text-gray-500">Ref:</span> {ocrData?.transactionRef || 'Not detected'}
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="mt-2">
-                                            <label className="block text-xs font-bold text-gray-700">Decoder Code (Verified via OCR)</label>
-                                            <input 
-                                                type="text" 
-                                                value={decoderCode} 
-                                                onChange={(e) => setDecoderCode(e.target.value)}
-                                                placeholder="Enter Decoder Code if not detected"
-                                                className="w-full border p-2 rounded mt-1 bg-white"
-                                            />
-                                            {ocrData?.decoderCode && <span className="text-xs text-green-600">Auto-detected from receipt!</span>}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="flex items-center mb-6">
-                        <input type="checkbox" id="terms" className="mr-2 h-5 w-5 text-brand focus:ring-brand" />
-                        <label htmlFor="terms" className="text-sm">I agree to the <Link to="/terms" className="text-brand underline">Terms & Conditions</Link></label>
-                    </div>
-
-                    <div className="flex justify-between">
-                         <button onClick={() => setStep('details')} className="text-gray-500 hover:underline">Back</button>
-                        <button 
-                            disabled={!receipt}
-                            onClick={handlePlaceOrder}
-                            className="bg-brand hover:bg-brand-dark text-white font-bold py-3 px-8 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            Confirm Payment & Order
-                        </button>
-                    </div>
+                    <input type="file" accept="image/*,.pdf" onChange={handleFileUpload} className="w-full border p-2 rounded mb-6" />
+                    <button disabled={!receipt} onClick={handlePlaceOrder} className="bg-brand hover:bg-brand-dark text-white font-bold py-3 px-8 rounded disabled:opacity-50">Confirm Order</button>
                 </div>
             )}
         </div>
@@ -1357,306 +1187,78 @@ const SubscriptionPage = () => {
 
     return (
         <div className="container mx-auto px-4 py-12">
-            <h1 className="text-3xl font-bold text-center mb-2">Subscribe to Moreplex</h1>
-            <p className="text-center text-gray-600 mb-12">Choose a plan that fits your entertainment needs.</p>
-
+            <h1 className="text-3xl font-bold text-center mb-12">Subscribe to Moreplex</h1>
             {step === 1 && (
                 <div className="grid md:grid-cols-3 gap-8">
                     {SUBSCRIPTION_PLANS.filter(p => p.type !== 'FTA').map(plan => (
-                        <div key={plan.id} className={`border rounded-xl p-8 hover:shadow-lg transition cursor-pointer ${selectedPlan === plan.id ? 'border-brand ring-2 ring-brand ring-opacity-50' : 'border-gray-200'}`}
-                             onClick={() => setSelectedPlan(plan.id)}>
-                            <h3 className="text-xl font-bold text-charcoal">{plan.name}</h3>
+                        <div key={plan.id} className={`border rounded-xl p-8 cursor-pointer ${selectedPlan === plan.id ? 'border-brand ring-2 ring-brand' : 'border-gray-200'}`} onClick={() => setSelectedPlan(plan.id)}>
+                            <h3 className="text-xl font-bold">{plan.name}</h3>
                             <div className="text-3xl font-bold text-brand my-4">₦{plan.price.toLocaleString()}</div>
-                            <ul className="space-y-2 text-gray-600 mb-8">
-                                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> {plan.channels}+ Channels</li>
-                                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> {plan.duration} Validity</li>
-                                <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-500 mr-2" /> HD Quality</li>
-                            </ul>
-                            <button className={`w-full py-2 rounded-lg font-bold ${selectedPlan === plan.id ? 'bg-brand text-white' : 'bg-gray-100 text-gray-800'}`}>
-                                Select Plan
-                            </button>
+                            <button className="w-full py-2 rounded-lg font-bold bg-gray-100">Select Plan</button>
                         </div>
                     ))}
                 </div>
             )}
-
-            {step === 1 && selectedPlan && (
-                <div className="mt-8 text-center">
-                    <button onClick={() => setStep(2)} className="bg-charcoal text-white px-8 py-3 rounded-lg font-bold">Next: Enter Decoder Details</button>
-                </div>
-            )}
-
+            {step === 1 && selectedPlan && <button onClick={() => setStep(2)} className="mt-8 bg-charcoal text-white px-8 py-3 rounded-lg block mx-auto font-bold">Next Step</button>}
             {step === 2 && (
                 <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md border">
-                    <h3 className="text-xl font-bold mb-4">Account Details</h3>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Decoder / Smart Card Number</label>
-                    <input 
-                        type="text" 
-                        value={decoderCode} 
-                        onChange={e => setDecoderCode(e.target.value)}
-                        placeholder="MPX-..."
-                        className="w-full border p-3 rounded mb-4 focus:border-brand outline-none" 
-                    />
-                    <div className="bg-blue-50 p-4 rounded mb-4 text-sm">
-                        Please pay <strong>₦{SUBSCRIPTION_PLANS.find(p => p.id === selectedPlan)?.price.toLocaleString()}</strong> to <br/>
-                        <strong>{COMPANY_INFO.bankDetails.bankName} - {COMPANY_INFO.bankDetails.accountNumber}</strong>
-                    </div>
-                    
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Upload Payment Proof</label>
+                    <input type="text" value={decoderCode} onChange={e => setDecoderCode(e.target.value)} placeholder="Decoder Number (MPX-...)" className="w-full border p-3 rounded mb-4" />
                     <input type="file" onChange={e => setReceipt(e.target.files?.[0] || null)} className="w-full border p-2 rounded mb-6" />
-
-                    <button 
-                        onClick={handleSubscribe} 
-                        disabled={!decoderCode || !receipt}
-                        className="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 rounded disabled:opacity-50"
-                    >
-                        Complete Subscription
-                    </button>
+                    <button onClick={handleSubscribe} disabled={!decoderCode || !receipt} className="w-full bg-brand text-white font-bold py-3 rounded">Subscribe</button>
                 </div>
             )}
+        </div>
+    );
+};
+
+const AdminPage = () => {
+    const { orders, users } = useAppContext();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    if (!isAuthenticated) return <AdminLogin onLogin={() => setIsAuthenticated(true)} />;
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
+            <div className="bg-white rounded shadow overflow-hidden">
+                <table className="min-w-full">
+                    <thead className="bg-gray-50">
+                        <tr>
+                            <th className="px-6 py-3 text-left">Order ID</th>
+                            <th className="px-6 py-3 text-left">Customer</th>
+                            <th className="px-6 py-3 text-left">Total</th>
+                            <th className="px-6 py-3 text-left">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {orders.map(order => (
+                            <tr key={order.id} className="border-t">
+                                <td className="px-6 py-4">{order.id}</td>
+                                <td className="px-6 py-4">{order.customerName}</td>
+                                <td className="px-6 py-4">₦{order.total.toLocaleString()}</td>
+                                <td className="px-6 py-4 capitalize">{order.status.replace('_', ' ')}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };
 
 const AdminLogin = ({ onLogin }: { onLogin: () => void }) => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (username === ADMIN_AUTH.username && password === ADMIN_AUTH.password) {
-            onLogin();
-        } else {
-            setError('Invalid credentials');
-        }
-    };
-
+    const [user, setUser] = useState('');
+    const [pass, setPass] = useState('');
     return (
-        <div className="min-h-[60vh] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
-                <div className="text-center">
-                    <div className="mx-auto h-12 w-12 bg-gray-900 rounded-full flex items-center justify-center text-white">
-                        <Lock className="h-6 w-6" />
-                    </div>
-                    <h2 className="mt-6 text-3xl font-extrabold text-gray-900">Admin Login</h2>
-                    <p className="mt-2 text-sm text-gray-600">Please sign in to access dashboard</p>
-                </div>
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    <div className="rounded-md shadow-sm -space-y-px">
-                        <div>
-                            <input 
-                                type="text" 
-                                required 
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" 
-                                placeholder="Username"
-                                value={username}
-                                onChange={e => setUsername(e.target.value)}
-                            />
-                        </div>
-                        <div>
-                            <input 
-                                type="password" 
-                                required 
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" 
-                                placeholder="Password"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                            />
-                        </div>
-                    </div>
-
-                    {error && <div className="text-red-500 text-sm text-center">{error}</div>}
-
-                    <div>
-                        <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-charcoal hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                            Sign in
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    );
-}
-
-const AdminPage = () => {
-    const { orders, users } = useAppContext();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [activeTab, setActiveTab] = useState<'orders' | 'verification' | 'customers'>('orders');
-
-    if (!isAuthenticated) {
-        return <AdminLogin onLogin={() => setIsAuthenticated(true)} />;
-    }
-
-    return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-                <button onClick={() => setIsAuthenticated(false)} className="text-sm text-red-500 hover:underline">Logout</button>
-            </div>
-            
-            <div className="flex space-x-4 mb-6 border-b pb-1">
-                <button onClick={() => setActiveTab('orders')} className={`px-4 py-2 rounded-t font-medium ${activeTab === 'orders' ? 'bg-charcoal text-white' : 'bg-gray-100 hover:bg-gray-200'}`}>Orders</button>
-                <button onClick={() => setActiveTab('verification')} className={`px-4 py-2 rounded-t font-medium ${activeTab === 'verification' ? 'bg-charcoal text-white' : 'bg-gray-100 hover:bg-gray-200'}`}>Receipt Verification</button>
-                <button onClick={() => setActiveTab('customers')} className={`px-4 py-2 rounded-t font-medium ${activeTab === 'customers' ? 'bg-charcoal text-white' : 'bg-gray-100 hover:bg-gray-200'}`}>Customers</button>
-            </div>
-
-            {activeTab === 'orders' && (
-                <div className="bg-white rounded shadow overflow-hidden">
-                    <table className="min-w-full">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {orders.length === 0 ? (
-                                <tr><td colSpan={5} className="px-6 py-4 text-center text-gray-500">No orders found</td></tr>
-                            ) : (
-                                orders.map(order => (
-                                    <tr key={order.id}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{order.id}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.customerName}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₦{order.total.toLocaleString()}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                {order.status.replace('_', ' ')}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(order.timestamp).toLocaleDateString()}</td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            )}
-
-             {activeTab === 'verification' && (
-                 <div className="grid gap-4">
-                     {orders.filter(o => o.status === 'awaiting_ocr').map(order => (
-                         <div key={order.id} className="bg-white p-4 rounded shadow border border-yellow-200">
-                             <div className="flex justify-between items-start">
-                                 <div>
-                                     <h3 className="font-bold">Order #{order.id}</h3>
-                                     <p className="text-sm">User: {order.customerName}</p>
-                                     <p className="text-sm">Amount: ₦{order.total.toLocaleString()}</p>
-                                     <div className="mt-2 bg-gray-100 p-2 rounded text-xs">
-                                         <p className="font-bold">OCR Analysis:</p>
-                                         <p>Extracted Code: {order.extractedDecoderCode || 'None'}</p>
-                                         <p>Matches Inventory: <span className="text-green-600">Pending Check</span></p>
-                                     </div>
-                                 </div>
-                                 <div className="flex flex-col space-y-2">
-                                     <button className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">Approve</button>
-                                     <button className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">Reject</button>
-                                 </div>
-                             </div>
-                         </div>
-                     ))}
-                     {orders.filter(o => o.status === 'awaiting_ocr').length === 0 && <p className="text-gray-500">No receipts pending verification.</p>}
-                 </div>
-             )}
-
-             {activeTab === 'customers' && (
-                <div className="bg-white rounded shadow overflow-hidden">
-                    <table className="min-w-full">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Decoder Number</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined Date</th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {users.filter(u => u.role === 'customer').length === 0 ? (
-                                <tr><td colSpan={5} className="px-6 py-4 text-center text-gray-500">No registered customers yet</td></tr>
-                            ) : (
-                                users.filter(u => u.role === 'customer').map(user => (
-                                    <tr key={user.id}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.name}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-brand">
-                                            {user.decoderCode || <span className="text-gray-300 italic">None linked</span>}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.phone}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(user.joinedDate).toLocaleDateString()}</td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+        <div className="flex items-center justify-center min-h-[60vh]">
+            <form className="bg-white p-8 rounded shadow-md w-96" onSubmit={e => { e.preventDefault(); if(user === ADMIN_AUTH.username && pass === ADMIN_AUTH.password) onLogin(); }}>
+                <h2 className="text-xl font-bold mb-4">Admin Login</h2>
+                <input type="text" placeholder="Username" value={user} onChange={e => setUser(e.target.value)} className="w-full border p-2 rounded mb-4" />
+                <input type="password" placeholder="Password" value={pass} onChange={e => setPass(e.target.value)} className="w-full border p-2 rounded mb-4" />
+                <button className="w-full bg-charcoal text-white py-2 rounded">Login</button>
+            </form>
         </div>
     );
 };
-
-const ContactPage = () => (
-  <div className="container mx-auto px-4 py-12">
-    <h1 className="text-3xl font-bold mb-8">Contact Us</h1>
-    <div className="grid md:grid-cols-2 gap-12">
-        <div className="bg-white p-8 rounded-lg shadow-sm">
-            <h2 className="text-xl font-bold mb-6">Get in Touch</h2>
-            <ul className="space-y-4">
-                <li className="flex items-start">
-                    <MapPin className="h-6 w-6 mr-4 text-brand shrink-0" />
-                    <div>
-                        <h4 className="font-bold">Head Office</h4>
-                        <p className="text-gray-600">{COMPANY_INFO.address}</p>
-                    </div>
-                </li>
-                <li className="flex items-center">
-                    <Phone className="h-6 w-6 mr-4 text-brand shrink-0" />
-                    <div>
-                        <h4 className="font-bold">Phone Support</h4>
-                        <p className="text-gray-600">{COMPANY_INFO.phone}</p>
-                    </div>
-                </li>
-                <li className="flex items-center">
-                    <Mail className="h-6 w-6 mr-4 text-brand shrink-0" />
-                    <div>
-                        <h4 className="font-bold">Email</h4>
-                        <p className="text-gray-600">{COMPANY_INFO.email}</p>
-                    </div>
-                </li>
-            </ul>
-
-            <div className="mt-8 pt-8 border-t">
-                 <h3 className="font-bold mb-4">Send us a message</h3>
-                 <form className="space-y-4" onSubmit={(e) => {e.preventDefault(); alert("Message Sent!")}}>
-                    <input type="text" placeholder="Your Name" className="w-full border p-3 rounded" />
-                    <input type="email" placeholder="Your Email" className="w-full border p-3 rounded" />
-                    <textarea rows={4} placeholder="How can we help?" className="w-full border p-3 rounded"></textarea>
-                    <button className="bg-brand hover:bg-brand-dark text-white font-bold py-3 px-6 rounded transition">Send Message</button>
-                 </form>
-            </div>
-        </div>
-        <div className="bg-gray-200 rounded-lg h-96 md:h-auto flex items-center justify-center text-gray-500">
-            Map Placeholder
-        </div>
-    </div>
-  </div>
-);
-
-const TermsPage = () => (
-    <div className="container mx-auto px-4 py-12 max-w-3xl">
-        <h1 className="text-3xl font-bold mb-8">Terms and Conditions</h1>
-        <div className="bg-white p-8 rounded-lg shadow-sm prose max-w-none">
-            <div className="whitespace-pre-wrap font-sans text-gray-700 leading-relaxed">
-                {TERMS_TEXT}
-            </div>
-        </div>
-    </div>
-);
-
-// --- Main App Logic ---
 
 const App = () => {
     const [cart, setCart] = useState<CartItem[]>([]);
@@ -1667,29 +1269,19 @@ const App = () => {
     const addToCart = (product: Product) => {
         setCart(prev => {
             const existing = prev.find(p => p.id === product.id);
-            if (existing) {
-                return prev.map(p => p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p);
-            }
+            if (existing) return prev.map(p => p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p);
             return [...prev, { ...product, quantity: 1 }];
         });
     };
 
-    const removeFromCart = (id: string) => {
-        setCart(prev => prev.filter(p => p.id !== id));
-    };
-
+    const removeFromCart = (id: string) => setCart(prev => prev.filter(p => p.id !== id));
     const clearCart = () => setCart([]);
+    const addOrder = (order: Order) => setOrders(prev => [order, ...prev]);
 
-    const addOrder = (order: Order) => {
-        setOrders(prev => [order, ...prev]);
-    };
-
-    // Auth Actions
     const registerUser = (user: UserType) => {
         if (users.find(u => u.email === user.email)) return false;
-        const newUser = { ...user, role: 'customer' as const };
-        setUsers([...users, newUser]);
-        setCurrentUser(newUser); // Auto login
+        setUsers([...users, user]);
+        setCurrentUser(user);
         return true;
     };
 
@@ -1702,14 +1294,10 @@ const App = () => {
         return false;
     };
 
-    const logoutUser = () => {
-        setCurrentUser(null);
-    };
-
     return (
         <AppContext.Provider value={{ 
             cart, addToCart, removeFromCart, clearCart, orders, addOrder,
-            users, currentUser, registerUser, loginUser, logoutUser 
+            users, currentUser, registerUser, loginUser, logoutUser: () => setCurrentUser(null) 
         }}>
             <Router>
                 <div className="flex flex-col min-h-screen">
@@ -1721,14 +1309,12 @@ const App = () => {
                             <Route path="/cart" element={<CartPage />} />
                             <Route path="/subscribe" element={<SubscriptionPage />} />
                             <Route path="/admin" element={<AdminPage />} />
-                            <Route path="/contact" element={<ContactPage />} />
-                            <Route path="/support" element={<ContactPage />} />
-                            <Route path="/terms" element={<TermsPage />} />
-                            
-                            {/* Auth Routes */}
                             <Route path="/signup" element={<SignupPage />} />
                             <Route path="/login" element={<LoginPage />} />
                             <Route path="/portal" element={<UserPortal />} />
+                            <Route path="/support" element={<ContactPage />} />
+                            <Route path="/contact" element={<ContactPage />} />
+                            <Route path="/terms" element={<TermsPage />} />
                         </Routes>
                     </main>
                     <Footer />
@@ -1738,5 +1324,23 @@ const App = () => {
         </AppContext.Provider>
     );
 };
+
+const ContactPage = () => (
+    <div className="container mx-auto px-4 py-12">
+        <h1 className="text-3xl font-bold mb-8">Contact Us</h1>
+        <div className="bg-white p-8 rounded shadow-sm">
+            <p><strong>Address:</strong> {COMPANY_INFO.address}</p>
+            <p><strong>Phone:</strong> {COMPANY_INFO.phone}</p>
+            <p><strong>Email:</strong> {COMPANY_INFO.email}</p>
+        </div>
+    </div>
+);
+
+const TermsPage = () => (
+    <div className="container mx-auto px-4 py-12">
+        <h1 className="text-3xl font-bold mb-8">Terms and Conditions</h1>
+        <div className="bg-white p-8 rounded shadow-sm whitespace-pre-wrap">{TERMS_TEXT}</div>
+    </div>
+);
 
 export default App;
