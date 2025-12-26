@@ -76,7 +76,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const isActive = (path: string) => location.pathname === path ? "text-brand" : "text-white hover:text-brand-light";
+  const isActive = (path: string) => location.pathname === path ? "text-red-600 font-bold" : "text-white hover:text-red-400";
 
   const handleLogout = () => {
       logoutUser();
@@ -85,7 +85,7 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="bg-charcoal text-white sticky top-0 z-50 shadow-lg border-b border-gray-800">
+    <nav className="bg-gray-900 text-white sticky top-0 z-50 shadow-lg border-b border-gray-800">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center">
@@ -103,26 +103,26 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {currentUser ? (
                  <div className="hidden md:flex items-center space-x-4">
-                     <Link to="/portal" className="flex items-center hover:text-brand">
-                        <User className="h-5 w-5 mr-1" />
+                     <Link to="/portal" className="flex items-center hover:text-red-600 transition">
+                        <User className="h-5 w-5 mr-1 text-red-600" />
                         <span className="text-sm font-semibold truncate max-w-[100px]">{currentUser.name.split(' ')[0]}</span>
                      </Link>
-                     <button onClick={handleLogout} className="text-gray-400 hover:text-white" title="Logout">
+                     <button onClick={handleLogout} className="text-gray-400 hover:text-white transition" title="Logout">
                         <LogOut className="h-5 w-5" />
                      </button>
                  </div>
             ) : (
                 <div className="hidden md:flex items-center space-x-2 text-sm">
-                    <Link to="/login" className="hover:text-brand">Login</Link>
+                    <Link to="/login" className="hover:text-red-600 transition">Login</Link>
                     <span className="text-gray-600">|</span>
-                    <Link to="/signup" className="bg-brand hover:bg-brand-dark text-white px-3 py-1.5 rounded-full transition">Join</Link>
+                    <Link to="/signup" className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full transition font-bold">Join</Link>
                 </div>
             )}
 
             <Link to="/cart" className="relative group">
-              <ShoppingCart className="h-6 w-6 text-white group-hover:text-brand transition" />
+              <ShoppingCart className="h-6 w-6 text-white group-hover:text-red-600 transition" />
               {cart.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-brand text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                   {cart.length}
                 </span>
               )}
@@ -143,14 +143,14 @@ const Navbar = () => {
             <div className="border-t border-gray-700 pt-4">
                  {currentUser ? (
                      <>
-                        <div className="text-brand font-bold mb-2">Hello, {currentUser.name}</div>
+                        <div className="text-red-600 font-bold mb-2">Hello, {currentUser.name}</div>
                         <Link to="/portal" onClick={() => setIsOpen(false)} className="block py-2 text-white">My Portal</Link>
                         <button onClick={handleLogout} className="block py-2 text-gray-400 w-full text-left">Logout</button>
                      </>
                  ) : (
                      <>
                         <Link to="/login" onClick={() => setIsOpen(false)} className="block py-2 text-white">Login</Link>
-                        <Link to="/signup" onClick={() => setIsOpen(false)} className="block py-2 text-brand">Create Account</Link>
+                        <Link to="/signup" onClick={() => setIsOpen(false)} className="block py-2 text-red-600 font-bold">Create Account</Link>
                      </>
                  )}
             </div>
@@ -162,208 +162,642 @@ const Navbar = () => {
 };
 
 const Footer = () => (
-  <footer className="bg-charcoal text-gray-400 py-12">
+  <footer className="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
     <div className="container mx-auto px-4 grid md:grid-cols-4 gap-8">
       <div>
         <Logo className="h-10 w-auto mb-4" />
         <p className="text-sm leading-relaxed mb-4">{COMPANY_INFO.tagline}</p>
         <div className="flex space-x-2">
-           <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center cursor-pointer hover:bg-brand">F</div>
-           <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center cursor-pointer hover:bg-brand">T</div>
-           <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center cursor-pointer hover:bg-brand">I</div>
+           <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-600 hover:text-white transition">f</div>
+           <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-600 hover:text-white transition">t</div>
+           <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-600 hover:text-white transition">i</div>
         </div>
       </div>
       <div>
-        <h3 className="text-white text-lg font-bold mb-4">Quick Links</h3>
+        <h3 className="text-white text-lg font-bold mb-4 font-display">Quick Links</h3>
         <ul className="space-y-2 text-sm">
-          <li><Link to="/shop" className="hover:text-brand">Buy Decoder</Link></li>
-          <li><Link to="/subscribe" className="hover:text-brand">Pay Subscription</Link></li>
-          <li><Link to="/terms" className="hover:text-brand">Terms & Conditions</Link></li>
-          <li><Link to="/contact" className="hover:text-brand">Privacy Policy</Link></li>
+          <li><Link to="/shop" className="hover:text-red-600 transition">Buy Decoder</Link></li>
+          <li><Link to="/subscribe" className="hover:text-red-600 transition">Subscription</Link></li>
+          <li><Link to="/support" className="hover:text-red-600 transition">Support</Link></li>
+          <li><Link to="/terms" className="hover:text-red-600 transition">Terms & Conditions</Link></li>
         </ul>
       </div>
       <div>
-        <h3 className="text-white text-lg font-bold mb-4">Contact Us</h3>
+        <h3 className="text-white text-lg font-bold mb-4 font-display">Contact Us</h3>
         <ul className="space-y-3 text-sm">
-          <li className="flex items-start">
-            <MapPin className="h-5 w-5 mr-2 shrink-0 text-brand" />
-            <span>{COMPANY_INFO.address}</span>
-          </li>
-          <li className="flex items-center">
-            <Phone className="h-5 w-5 mr-2 shrink-0 text-brand" />
-            <a href={`tel:${COMPANY_INFO.phone.replace(/\s/g, '')}`}>{COMPANY_INFO.phone}</a>
-          </li>
-          <li className="flex items-center">
-             <div className="w-5 h-5 mr-2 flex items-center justify-center bg-green-500 rounded-full text-black font-bold text-xs">W</div>
-            <a href={COMPANY_INFO.whatsappUrl} target="_blank" rel="noreferrer">WhatsApp Us</a>
-          </li>
-          <li className="flex items-center">
-            <Mail className="h-5 w-5 mr-2 shrink-0 text-brand" />
-            <a href={`mailto:${COMPANY_INFO.email}`}>{COMPANY_INFO.email}</a>
-          </li>
+          <li className="flex items-start"><MapPin className="h-4 w-4 mr-2 text-red-600 mt-0.5" /> <span className="flex-1">{COMPANY_INFO.address}</span></li>
+          <li className="flex items-center"><Phone className="h-4 w-4 mr-2 text-red-600" /> <span>{COMPANY_INFO.phone}</span></li>
+          <li className="flex items-center"><Mail className="h-4 w-4 mr-2 text-red-600" /> <span>{COMPANY_INFO.email}</span></li>
         </ul>
       </div>
       <div>
-        <h3 className="text-white text-lg font-bold mb-4">Newsletter</h3>
-        <p className="text-sm mb-4">Subscribe for latest channels and offers.</p>
-        <div className="flex">
-          <input type="email" placeholder="Email" className="bg-gray-800 text-white px-3 py-2 rounded-l-md w-full focus:outline-none" />
-          <button className="bg-brand text-white px-4 py-2 rounded-r-md font-bold hover:bg-brand-dark">Go</button>
+        <h3 className="text-white text-lg font-bold mb-4 font-display">Payment Info</h3>
+        <div className="bg-gray-800 p-4 rounded-xl text-xs space-y-1 border border-gray-700">
+            <p className="text-red-500 font-bold uppercase tracking-widest text-[10px] mb-1">Bank Details</p>
+            <p className="font-bold text-gray-200">{COMPANY_INFO.bankDetails.bankName}</p>
+            <p className="text-gray-300 font-mono">{COMPANY_INFO.bankDetails.accountNumber}</p>
+            <p className="text-gray-400">{COMPANY_INFO.bankDetails.accountName}</p>
         </div>
       </div>
     </div>
-    <div className="container mx-auto px-4 mt-8 pt-8 border-t border-gray-800 text-center text-xs">
-      &copy; {new Date().getFullYear()} Moreplex TV. All Rights Reserved.
+    <div className="container mx-auto px-4 mt-12 pt-8 border-t border-gray-800 text-center text-xs text-gray-600">
+      <p>&copy; {new Date().getFullYear()} {COMPANY_INFO.name}. All rights reserved. Powered by Moreplex Group.</p>
     </div>
   </footer>
 );
 
-const ChatWidget = () => {
-    const [open, setOpen] = useState(false);
-    return (
-        <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end">
-            {open && (
-                <div className="mb-4 w-72 bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden animate-slide-in-up">
-                    <div className="bg-charcoal text-white p-3 flex justify-between items-center">
-                        <span className="font-bold">Admin Support</span>
-                        <button onClick={() => setOpen(false)}><X className="h-4 w-4" /></button>
+// --- Pages ---
+
+const Home = () => (
+  <div className="bg-white">
+    {/* Hero Section with Fixed Background and Animated Headline */}
+    <section className="relative bg-black text-white py-24 md:py-48 min-h-[750px] flex items-center overflow-hidden">
+      <div className="absolute inset-0 z-0">
+          {/* USER SPECIFIED CENTRAL CINEMA POSTER WALL BACKGROUND */}
+          <div className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[20s] ease-linear animate-ken-burns scale-110" 
+               style={{ 
+                 backgroundImage: "url('https://ofstartups.com/wp-content/uploads/2024/01/movies-edited-1536x864.jpg')",
+                 filter: "brightness(0.75) contrast(1.1) saturate(1.15)"
+               }}>
+          </div>
+          {/* Dynamic Gradient Overlays for Readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30"></div>
+      </div>
+      
+      <div className="container mx-auto px-4 relative z-10 text-center md:text-left">
+        <div className="max-w-4xl">
+            <span className="inline-block bg-red-600 text-white text-sm font-black px-4 py-1.5 rounded-full mb-6 uppercase tracking-widest animate-pulse shadow-2xl">
+                DTH • DTT • Video On Demand
+            </span>
+            {/* HEADLINE WITH SLIDE-IN ANIMATION */}
+            <h1 className="text-5xl md:text-8xl font-black mb-8 leading-[1.05] drop-shadow-[0_8px_30px_rgb(0,0,0,0.9)] animate-slide-in-left">
+              Redefining <br className="hidden md:block" />
+              Entertainment <br className="hidden md:block" />
+              with <span className="text-red-600 inline-block transform hover:scale-110 transition duration-300">Sheer Delight</span>
+            </h1>
+            <p className="text-xl md:text-3xl text-gray-100 mb-12 max-w-2xl font-semibold drop-shadow-xl leading-relaxed">
+              Experience the new dawn of Pay TV in Africa. Premium sports, local blockbusters, and 120+ channels for the whole family.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6">
+              <Link to="/shop" className="group bg-red-600 hover:bg-red-700 text-white font-black py-5 px-14 rounded-full transition transform hover:scale-105 shadow-2xl flex items-center justify-center text-xl">
+                Get Decoder <Tv className="ml-2 w-7 h-7 group-hover:rotate-12 transition" />
+              </Link>
+              <Link to="/subscribe" className="bg-white/10 backdrop-blur-xl border-2 border-white/40 hover:bg-white hover:text-gray-900 text-white font-bold py-5 px-14 rounded-full transition transform hover:scale-105 shadow-2xl flex items-center justify-center text-xl">
+                Renew Subscription <Zap className="ml-2 w-6 h-6" />
+              </Link>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section className="py-24">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-20">
+          <h2 className="text-4xl font-black mb-4">Unmatched Features</h2>
+          <div className="w-16 h-1.5 bg-red-600 mx-auto rounded-full"></div>
+        </div>
+        <div className="grid md:grid-cols-3 gap-10">
+          {[
+            { icon: <Monitor className="h-10 w-10" />, title: "Crystal HD Picture", desc: "Experience your favorite shows and sports in stunning 1080p high definition quality." },
+            { icon: <Zap className="h-10 w-10" />, title: "Fast Activation", desc: "Auto-activation system ensures your service is restored within seconds of payment." },
+            { icon: <Shield className="h-10 w-10" />, title: "Durable Hardware", desc: "Our decoders and dishes are built to withstand tropical weather and low signal areas." }
+          ].map((item, i) => (
+            <div key={i} className="bg-gray-50 p-10 rounded-[2rem] hover:bg-white hover:shadow-2xl transition-all duration-300 border border-gray-100 group">
+              <div className="text-red-600 mb-8 bg-white w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition duration-300">{item.icon}</div>
+              <h3 className="text-2xl font-black mb-4">{item.title}</h3>
+              <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section className="py-24 bg-gray-900 text-white overflow-hidden relative">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+            <div className="md:w-1/2 mb-12 md:mb-0">
+                <h2 className="text-4xl font-black mb-8">JOLLY HD DECODER FEATURES</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {JOLLY_FEATURES.slice(0, 10).map((f, i) => (
+                        <div key={i} className="flex items-center space-x-3 text-sm text-gray-400">
+                            <CheckCircle className="h-4 w-4 text-red-600 flex-shrink-0" />
+                            <span>{f}</span>
+                        </div>
+                    ))}
+                </div>
+                <Link to="/shop" className="mt-12 inline-block bg-white text-gray-900 px-10 py-4 rounded-2xl font-black hover:bg-red-600 hover:text-white transition">Buy Decoder Now</Link>
+            </div>
+            <div className="md:w-1/3">
+                <div className="relative group">
+                    <div className="absolute -inset-4 bg-red-600 opacity-20 blur-3xl group-hover:opacity-40 transition"></div>
+                    <img src="https://picsum.photos/400/500?random=11" alt="Decoder" className="relative z-10 rounded-3xl shadow-2xl" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section className="py-24 bg-gray-50">
+        <div className="container mx-auto px-4 text-center mb-16">
+            <h2 className="text-4xl font-black mb-4">Join 1 Million+ Happy Viewers</h2>
+            <p className="text-gray-500">Moreplex TV is redefining African entertainment.</p>
+        </div>
+        <div className="container mx-auto px-4 grid md:grid-cols-3 gap-8">
+            {TESTIMONIALS.map(t => (
+                <div key={t.id} className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col">
+                    <div className="flex text-yellow-400 mb-6 space-x-1">
+                        {[...Array(t.rating)].map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
                     </div>
-                    <div className="p-4 h-64 overflow-y-auto bg-gray-50 text-sm">
-                        <div className="mb-2 text-center text-gray-500 text-xs">Today</div>
-                        <div className="bg-gray-200 p-2 rounded-lg inline-block max-w-[80%] mb-2">
-                            Hello! How can we help you today with your Moreplex Decoder?
+                    <p className="text-gray-700 mb-8 italic text-lg leading-relaxed flex-grow">"{t.text}"</p>
+                    <div className="flex items-center space-x-4 pt-6 border-t border-gray-50">
+                        <div className="w-12 h-12 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center font-black text-xl">{t.name[0]}</div>
+                        <div className="text-left">
+                            <h4 className="font-bold text-gray-900">{t.name}</h4>
+                            <p className="text-xs text-gray-400 uppercase tracking-widest">{t.location}</p>
                         </div>
                     </div>
-                    <div className="p-3 border-t bg-white">
-                        <input type="text" placeholder="Type a message..." className="w-full border rounded px-2 py-1 text-sm focus:border-brand outline-none" />
-                         <a href={COMPANY_INFO.whatsappUrl} target="_blank" rel="noreferrer" className="block text-center mt-2 text-xs text-brand hover:underline">
-                            Or chat on WhatsApp for faster response
-                        </a>
-                    </div>
                 </div>
-            )}
-            <button 
-                onClick={() => setOpen(!open)}
-                className="bg-brand hover:bg-brand-dark text-white rounded-full p-4 shadow-lg transition-transform hover:scale-105 flex items-center justify-center"
-            >
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                <span className="sr-only">Chat</span>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-            </button>
+            ))}
         </div>
-    )
-}
+    </section>
+  </div>
+);
 
-// --- Auth Components ---
-
-const SignupPage = () => {
-    const { registerUser } = useAppContext();
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({ name: '', email: '', phone: '', password: '', decoderCode: '' });
-    const [error, setError] = useState('');
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const success = registerUser({
-            id: `user-${Date.now()}`,
-            role: 'customer',
-            joinedDate: new Date(),
-            ...formData
-        });
-        
-        if (success) {
-            navigate('/portal');
-        } else {
-            setError('Email already exists. Please login.');
-        }
-    };
-
-    return (
-        <div className="container mx-auto px-4 py-16 flex justify-center">
-            <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-                <h2 className="text-2xl font-bold text-center mb-6 text-charcoal">Create Account</h2>
-                {error && <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm">{error}</div>}
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Full Name</label>
-                        <input required type="text" className="w-full border p-2 rounded focus:ring-brand focus:border-brand" 
-                            value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+const Shop = () => {
+  const { addToCart } = useAppContext();
+  return (
+    <div className="bg-gray-50 min-h-screen py-16">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div className="max-w-xl">
+            <h1 className="text-5xl font-black mb-4">Equipment Store</h1>
+            <p className="text-gray-600 text-lg">Official Moreplex TV hardware. Professional installation available nationwide.</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+              {['All Products', 'Decoders', 'Antennas', 'Accessories', 'Services'].map((tag, i) => (
+                  <button key={i} className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${i === 0 ? 'bg-red-600 text-white shadow-lg' : 'bg-white text-gray-600 border border-gray-200 hover:border-red-600'}`}>{tag}</button>
+              ))}
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {PRODUCTS.map(product => (
+            <div key={product.id} className="bg-white rounded-[2rem] overflow-hidden border border-gray-100 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 group flex flex-col h-full">
+              <div className="relative h-64 overflow-hidden">
+                <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition duration-700" />
+                <div className="absolute top-6 left-6">
+                    <span className="bg-gray-900/80 backdrop-blur-md text-white text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest">{product.category}</span>
+                </div>
+              </div>
+              <div className="p-8 flex flex-col flex-grow">
+                <h3 className="font-bold text-xl mb-3 leading-tight group-hover:text-red-600 transition h-14 overflow-hidden">{product.name}</h3>
+                <p className="text-gray-500 text-sm mb-6 line-clamp-2 leading-relaxed">{product.description}</p>
+                <div className="mt-auto">
+                    <div className="flex items-center justify-between mb-6">
+                        <span className="text-3xl font-black text-gray-900">₦{product.price.toLocaleString()}</span>
+                        {product.installationFee && <span className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">Install Fee: ₦{product.installationFee}</span>}
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Email Address</label>
-                        <input required type="email" className="w-full border p-2 rounded focus:ring-brand focus:border-brand" 
-                            value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-                        <input required type="tel" className="w-full border p-2 rounded focus:ring-brand focus:border-brand" 
-                            value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
-                    </div>
-                    <div className="bg-gray-50 p-3 rounded border border-gray-200">
-                        <label className="block text-sm font-bold text-gray-800 mb-1">Decoder Number</label>
-                        <p className="text-xs text-gray-500 mb-2">Found on the bottom of your device (e.g., MPX-12345).</p>
-                        <input type="text" className="w-full border p-2 rounded focus:ring-brand focus:border-brand uppercase placeholder-gray-400" 
-                            placeholder="MPX-XXXXXX"
-                            value={formData.decoderCode} onChange={e => setFormData({...formData, decoderCode: e.target.value})} />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Password</label>
-                        <input required type="password" className="w-full border p-2 rounded focus:ring-brand focus:border-brand" 
-                            value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} />
-                    </div>
-                    <button type="submit" className="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 rounded transition shadow-lg mt-2">
-                        Sign Up
+                    <button 
+                      onClick={() => addToCart(product)}
+                      className="w-full bg-gray-900 text-white py-4 rounded-2xl font-black hover:bg-red-600 transition-all shadow-xl shadow-gray-900/10 flex items-center justify-center space-x-3"
+                    >
+                      <ShoppingCart className="h-5 w-5" />
+                      <span>Add to Cart</span>
                     </button>
-                </form>
-                <div className="mt-6 text-center text-sm">
-                    Already have an account? <Link to="/login" className="text-brand font-bold hover:underline">Login here</Link>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Subscribe = () => {
+    return (
+        <div className="bg-white min-h-screen py-24">
+            <div className="container mx-auto px-4">
+                <div className="max-w-3xl mx-auto text-center mb-20">
+                    <h1 className="text-5xl font-black mb-6">Crystal Clear Entertainment</h1>
+                    <p className="text-lg text-gray-600 leading-relaxed">Choose a subscription plan that fits your lifestyle. Flexible payments, premium content, and sheer delight!</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+                    {SUBSCRIPTION_PLANS.filter(p => p.type === 'PayTV').map((plan, i) => (
+                        <div key={plan.id} className={`rounded-[3rem] p-10 border-2 transition-all duration-300 flex flex-col ${i === 2 ? 'bg-gray-900 text-white border-gray-900 shadow-2xl scale-105' : 'bg-white text-gray-900 border-gray-100 hover:border-red-600 shadow-sm'}`}>
+                            {i === 2 && <div className="bg-red-600 text-white text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-[0.2em] mb-6 self-start">Most Popular</div>}
+                            <div className="mb-10">
+                                <h3 className={`text-2xl font-black mb-2 ${i === 2 ? 'text-white' : 'text-gray-900'}`}>{plan.name}</h3>
+                                <div className="flex items-baseline">
+                                    <span className="text-5xl font-black tracking-tighter">₦{plan.price.toLocaleString()}</span>
+                                    <span className={`ml-2 font-bold ${i === 2 ? 'text-gray-400' : 'text-gray-400'}`}>/{plan.duration}</span>
+                                </div>
+                            </div>
+                            <ul className="space-y-6 mb-12 flex-grow">
+                                <li className="flex items-center space-x-4">
+                                    <div className="bg-green-500/20 p-1 rounded-full"><CheckCircle className="h-4 w-4 text-green-500" /></div>
+                                    <span className="font-bold">{plan.channels} HD Channels</span>
+                                </li>
+                                <li className="flex items-center space-x-4 opacity-80">
+                                    <div className="bg-green-500/20 p-1 rounded-full"><CheckCircle className="h-4 w-4 text-green-500" /></div>
+                                    <span>24/7 Premium Support</span>
+                                </li>
+                                <li className="flex items-center space-x-4 opacity-80">
+                                    <div className="bg-green-500/20 p-1 rounded-full"><CheckCircle className="h-4 w-4 text-green-500" /></div>
+                                    <span>Free Mobile App Access</span>
+                                </li>
+                            </ul>
+                            <button className={`w-full py-5 rounded-[1.5rem] font-black text-lg shadow-xl transition-all ${i === 2 ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-gray-900 text-white hover:bg-red-600'}`}>Select {plan.name.split(' ')[1]}</button>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="mt-24 max-w-5xl mx-auto bg-gradient-to-r from-red-600 to-red-800 rounded-[3rem] p-12 text-white flex flex-col md:flex-row items-center justify-between shadow-2xl shadow-red-600/30">
+                    <div className="mb-8 md:mb-0 max-w-md">
+                        <h3 className="text-3xl font-black mb-4">Moreplex FTA Mode</h3>
+                        <p className="text-red-100 text-lg">Don't want to subscribe this month? Our decoder automatically switches to FTA mode with 15+ free local channels. Always connected.</p>
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <span className="text-red-200 font-black text-[12px] uppercase tracking-[0.3em] mb-4">Always Free • No Expiry</span>
+                        <Link to="/shop" className="bg-white text-red-700 px-12 py-5 rounded-2xl font-black text-xl hover:bg-gray-100 transition shadow-xl">Get Your Decoder</Link>
+                    </div>
                 </div>
             </div>
         </div>
     );
 };
 
-const LoginPage = () => {
-    const { loginUser } = useAppContext();
+const Cart = () => {
+    const { cart, removeFromCart, clearCart } = useAppContext();
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const navigate = useNavigate();
+
+    if (cart.length === 0) {
+        return (
+            <div className="container mx-auto px-4 py-32 text-center">
+                <div className="bg-gray-50 w-32 h-32 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 shadow-inner">
+                    <ShoppingCart className="h-12 w-12 text-gray-300" />
+                </div>
+                <h2 className="text-4xl font-black mb-4">Your bag is empty</h2>
+                <p className="text-gray-500 mb-10 text-lg">Seems like you haven't added any Moreplex magic to your cart yet.</p>
+                <Link to="/shop" className="bg-red-600 text-white px-12 py-4 rounded-2xl font-black text-lg hover:bg-red-700 transition shadow-xl shadow-red-600/20">Start Shopping</Link>
+            </div>
+        );
+    }
+
+    return (
+        <div className="bg-gray-50 min-h-screen py-16">
+            <div className="container mx-auto px-4 max-w-6xl">
+                <div className="flex items-center justify-between mb-12">
+                    <h1 className="text-4xl font-black">Your Shopping Bag</h1>
+                    <button onClick={clearCart} className="text-gray-400 hover:text-red-600 font-bold transition flex items-center"><X className="h-4 w-4 mr-1" /> Clear Bag</button>
+                </div>
+                <div className="grid lg:grid-cols-3 gap-12">
+                    <div className="lg:col-span-2 space-y-6">
+                        {cart.map(item => (
+                            <div key={item.id} className="bg-white p-6 rounded-[2rem] flex items-center border border-gray-100 shadow-sm hover:shadow-md transition">
+                                <div className="w-24 h-24 rounded-2xl overflow-hidden mr-8 flex-shrink-0">
+                                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                                </div>
+                                <div className="flex-grow">
+                                    <h3 className="font-black text-xl mb-1">{item.name}</h3>
+                                    <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">{item.category}</p>
+                                    <div className="flex items-center mt-3 text-sm text-gray-500 font-bold">
+                                        Qty: {item.quantity}
+                                    </div>
+                                </div>
+                                <div className="text-right ml-4">
+                                    <p className="font-black text-2xl mb-4 text-gray-900">₦{(item.price * item.quantity).toLocaleString()}</p>
+                                    <button onClick={() => removeFromCart(item.id)} className="text-red-500 text-xs font-black uppercase hover:underline">Delete</button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="space-y-6">
+                        <div className="bg-gray-900 text-white p-10 rounded-[2.5rem] shadow-2xl sticky top-28">
+                            <h3 className="text-2xl font-black mb-8">Summary</h3>
+                            <div className="space-y-5 mb-10">
+                                <div className="flex justify-between text-gray-400 font-bold">
+                                    <span>Subtotal</span>
+                                    <span>₦{total.toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between text-gray-400 font-bold">
+                                    <span>Shipping</span>
+                                    <span className="text-red-500">Free</span>
+                                </div>
+                                <div className="border-t border-gray-800 pt-6 flex justify-between text-3xl font-black">
+                                    <span>Total</span>
+                                    <span className="text-white font-display tracking-tighter">₦{total.toLocaleString()}</span>
+                                </div>
+                            </div>
+                            <button 
+                                onClick={() => navigate('/checkout')}
+                                className="w-full bg-red-600 text-white py-5 rounded-2xl font-black text-xl hover:bg-red-700 transition-all shadow-xl shadow-red-600/30"
+                            >
+                                Checkout
+                            </button>
+                            <p className="text-center mt-6 text-[10px] text-gray-500 uppercase tracking-widest font-bold">Secure SSL Encrypted Checkout</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const Checkout = () => {
+    const { cart, addOrder, clearCart, currentUser } = useAppContext();
+    const [step, setStep] = useState(1);
+    const [receiptFile, setReceiptFile] = useState<File | null>(null);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [extractedData, setExtractedData] = useState<ReceiptData | null>(null);
+    const [customerInfo, setCustomerInfo] = useState({
+        name: currentUser?.name || '',
+        email: currentUser?.email || '',
+        phone: currentUser?.phone || '',
+        address: ''
+    });
+    const navigate = useNavigate();
+
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setReceiptFile(e.target.files[0]);
+        }
+    };
+
+    const handleAnalyze = async () => {
+        if (!receiptFile) return;
+        setIsAnalyzing(true);
+        const data = await analyzeReceipt(receiptFile);
+        setExtractedData(data);
+        setIsAnalyzing(false);
+        if (data) setStep(3);
+        else alert("Failed to analyze receipt. Please try again or fill manually.");
+    };
+
+    const handleComplete = () => {
+        const order: Order = {
+            id: Math.random().toString(36).substr(2, 9).toUpperCase(),
+            items: cart,
+            total,
+            customerName: customerInfo.name,
+            customerEmail: customerInfo.email,
+            status: 'awaiting_ocr',
+            timestamp: new Date(),
+            extractedDecoderCode: extractedData?.decoderCode
+        };
+        addOrder(order);
+        clearCart();
+        setStep(4);
+    };
+
+    return (
+        <div className="bg-white min-h-screen py-20">
+            <div className="container mx-auto px-4 max-w-2xl">
+                <div className="flex justify-between items-center mb-16 relative">
+                    <div className="absolute h-1 bg-gray-100 top-1/2 left-0 right-0 -z-10"></div>
+                    {[1, 2, 3, 4].map(s => (
+                        <div key={s} className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black transition-all ${step >= s ? 'bg-red-600 text-white shadow-xl shadow-red-600/30' : 'bg-white border-2 border-gray-100 text-gray-300'}`}>{s}</div>
+                    ))}
+                </div>
+
+                {step === 1 && (
+                    <div className="bg-gray-50 p-10 rounded-[3rem] border border-gray-100 shadow-sm">
+                        <h2 className="text-3xl font-black mb-8 text-gray-900">Delivery Details</h2>
+                        <div className="space-y-5">
+                            <div className="space-y-1">
+                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
+                                <input 
+                                    type="text" className="w-full p-5 rounded-2xl border-none shadow-inner bg-white" 
+                                    value={customerInfo.name} onChange={e => setCustomerInfo({...customerInfo, name: e.target.value})}
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Email</label>
+                                    <input 
+                                        type="email" className="w-full p-5 rounded-2xl border-none shadow-inner bg-white" 
+                                        value={customerInfo.email} onChange={e => setCustomerInfo({...customerInfo, email: e.target.value})}
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Phone</label>
+                                    <input 
+                                        type="tel" className="w-full p-5 rounded-2xl border-none shadow-inner bg-white" 
+                                        value={customerInfo.phone} onChange={e => setCustomerInfo({...customerInfo, phone: e.target.value})}
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Address</label>
+                                <textarea 
+                                    className="w-full p-5 rounded-2xl border-none shadow-inner bg-white h-32"
+                                    value={customerInfo.address} onChange={e => setCustomerInfo({...customerInfo, address: e.target.value})}
+                                ></textarea>
+                            </div>
+                        </div>
+                        <button onClick={() => setStep(2)} className="w-full bg-gray-900 text-white py-5 rounded-2xl mt-10 font-black text-lg hover:bg-red-600 transition shadow-xl">Proceed to Payment</button>
+                    </div>
+                )}
+
+                {step === 2 && (
+                    <div className="bg-gray-50 p-10 rounded-[3rem] border border-gray-100 shadow-sm text-center">
+                        <h2 className="text-3xl font-black mb-4">Complete Payment</h2>
+                        <p className="text-gray-500 mb-10 text-lg">Transfer <span className="text-red-600 font-black">₦{total.toLocaleString()}</span> to the following account:</p>
+                        
+                        <div className="bg-white p-8 rounded-[2rem] mb-10 text-left border border-gray-100 shadow-sm space-y-4">
+                            <div>
+                                <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">Bank Name</p>
+                                <p className="font-black text-lg text-gray-900">{COMPANY_INFO.bankDetails.bankName}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">Account Number</p>
+                                <p className="font-black text-2xl text-red-600 font-mono tracking-tighter">{COMPANY_INFO.bankDetails.accountNumber}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">Account Name</p>
+                                <p className="font-black text-lg text-gray-900">{COMPANY_INFO.bankDetails.accountName}</p>
+                            </div>
+                        </div>
+
+                        <div className={`border-4 border-dashed rounded-[2.5rem] p-12 transition-all ${receiptFile ? 'border-green-400 bg-green-50' : 'border-gray-200 bg-white hover:border-red-400'}`}>
+                            <input type="file" id="receipt" className="hidden" onChange={handleFileChange} accept="image/*" />
+                            <label htmlFor="receipt" className="cursor-pointer flex flex-col items-center">
+                                {receiptFile ? <CheckCircle className="h-16 w-16 text-green-500 mb-4" /> : <Upload className="h-16 w-16 text-red-600 mb-4" />}
+                                <p className="font-black text-xl text-gray-900">{receiptFile ? 'Receipt Selected' : 'Upload Receipt'}</p>
+                                <p className="text-sm text-gray-400 mt-2 font-medium">{receiptFile ? receiptFile.name : 'Screenshot or photo of transfer'}</p>
+                            </label>
+                        </div>
+
+                        <button 
+                            disabled={!receiptFile || isAnalyzing}
+                            onClick={handleAnalyze}
+                            className="w-full bg-red-600 text-white py-5 rounded-2xl mt-10 font-black text-xl disabled:bg-gray-200 disabled:text-gray-400 shadow-2xl shadow-red-600/20 flex items-center justify-center space-x-3"
+                        >
+                            {isAnalyzing ? (
+                                <>
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    <span>AI Verification...</span>
+                                </>
+                            ) : (
+                                <span>Verify & Continue</span>
+                            )}
+                        </button>
+                    </div>
+                )}
+
+                {step === 3 && extractedData && (
+                    <div className="bg-gray-50 p-10 rounded-[3rem] border border-gray-100 shadow-sm">
+                        <div className="flex items-center space-x-4 mb-10">
+                            <div className="bg-green-500 p-3 rounded-2xl"><CheckCircle className="h-8 w-8 text-white" /></div>
+                            <h2 className="text-3xl font-black">AI Verification Success</h2>
+                        </div>
+                        <div className="bg-white p-8 rounded-[2rem] border border-gray-100 mb-10 space-y-6">
+                            <div className="flex justify-between items-center border-b border-gray-50 pb-4">
+                                <span className="text-gray-400 font-bold text-xs uppercase tracking-widest">Detected Amount</span>
+                                <span className="font-black text-xl text-green-600">₦{extractedData.amount?.toLocaleString() || '---'}</span>
+                            </div>
+                            <div className="flex justify-between items-center border-b border-gray-50 pb-4">
+                                <span className="text-gray-400 font-bold text-xs uppercase tracking-widest">Transaction Ref</span>
+                                <span className="font-mono text-sm font-black">{extractedData.transactionRef || '---'}</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-gray-400 font-bold text-xs uppercase tracking-widest">Decoder IUC</span>
+                                <span className="font-black text-red-600">{extractedData.decoderCode || 'Pending Sync'}</span>
+                            </div>
+                        </div>
+                        <p className="text-sm text-gray-400 mb-10 px-4">Our AI has successfully extracted these details from your receipt. If anything looks wrong, you can contact support after placing the order.</p>
+                        <button onClick={handleComplete} className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-xl shadow-xl hover:bg-red-600 transition-all">Confirm & Place Order</button>
+                    </div>
+                )}
+
+                {step === 4 && (
+                    <div className="text-center py-10 animate-in fade-in zoom-in duration-500">
+                        <div className="w-24 h-24 bg-green-500 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-10 shadow-2xl shadow-green-500/30">
+                            <CheckCircle className="h-12 w-12" />
+                        </div>
+                        <h2 className="text-4xl font-black mb-6">Order Placed!</h2>
+                        <p className="text-gray-500 mb-12 text-lg leading-relaxed">Your entertainment is on the way. We've received your payment and will dispatch your order immediately. A confirmation has been sent to your email.</p>
+                        <Link to="/" className="bg-gray-900 text-white px-12 py-5 rounded-2xl font-black text-lg hover:bg-red-600 transition shadow-xl">Return to Home</Link>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+const Login = () => {
+    const { loginUser } = useAppContext();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        const success = loginUser(email, password);
-        if (success) {
+        if (loginUser(email, password)) {
             navigate('/portal');
         } else {
-            setError('Invalid email or password.');
+            setError('Invalid credentials. Please try again.');
         }
     };
 
     return (
-        <div className="container mx-auto px-4 py-16 flex justify-center">
-            <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-                <h2 className="text-2xl font-bold text-center mb-6 text-charcoal">Login to Your Portal</h2>
-                {error && <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm">{error}</div>}
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Email Address</label>
-                        <input required type="email" className="w-full border p-2 rounded focus:ring-brand focus:border-brand" 
-                            value={email} onChange={e => setEmail(e.target.value)} />
+        <div className="bg-gray-50 min-h-screen py-24 flex items-center justify-center px-4">
+            <div className="bg-white p-10 rounded-[3rem] shadow-2xl border border-gray-100 w-full max-w-md relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-2 bg-red-600"></div>
+                <div className="text-center mb-10">
+                    <Logo className="h-12 w-auto mb-8" />
+                    <h1 className="text-3xl font-black mb-2">Welcome Back</h1>
+                    <p className="text-gray-400 font-medium">Log in to manage your subscription</p>
+                </div>
+                {error && <div className="bg-red-50 text-red-600 p-4 rounded-2xl mb-8 text-sm font-bold flex items-center border border-red-100"><AlertCircle className="h-5 w-5 mr-3 flex-shrink-0" /> {error}</div>}
+                <form onSubmit={handleLogin} className="space-y-6">
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email Address</label>
+                        <input 
+                            type="email" placeholder="name@example.com" required className="w-full p-5 rounded-2xl bg-gray-50 border-none shadow-inner"
+                            value={email} onChange={e => setEmail(e.target.value)}
+                        />
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Password</label>
-                        <input required type="password" className="w-full border p-2 rounded focus:ring-brand focus:border-brand" 
-                            value={password} onChange={e => setPassword(e.target.value)} />
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Password</label>
+                        <input 
+                            type="password" placeholder="••••••••" required className="w-full p-5 rounded-2xl bg-gray-50 border-none shadow-inner"
+                            value={password} onChange={e => setPassword(e.target.value)}
+                        />
                     </div>
-                    <button type="submit" className="w-full bg-charcoal hover:bg-gray-900 text-white font-bold py-3 rounded transition shadow-lg mt-2">
-                        Login
-                    </button>
+                    <button type="submit" className="w-full bg-red-600 text-white py-5 rounded-2xl font-black text-xl hover:bg-red-700 transition shadow-xl shadow-red-600/20">Login</button>
                 </form>
-                <div className="mt-6 text-center text-sm">
-                    Don't have an account? <Link to="/signup" className="text-brand font-bold hover:underline">Join Moreplex</Link>
+                <div className="mt-10 pt-8 border-t border-gray-50 text-center">
+                    <p className="text-gray-400 font-medium">New to Moreplex? <Link to="/signup" className="text-red-600 font-black hover:underline ml-1">Create Account</Link></p>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const SignUp = () => {
+    const { registerUser } = useAppContext();
+    const [formData, setFormData] = useState({ name: '', email: '', phone: '', password: '' });
+    const navigate = useNavigate();
+
+    const handleSignUp = (e: React.FormEvent) => {
+        e.preventDefault();
+        const newUser: UserType = {
+            id: Math.random().toString(36).substr(2, 9),
+            ...formData,
+            role: 'customer',
+            joinedDate: new Date()
+        };
+        if (registerUser(newUser)) {
+            navigate('/portal');
+        } else {
+            alert("Email is already registered. Please login.");
+        }
+    };
+
+    return (
+        <div className="bg-gray-50 min-h-screen py-24 flex items-center justify-center px-4">
+            <div className="bg-white p-10 rounded-[3rem] shadow-2xl border border-gray-100 w-full max-w-md relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-2 bg-red-600"></div>
+                <div className="text-center mb-10">
+                    <h1 className="text-3xl font-black mb-2">Create Account</h1>
+                    <p className="text-gray-400 font-medium">Join Africa's premium DTH platform</p>
+                </div>
+                <form onSubmit={handleSignUp} className="space-y-5">
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
+                        <input 
+                            type="text" placeholder="John Doe" required className="w-full p-4 rounded-2xl bg-gray-50 border-none shadow-inner"
+                            value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
+                        />
+                    </div>
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email</label>
+                        <input 
+                            type="email" placeholder="john@example.com" required className="w-full p-4 rounded-2xl bg-gray-50 border-none shadow-inner"
+                            value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})}
+                        />
+                    </div>
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Phone</label>
+                        <input 
+                            type="tel" placeholder="08012345678" required className="w-full p-4 rounded-2xl bg-gray-50 border-none shadow-inner"
+                            value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}
+                        />
+                    </div>
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Password</label>
+                        <input 
+                            type="password" placeholder="••••••••" required className="w-full p-4 rounded-2xl bg-gray-50 border-none shadow-inner"
+                            value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})}
+                        />
+                    </div>
+                    <button type="submit" className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-lg hover:bg-red-600 transition shadow-xl mt-4">Sign Up</button>
+                </form>
+                <div className="mt-10 pt-8 border-t border-gray-50 text-center">
+                    <p className="text-gray-400 font-medium">Already have an account? <Link to="/login" className="text-red-600 font-black hover:underline ml-1">Login</Link></p>
                 </div>
             </div>
         </div>
@@ -371,584 +805,333 @@ const LoginPage = () => {
 };
 
 const UserPortal = () => {
-    const { currentUser, orders, addOrder } = useAppContext();
-    const [activeTab, setActiveTab] = useState<'dashboard' | 'orders' | 'support' | 'payments'>('dashboard');
-    const userOrders = orders.filter(o => o.userId === currentUser?.id);
-    const [receiptFile, setReceiptFile] = useState<File | null>(null);
-    const [isAnalyzing, setIsAnalyzing] = useState(false);
-    const [ocrData, setOcrData] = useState<ReceiptData | null>(null);
-    const [paymentType, setPaymentType] = useState<'subscription' | 'existing_order'>('subscription');
-    const [selectedOrderId, setSelectedOrderId] = useState('');
-    const [manualDecoderCode, setManualDecoderCode] = useState('');
-
-    useEffect(() => {
-        if(currentUser?.decoderCode) setManualDecoderCode(currentUser.decoderCode);
-    }, [currentUser]);
-
-    const handleReceiptUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            setReceiptFile(file);
-            setIsAnalyzing(true);
-            try {
-                const data = await analyzeReceipt(file);
-                if (data) {
-                    setOcrData(data);
-                    if(data.decoderCode) setManualDecoderCode(data.decoderCode);
-                }
-            } catch (err) {
-                console.error(err);
-                alert("OCR Analysis failed. Please enter details manually.");
-            } finally {
-                setIsAnalyzing(false);
-            }
-        }
-    };
-
-    const submitPaymentProof = () => {
-        if (!currentUser) return;
-        let orderPayload: Order;
-        const timestamp = new Date();
-        if (paymentType === 'existing_order' && selectedOrderId) {
-            const existing = orders.find(o => o.id === selectedOrderId);
-            orderPayload = {
-                id: `VERIFY-${Date.now()}`,
-                userId: currentUser.id,
-                items: existing ? existing.items : [{ id: 're-verify', name: 'Payment Verification', price: 0, quantity: 1, sku: 'VERIFY', category: 'service', description: `Verification for Order #${selectedOrderId}`, stock: 0, image: '' }],
-                total: existing ? existing.total : (ocrData?.amount || 0),
-                customerName: currentUser.name,
-                customerEmail: currentUser.email,
-                status: 'awaiting_ocr',
-                extractedDecoderCode: manualDecoderCode,
-                timestamp
-            };
-        } else {
-            orderPayload = {
-                id: `SUB-PAY-${Date.now()}`,
-                userId: currentUser.id,
-                items: [{
-                    id: 'sub-renewal',
-                    name: 'Subscription Payment',
-                    sku: 'SUB-RENEWAL',
-                    price: ocrData?.amount || 0,
-                    category: 'service',
-                    description: 'Manual subscription renewal payment',
-                    quantity: 1,
-                    image: 'https://picsum.photos/200',
-                    stock: 999
-                }],
-                total: ocrData?.amount || 0,
-                customerName: currentUser.name,
-                customerEmail: currentUser.email,
-                status: 'awaiting_ocr',
-                extractedDecoderCode: manualDecoderCode,
-                timestamp
-            };
-        }
-        addOrder(orderPayload);
-        alert("Payment proof uploaded successfully! Admin will verify shortly.");
-        setActiveTab('orders');
-        setReceiptFile(null);
-        setOcrData(null);
-    };
-
-    if (!currentUser) return <Navigate to="/login" />;
+    const { currentUser, orders } = useAppContext();
+    const userOrders = orders.filter(o => o.customerEmail === currentUser?.email);
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="flex flex-col md:flex-row gap-8">
-                <div className="md:w-64 flex-shrink-0">
-                    <div className="bg-white p-6 rounded-lg shadow-sm mb-6 border border-gray-100">
-                        <div className="flex flex-col items-center mb-4">
-                            <div className="w-20 h-20 bg-brand text-white rounded-full flex items-center justify-center text-3xl font-bold mb-2">
-                                {currentUser.name.charAt(0)}
+        <div className="bg-gray-50 min-h-screen py-16">
+            <div className="container mx-auto px-4 max-w-6xl">
+                <div className="flex flex-col lg:flex-row gap-10">
+                    <aside className="lg:w-1/4">
+                        <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 mb-8 text-center relative overflow-hidden">
+                            <div className="absolute top-0 left-0 right-0 h-1.5 bg-red-600"></div>
+                            <div className="w-24 h-24 bg-red-50 text-red-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-3xl font-black shadow-inner">
+                                {currentUser?.name[0]}
                             </div>
-                            <h2 className="font-bold text-lg">{currentUser.name}</h2>
-                            <p className="text-sm text-gray-500">{currentUser.email}</p>
+                            <h3 className="font-black text-xl mb-1">{currentUser?.name}</h3>
+                            <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">{currentUser?.phone}</p>
                         </div>
-                        <nav className="space-y-2">
-                            <button onClick={() => setActiveTab('dashboard')} className={`w-full text-left px-4 py-2 rounded flex items-center ${activeTab === 'dashboard' ? 'bg-gray-100 text-brand font-bold' : 'hover:bg-gray-50'}`}>
-                                <LayoutDashboard className="w-4 h-4 mr-2" /> Dashboard
-                            </button>
-                            <button onClick={() => setActiveTab('orders')} className={`w-full text-left px-4 py-2 rounded flex items-center ${activeTab === 'orders' ? 'bg-gray-100 text-brand font-bold' : 'hover:bg-gray-50'}`}>
-                                <History className="w-4 h-4 mr-2" /> Order History
-                            </button>
-                            <button onClick={() => setActiveTab('payments')} className={`w-full text-left px-4 py-2 rounded flex items-center ${activeTab === 'payments' ? 'bg-gray-100 text-brand font-bold' : 'hover:bg-gray-50'}`}>
-                                <CreditCard className="w-4 h-4 mr-2" /> Payment Proofs
-                            </button>
-                            <button onClick={() => setActiveTab('support')} className={`w-full text-left px-4 py-2 rounded flex items-center ${activeTab === 'support' ? 'bg-gray-100 text-brand font-bold' : 'hover:bg-gray-50'}`}>
-                                <Phone className="w-4 h-4 mr-2" /> Support
-                            </button>
+                        <nav className="space-y-3">
+                            {[
+                                { icon: <LayoutDashboard />, label: "Dashboard", active: true },
+                                { icon: <History />, label: "My Orders" },
+                                { icon: <Monitor />, label: "Channels" },
+                                { icon: <History />, label: "Recharge History" },
+                                { icon: <Settings />, label: "Security" }
+                            ].map((item, i) => (
+                                <button key={i} className={`w-full flex items-center space-x-4 p-5 rounded-2xl font-black transition-all ${item.active ? 'bg-red-600 text-white shadow-xl shadow-red-600/20' : 'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-900'}`}>
+                                    <span className="flex-shrink-0">{item.icon}</span>
+                                    <span>{item.label}</span>
+                                </button>
+                            ))}
                         </nav>
-                    </div>
-                </div>
-
-                <div className="flex-grow">
-                    {activeTab === 'dashboard' && (
-                        <div className="space-y-6">
-                            <h1 className="text-2xl font-bold">Welcome back, {currentUser.name.split(' ')[0]}</h1>
-                            <div className="grid md:grid-cols-2 gap-6">
-                                <div className="bg-gradient-to-br from-charcoal to-gray-900 text-white p-6 rounded-xl shadow-lg relative overflow-hidden">
-                                    <h3 className="text-gray-400 text-sm font-medium mb-1">My Decoder</h3>
-                                    <div className="text-3xl font-mono tracking-wider mb-4">
-                                        {currentUser.decoderCode || 'NO DECODER LINKED'}
-                                    </div>
-                                    {currentUser.decoderCode ? (
-                                        <div className="flex space-x-2">
-                                            <span className="bg-green-500 text-xs px-2 py-1 rounded">Active</span>
-                                            <Link to="/subscribe" className="bg-white/20 hover:bg-white/30 text-xs px-3 py-1 rounded transition">Renew Sub</Link>
-                                        </div>
-                                    ) : (
-                                        <Link to="/shop" className="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded text-sm inline-block">Buy Decoder</Link>
-                                    )}
-                                </div>
-                                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                                    <h3 className="font-bold mb-4">Quick Actions</h3>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <Link to="/subscribe" className="p-3 border rounded hover:border-brand hover:text-brand text-center text-sm transition">
-                                            Pay Subscription
-                                        </Link>
-                                        <button onClick={() => setActiveTab('payments')} className="p-3 border rounded hover:border-brand hover:text-brand text-center text-sm transition">
-                                            Upload Receipt
-                                        </button>
-                                        <Link to="/shop" className="p-3 border rounded hover:border-brand hover:text-brand text-center text-sm transition">
-                                            Buy Accessories
-                                        </Link>
-                                        <button onClick={() => setActiveTab('support')} className="p-3 border rounded hover:border-brand hover:text-brand text-center text-sm transition">
-                                            Contact Support
-                                        </button>
-                                    </div>
+                    </aside>
+                    <main className="lg:w-3/4">
+                        <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-[3rem] p-12 text-white mb-10 flex flex-col md:flex-row justify-between items-center shadow-2xl relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/10 blur-3xl rounded-full -mr-32 -mt-32 transition group-hover:bg-red-600/20"></div>
+                            <div className="relative z-10">
+                                <p className="text-red-500 text-[10px] uppercase tracking-[0.4em] font-black mb-4">Active Subscription</p>
+                                <h2 className="text-5xl font-black tracking-tighter mb-4">Family Package</h2>
+                                <div className="flex items-center space-x-4 text-gray-400 font-bold">
+                                    <Clock className="h-4 w-4 text-red-600" />
+                                    <span>Expires in 22 Days (Oct 28)</span>
                                 </div>
                             </div>
-                            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                                <h3 className="font-bold mb-4">Recent Orders</h3>
-                                {userOrders.length > 0 ? (
-                                    <ul className="space-y-3">
-                                        {userOrders.slice(0, 3).map(order => (
-                                            <li key={order.id} className="flex justify-between items-center border-b pb-2 last:border-0">
-                                                <div>
-                                                    <span className="font-medium">#{order.id}</span>
-                                                    <span className="text-xs text-gray-500 block">{new Date(order.timestamp).toLocaleDateString()}</span>
-                                                </div>
-                                                <span className={`px-2 py-1 rounded text-xs ${order.status === 'verified' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                                                    {order.status.replace('_', ' ')}
-                                                </span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    <p className="text-gray-500 text-sm">No recent activity.</p>
-                                )}
+                            <div className="relative z-10 mt-10 md:mt-0">
+                                <button className="bg-red-600 hover:bg-red-700 text-white px-10 py-5 rounded-2xl font-black text-lg transition shadow-xl shadow-red-600/30">Quick Renew</button>
                             </div>
                         </div>
-                    )}
 
-                    {activeTab === 'payments' && (
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <h2 className="text-xl font-bold mb-6">Upload Payment Proof</h2>
-                            <div className="grid md:grid-cols-2 gap-8">
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Upload File</label>
-                                    {!receiptFile ? (
-                                        <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
-                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                <Upload className="w-10 h-10 mb-3 text-gray-400" />
-                                                <p className="text-sm text-gray-500"><span className="font-semibold">Click to upload</span> payment proof</p>
-                                            </div>
-                                            <input type="file" className="hidden" accept="image/*,.pdf" onChange={handleReceiptUpload} />
-                                        </label>
-                                    ) : (
-                                        <div className="border rounded-lg p-4 bg-gray-50 relative">
-                                            <div className="flex items-center space-x-3">
-                                                <FileText className="w-8 h-8 text-brand" />
-                                                <div className="overflow-hidden">
-                                                    <p className="text-sm font-bold truncate">{receiptFile.name}</p>
-                                                    <p className="text-xs text-gray-500">{(receiptFile.size / 1024).toFixed(0)} KB</p>
-                                                </div>
-                                            </div>
-                                            <button 
-                                                onClick={() => { setReceiptFile(null); setOcrData(null); }}
-                                                className="text-xs text-red-500 hover:text-red-700 underline mt-2"
-                                            >
-                                                Remove File
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="space-y-4">
-                                    {isAnalyzing && <div className="flex items-center text-brand animate-pulse"><Zap className="w-5 h-5 mr-2" /><span>Analyzing receipt...</span></div>}
-                                    {receiptFile && !isAnalyzing && (
-                                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                                            <h4 className="font-bold text-blue-900 mb-2">Extracted Details</h4>
-                                            <div className="grid grid-cols-2 gap-2 text-sm">
-                                                <div><span className="text-gray-500">Amount:</span> <span className="font-bold">₦{ocrData?.amount || '---'}</span></div>
-                                                <div><span className="text-gray-500">Date:</span> <span>{ocrData?.date || '---'}</span></div>
+                        <div className="flex items-center justify-between mb-8">
+                            <h3 className="text-2xl font-black">Recent Orders</h3>
+                            <button className="text-red-600 font-black text-sm uppercase tracking-widest hover:underline">View All</button>
+                        </div>
+
+                        {userOrders.length > 0 ? (
+                            <div className="space-y-6">
+                                {userOrders.map(order => (
+                                    <div key={order.id} className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col sm:flex-row justify-between items-center group hover:border-red-600 transition duration-300">
+                                        <div className="flex items-center space-x-6 mb-6 sm:mb-0">
+                                            <div className="p-4 bg-gray-50 rounded-2xl text-gray-400 group-hover:bg-red-50 group-hover:text-red-600 transition"><ShoppingCart className="h-6 w-6" /></div>
+                                            <div>
+                                                <p className="font-black text-lg">Order #{order.id}</p>
+                                                <p className="text-xs text-gray-400 font-bold">{new Date(order.timestamp).toLocaleDateString(undefined, { dateStyle: 'long' })}</p>
                                             </div>
                                         </div>
-                                    )}
-                                    <div>
-                                        <label className="block text-sm font-medium mb-1">What is this payment for?</label>
-                                        <select value={paymentType} onChange={(e) => setPaymentType(e.target.value as any)} className="w-full border p-2 rounded">
-                                            <option value="subscription">Subscription Renewal</option>
-                                            <option value="existing_order">Existing Pending Order</option>
-                                        </select>
+                                        <div className="text-center sm:text-right">
+                                            <p className="font-black text-2xl text-gray-900 mb-2">₦{order.total.toLocaleString()}</p>
+                                            <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${order.status === 'verified' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'}`}>{order.status.replace('_', ' ')}</span>
+                                        </div>
                                     </div>
-                                    <button onClick={submitPaymentProof} disabled={!receiptFile || isAnalyzing} className="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 rounded disabled:opacity-50 transition">
-                                        Submit for Verification
-                                    </button>
-                                </div>
+                                ))}
                             </div>
-                        </div>
-                    )}
-
-                    {activeTab === 'orders' && (
-                        <div className="bg-white p-6 rounded-lg shadow-sm min-h-[400px] border border-gray-100">
-                            <h2 className="text-xl font-bold mb-6">Order History</h2>
-                            {userOrders.length === 0 ? (
-                                <div className="text-center py-10">
-                                    <ShoppingCart className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                                    <p className="text-gray-500">No orders found.</p>
-                                </div>
-                            ) : (
-                                <div className="space-y-4">
-                                    {userOrders.map(order => (
-                                        <div key={order.id} className="border rounded-lg p-4 hover:shadow-md transition">
-                                            <div className="flex justify-between items-start">
-                                                <div>
-                                                    <div className="font-bold">Order #{order.id}</div>
-                                                    <div className="text-sm text-gray-500">{new Date(order.timestamp).toDateString()}</div>
-                                                </div>
-                                                <div className="text-right">
-                                                    <div className="font-bold text-brand">₦{order.total.toLocaleString()}</div>
-                                                    <span className={`inline-block px-2 py-0.5 rounded text-xs mt-1 capitalize ${order.status === 'verified' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>{order.status.replace('_', ' ')}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {activeTab === 'support' && (
-                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <h2 className="text-xl font-bold mb-6">Support Center</h2>
-                            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); alert("Ticket created!"); }}>
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Subject</label>
-                                    <input type="text" className="w-full border p-2 rounded" placeholder="Issue title" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Message</label>
-                                    <textarea rows={4} className="w-full border p-2 rounded" placeholder="How can we help?"></textarea>
-                                </div>
-                                <button className="bg-charcoal text-white px-6 py-2 rounded font-bold hover:bg-gray-800">Submit Ticket</button>
-                            </form>
-                        </div>
-                    )}
+                        ) : (
+                            <div className="bg-white border-2 border-dashed border-gray-200 p-24 rounded-[3rem] text-center">
+                                <History className="h-16 w-16 text-gray-100 mx-auto mb-6" />
+                                <p className="text-gray-400 font-black text-xl uppercase tracking-widest">No orders yet</p>
+                                <Link to="/shop" className="text-red-600 font-black mt-4 inline-block hover:underline">Start Shopping</Link>
+                            </div>
+                        )}
+                    </main>
                 </div>
             </div>
         </div>
     );
 };
 
-// --- Pages ---
+const AdminDashboard = () => {
+    const { orders, users } = useAppContext();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [loginData, setLoginData] = useState({ user: '', pass: '' });
 
-const HomePage = () => {
-  return (
-    <div>
-      {/* Hero */}
-      <section className="relative bg-black text-white py-24 md:py-48 min-h-[750px] flex items-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-            {/* RESTORED VIBRANT MOVIE POSTER WALL BACKGROUND */}
-            <div className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[20s] ease-linear animate-ken-burns scale-110" 
-                 style={{ 
-                   backgroundImage: "url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2070&auto=format&fit=crop')",
-                   filter: "brightness(0.8) contrast(1.15) saturate(1.2)"
-                 }}>
+    if (!isAuthenticated) {
+        return (
+            <div className="bg-gray-900 min-h-screen py-24 flex items-center justify-center px-4">
+                <div className="bg-white p-12 rounded-[3rem] shadow-2xl w-full max-w-sm relative">
+                    <div className="bg-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-red-600/30">
+                        <Shield className="h-8 w-8 text-white" />
+                    </div>
+                    <h2 className="text-2xl font-black mb-8 text-center text-gray-900">Admin Control</h2>
+                    <div className="space-y-4">
+                        <input 
+                            type="text" placeholder="Username" className="w-full p-5 bg-gray-50 border-none rounded-2xl shadow-inner"
+                            onChange={e => setLoginData({...loginData, user: e.target.value})}
+                        />
+                        <input 
+                            type="password" placeholder="Password" className="w-full p-5 bg-gray-50 border-none rounded-2xl shadow-inner"
+                            onChange={e => setLoginData({...loginData, pass: e.target.value})}
+                        />
+                        <button 
+                            onClick={() => {
+                                if (loginData.user === ADMIN_AUTH.username && loginData.pass === ADMIN_AUTH.password) setIsAuthenticated(true);
+                                else alert("Access Denied: Invalid Admin Credentials");
+                            }}
+                            className="w-full bg-red-600 text-white py-5 rounded-2xl font-black text-lg shadow-xl hover:bg-red-700 transition"
+                        >
+                            Authorize Access
+                        </button>
+                    </div>
+                </div>
             </div>
-            {/* Rich Dynamic Overlays */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30"></div>
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10 text-center md:text-left">
-          <div className="max-w-4xl">
-              <span className="inline-block bg-brand text-white text-sm font-black px-4 py-1.5 rounded-full mb-6 uppercase tracking-widest animate-pulse shadow-2xl">
-                  DTH • DTT • Video On Demand
-              </span>
-              {/* SLIDE-IN ANIMATION APPLIED TO THE HEADLINE */}
-              <h1 className="text-5xl md:text-8xl font-black mb-8 leading-[1.05] drop-shadow-[0_8px_30px_rgb(0,0,0,0.9)] animate-slide-in-left">
-                Redefining <br className="hidden md:block" />
-                Entertainment <br className="hidden md:block" />
-                with <span className="text-brand inline-block transform hover:scale-110 transition duration-300">Sheer Delight</span>
-              </h1>
-              <p className="text-xl md:text-3xl text-gray-100 mb-12 max-w-2xl font-semibold drop-shadow-xl leading-relaxed">
-                Experience the new dawn of Pay TV in Africa. Premium sports, local blockbusters, and 120+ channels for the whole family.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-6">
-                <Link to="/shop" className="group bg-brand hover:bg-brand-dark text-white font-black py-5 px-14 rounded-full transition transform hover:scale-105 shadow-2xl flex items-center justify-center text-xl">
-                  Get Decoder <Tv className="ml-2 w-7 h-7 group-hover:rotate-12 transition" />
-                </Link>
-                <Link to="/subscribe" className="bg-white/10 backdrop-blur-xl border-2 border-white/40 hover:bg-white hover:text-charcoal text-white font-bold py-5 px-14 rounded-full transition transform hover:scale-105 shadow-2xl flex items-center justify-center text-xl">
-                  Renew Subscription <Zap className="ml-2 w-6 h-6" />
-                </Link>
-              </div>
-          </div>
-        </div>
-      </section>
+        );
+    }
 
-      {/* Jolly Decoder Features */}
-      <section className="bg-gradient-to-b from-red-600 to-red-800 text-white py-16 overflow-hidden relative">
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="text-center mb-10">
-              <div className="inline-block bg-white px-4 py-2 rounded-lg mb-6 transform -rotate-2">
-                <span className="text-red-600 font-black text-xl tracking-tighter">m MOREPLEX TV</span>
-              </div>
-              <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-4 drop-shadow-2xl animate-swing" 
-                  style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
-                JOLLY DECODER
-              </h2>
-            </div>
-            <div className="max-w-6xl mx-auto">
-                <div className="grid md:grid-cols-2 gap-px bg-red-500/30 border-2 border-white/20 rounded-xl overflow-hidden shadow-2xl">
-                    {JOLLY_FEATURES.map((feature, i) => (
-                        <div key={i} className="bg-white/95 text-red-900 px-6 py-4 font-bold text-sm md:text-base flex items-center hover:bg-white transition duration-300">
-                            <CheckCircle className="w-5 h-5 mr-3 text-red-600 shrink-0" />
-                            {feature}
+    return (
+        <div className="bg-gray-50 min-h-screen py-16">
+            <div className="container mx-auto px-4">
+                <div className="flex items-center justify-between mb-16">
+                    <h1 className="text-4xl font-black flex items-center"><Shield className="h-10 w-10 mr-4 text-red-600" /> Command Center</h1>
+                    <div className="bg-white px-6 py-3 rounded-2xl border border-gray-100 shadow-sm flex items-center space-x-3">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-xs font-black uppercase tracking-widest text-gray-500">Live Server Active</span>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                    {[
+                        { label: "Volume", value: orders.length, icon: <ShoppingCart className="h-6 w-6" />, color: "red" },
+                        { label: "Revenue", value: `₦${orders.reduce((s, o) => s + o.total, 0).toLocaleString()}`, icon: <CreditCard className="h-6 w-6" />, color: "blue" },
+                        { label: "Members", value: users.length, icon: <Users className="h-6 w-6" />, color: "green" },
+                        { label: "Verification", value: orders.filter(o => o.status === 'awaiting_ocr').length, icon: <Clock className="h-6 w-6" />, color: "yellow" }
+                    ].map((stat, i) => (
+                        <div key={i} className="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100 flex items-center justify-between group hover:shadow-xl transition duration-500">
+                            <div>
+                                <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mb-2">{stat.label}</p>
+                                <p className="text-3xl font-black text-gray-900 tracking-tighter">{stat.value}</p>
+                            </div>
+                            <div className="text-gray-200 group-hover:text-red-600 transition-colors duration-500">{stat.icon}</div>
                         </div>
                     ))}
                 </div>
-            </div>
-            <div className="text-center mt-12">
-                <Link to="/shop" className="inline-block bg-white text-red-700 font-black text-xl py-4 px-12 rounded-full shadow-2xl hover:scale-105 hover:bg-gray-100 transition transform duration-300 uppercase tracking-wide">
-                    Buy Now
-                </Link>
-            </div>
-          </div>
-      </section>
 
-      {/* Services Highlights */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-gray-50 p-8 rounded-xl text-center hover:shadow-xl transition border border-gray-100">
-              <div className="w-16 h-16 bg-brand/10 text-brand rounded-full flex items-center justify-center mx-auto mb-4">
-                <Tv className="w-8 h-8" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Direct To Home (DTH)</h3>
-              <p className="text-gray-600">Crystal clear satellite TV with coverage across Africa. Enjoy 100+ channels.</p>
-            </div>
-            <div className="bg-gray-50 p-8 rounded-xl text-center hover:shadow-xl transition border border-gray-100">
-              <div className="w-16 h-16 bg-brand/10 text-brand rounded-full flex items-center justify-center mx-auto mb-4">
-                <Monitor className="w-8 h-8" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Digital Terrestrial (DTT)</h3>
-              <p className="text-gray-600">Local channels in high definition without a satellite dish using our smart antenna.</p>
-            </div>
-            <div className="bg-gray-50 p-8 rounded-xl text-center hover:shadow-xl transition border border-gray-100">
-              <div className="w-16 h-16 bg-brand/10 text-brand rounded-full flex items-center justify-center mx-auto mb-4">
-                <PlayCircle className="w-8 h-8" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Video On Demand</h3>
-              <p className="text-gray-600">Watch your favorite movies and shows anytime, anywhere with our VOD service.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Products */}
-      <section className="py-16 bg-gray-100">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-end mb-8">
-            <h2 className="text-3xl font-bold text-charcoal">Best Sellers</h2>
-            <Link to="/shop" className="text-brand font-semibold hover:underline">View All &rarr;</Link>
-          </div>
-          <div className="grid md:grid-cols-4 gap-6">
-            {PRODUCTS.slice(0, 4).map(product => (
-              <Link to="/shop" key={product.id} className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
-                <div className="relative h-48 overflow-hidden">
-                    <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition duration-500" />
-                </div>
-                <div className="p-4">
-                    <h3 className="font-bold text-lg mb-1 truncate">{product.name}</h3>
-                    <p className="text-brand font-bold">₦{product.price.toLocaleString()}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA - Dealer */}
-      <section className="py-20 bg-brand">
-          <div className="container mx-auto px-4 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Become a Moreplex Dealer</h2>
-              <p className="text-white/90 text-xl max-w-2xl mx-auto mb-8">Join our growing network of distributors across Nigeria. High commissions and technical training provided.</p>
-              <Link to="/contact" className="bg-white text-brand font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition">
-                  Apply Now
-              </Link>
-          </div>
-      </section>
-    </div>
-  );
-};
-
-const ShopPage = () => {
-    const { addToCart } = useAppContext();
-    const [filter, setFilter] = useState('all');
-    const filteredProducts = filter === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === filter);
-    return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-8 text-charcoal">Moreplex Store</h1>
-            <div className="flex flex-wrap gap-4 mb-8">
-                {['all', 'decoder', 'dish', 'accessory', 'service'].map(cat => (
-                    <button key={cat} onClick={() => setFilter(cat)} className={`px-4 py-2 rounded-full capitalize ${filter === cat ? 'bg-brand text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>{cat}</button>
-                ))}
-            </div>
-            <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-8">
-                {filteredProducts.map(product => (
-                    <div key={product.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-                        <div className="h-48 overflow-hidden relative"><img src={product.image} alt={product.name} className="w-full h-full object-cover" /></div>
-                        <div className="p-5 flex-1 flex flex-col">
-                            <h3 className="font-bold text-lg text-charcoal mb-1">{product.name}</h3>
-                            <p className="text-sm text-gray-600 line-clamp-2 mb-4">{product.description}</p>
-                            <div className="mt-auto">
-                                <span className="text-xl font-bold text-brand block mb-4">₦{product.price.toLocaleString()}</span>
-                                <button onClick={() => addToCart(product)} className="w-full bg-charcoal hover:bg-gray-800 text-white font-medium py-2 rounded-lg transition flex items-center justify-center"><ShoppingCart className="w-4 h-4 mr-2" /> Add to Cart</button>
-                            </div>
+                <div className="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden shadow-sm">
+                    <div className="p-10 border-b border-gray-50 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <h2 className="font-black text-2xl">Order Management</h2>
+                        <div className="flex bg-gray-50 p-1.5 rounded-2xl">
+                            {['All', 'Pending', 'Verified'].map((f, i) => <button key={i} className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition ${i === 0 ? 'bg-white shadow-md text-gray-900' : 'text-gray-400 hover:text-gray-600'}`}>{f}</button>)}
                         </div>
                     </div>
-                ))}
-            </div>
-        </div>
-    );
-};
-
-const CartPage = () => {
-    const { cart, removeFromCart, clearCart, addOrder, currentUser } = useAppContext();
-    const navigate = useNavigate();
-    const [step, setStep] = useState<'cart' | 'details' | 'payment'>('cart');
-    const [customer, setCustomer] = useState({ name: '', email: '', phone: '', address: '', city: '' });
-    const [receipt, setReceipt] = useState<File | null>(null);
-    useEffect(() => {
-        if (currentUser) {
-            setCustomer(prev => ({ ...prev, name: currentUser.name, email: currentUser.email, phone: currentUser.phone }));
-        }
-    }, [currentUser]);
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const handlePlaceOrder = () => {
-        const newOrder: Order = { id: `ORD-${Date.now()}`, items: cart, total, customerName: customer.name, customerEmail: customer.email, status: 'awaiting_ocr', timestamp: new Date() };
-        addOrder(newOrder);
-        clearCart();
-        alert("Order successful! We are verifying your payment.");
-        navigate(currentUser ? '/portal' : '/');
-    };
-    if (cart.length === 0 && step === 'cart') return <div className="container mx-auto px-4 py-20 text-center"><ShoppingCart className="w-16 h-16 mx-auto text-gray-300 mb-4" /><h2 className="text-2xl font-bold text-gray-700 mb-4">Your cart is empty</h2><Link to="/shop" className="text-brand font-bold hover:underline">Go to Shop</Link></div>;
-    return (
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
-            {step === 'cart' && (
-                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                    <h2 className="text-2xl font-bold mb-6">Shopping Cart</h2>
-                    <div className="space-y-4">{cart.map(item => (<div key={item.id} className="flex items-center justify-between border-b pb-4">
-                        <div className="flex items-center"><img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded mr-4" /><div><h4 className="font-bold">{item.name}</h4><p className="text-sm text-gray-500">₦{item.price.toLocaleString()} x {item.quantity}</p></div></div>
-                        <button onClick={() => removeFromCart(item.id)} className="text-red-500 hover:text-red-700"><X className="w-5 h-5" /></button>
-                    </div>))}</div>
-                    <button onClick={() => setStep('details')} className="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 rounded-lg mt-6">Checkout</button>
-                </div>
-            )}
-            {step === 'details' && (
-                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                    <h2 className="text-2xl font-bold mb-6">Delivery Details</h2>
-                    <div className="grid md:grid-cols-2 gap-4 mb-4">
-                        <input type="text" placeholder="Full Name" value={customer.name} onChange={e => setCustomer({...customer, name: e.target.value})} className="border p-3 rounded" />
-                        <input type="email" placeholder="Email" value={customer.email} onChange={e => setCustomer({...customer, email: e.target.value})} className="border p-3 rounded" />
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left">
+                            <thead className="bg-gray-50/50 text-gray-400 uppercase text-[10px] tracking-[0.2em] font-black border-b border-gray-50">
+                                <tr>
+                                    <th className="px-10 py-6">Reference</th>
+                                    <th className="px-10 py-6">Client</th>
+                                    <th className="px-10 py-6">Value</th>
+                                    <th className="px-10 py-6">Status</th>
+                                    <th className="px-10 py-6">IUC Sync</th>
+                                    <th className="px-10 py-6 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-50">
+                                {orders.map(o => (
+                                    <tr key={o.id} className="hover:bg-gray-50/50 transition duration-300">
+                                        <td className="px-10 py-8">
+                                            <span className="font-mono text-sm font-black text-gray-900 bg-gray-100 px-3 py-1.5 rounded-lg">#{o.id}</span>
+                                        </td>
+                                        <td className="px-10 py-8">
+                                            <p className="font-black text-gray-900 leading-none mb-1">{o.customerName}</p>
+                                            <p className="text-xs text-gray-400 font-medium">{o.customerEmail}</p>
+                                        </td>
+                                        <td className="px-10 py-8 font-black text-gray-900">₦{o.total.toLocaleString()}</td>
+                                        <td className="px-10 py-8">
+                                            <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${o.status === 'awaiting_ocr' ? 'bg-yellow-50 text-yellow-600 border border-yellow-100' : 'bg-green-50 text-green-600 border border-green-100'}`}>{o.status.replace('_', ' ')}</span>
+                                        </td>
+                                        <td className="px-10 py-8">
+                                            <span className="font-mono text-xs font-black text-red-600">{o.extractedDecoderCode || 'MANUAL REQ'}</span>
+                                        </td>
+                                        <td className="px-10 py-8 text-right">
+                                            <div className="flex items-center justify-end space-x-2">
+                                                <button className="p-3 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded-xl transition"><FileText className="h-5 w-5" /></button>
+                                                <button className="p-3 text-gray-300 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition"><Settings className="h-5 w-5" /></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
-                    <button onClick={() => setStep('payment')} className="bg-brand text-white font-bold py-2 px-8 rounded">Next</button>
                 </div>
-            )}
-            {step === 'payment' && (
-                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                    <h2 className="text-2xl font-bold mb-6">Upload Receipt</h2>
-                    <input type="file" onChange={e => setReceipt(e.target.files?.[0] || null)} className="w-full border p-2 rounded mb-6" />
-                    <button disabled={!receipt} onClick={handlePlaceOrder} className="bg-brand text-white font-bold py-3 px-8 rounded disabled:opacity-50">Confirm Payment</button>
-                </div>
-            )}
-        </div>
-    );
-};
-
-const SubscriptionPage = () => {
-    const { currentUser } = useAppContext();
-    const navigate = useNavigate();
-    const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-    return (
-        <div className="container mx-auto px-4 py-12">
-            <h1 className="text-3xl font-bold text-center mb-12">Subscribe to Moreplex</h1>
-            <div className="grid md:grid-cols-3 gap-8">
-                {SUBSCRIPTION_PLANS.filter(p => p.type !== 'FTA').map(plan => (
-                    <div key={plan.id} className={`border rounded-xl p-8 cursor-pointer ${selectedPlan === plan.id ? 'border-brand ring-2 ring-brand' : 'border-gray-200'}`} onClick={() => setSelectedPlan(plan.id)}>
-                        <h3 className="text-xl font-bold">{plan.name}</h3>
-                        <div className="text-3xl font-bold text-brand my-4">₦{plan.price.toLocaleString()}</div>
-                        <button className="w-full py-2 rounded-lg font-bold bg-gray-100">Select</button>
-                    </div>
-                ))}
-            </div>
-            {selectedPlan && <button onClick={() => alert("Renewal request sent!")} className="mt-8 bg-charcoal text-white px-8 py-3 rounded-lg block mx-auto font-bold">Renew Sub</button>}
-        </div>
-    );
-};
-
-const AdminPage = () => {
-    const { orders } = useAppContext();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    if (!isAuthenticated) return <AdminLogin onLogin={() => setIsAuthenticated(true)} />;
-    return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold mb-6">Admin Panel</h1>
-            <div className="bg-white rounded border overflow-x-auto">
-                <table className="min-w-full">
-                    <thead className="bg-gray-50 border-b">
-                        <tr><th className="px-6 py-3 text-left">Order ID</th><th className="px-6 py-3 text-left">Customer</th><th className="px-6 py-3 text-left">Total</th><th className="px-6 py-3 text-left">Status</th></tr>
-                    </thead>
-                    <tbody>
-                        {orders.map(order => (<tr key={order.id} className="border-b">
-                            <td className="px-6 py-4">{order.id}</td><td className="px-6 py-4">{order.customerName}</td><td className="px-6 py-4">₦{order.total.toLocaleString()}</td><td className="px-6 py-4 capitalize">{order.status}</td>
-                        </tr>))}
-                    </tbody>
-                </table>
             </div>
         </div>
     );
 };
 
-const AdminLogin = ({ onLogin }: { onLogin: () => void }) => {
-    const [user, setUser] = useState('');
-    const [pass, setPass] = useState('');
-    return (
-        <div className="flex items-center justify-center min-h-[60vh]"><form className="bg-white p-8 rounded border w-96" onSubmit={e => { e.preventDefault(); if(user === ADMIN_AUTH.username && pass === ADMIN_AUTH.password) onLogin(); }}><h2 className="text-xl font-bold mb-4">Admin Login</h2><input type="text" placeholder="User" value={user} onChange={e => setUser(e.target.value)} className="w-full border p-2 rounded mb-4" /><input type="password" placeholder="Pass" value={pass} onChange={e => setPass(e.target.value)} className="w-full border p-2 rounded mb-4" /><button className="w-full bg-charcoal text-white py-2 rounded">Login</button></form></div>
-    );
-};
+const Support = () => (
+    <div className="bg-white min-h-screen py-24">
+        <div className="container mx-auto px-4 text-center max-w-4xl">
+            <h1 className="text-6xl font-black mb-6 tracking-tighter">How can we help?</h1>
+            <p className="text-xl text-gray-500 mb-20 leading-relaxed">Our support heroes are available 24/7 to ensure your entertainment never stops. Reach out via your preferred channel.</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <a href={COMPANY_INFO.whatsappUrl} target="_blank" rel="noopener noreferrer" className="bg-green-50/50 p-12 rounded-[3rem] border border-green-100 hover:shadow-2xl transition duration-500 group">
+                    <div className="w-20 h-20 bg-green-500 text-white rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-green-500/20 group-hover:scale-110 transition duration-500"><Phone className="h-10 w-10" /></div>
+                    <h3 className="font-black text-2xl mb-2">WhatsApp</h3>
+                    <p className="text-gray-500 text-sm font-medium">Instant chat with an agent</p>
+                    <p className="text-green-600 font-black mt-6 uppercase tracking-widest text-xs">Start Conversation</p>
+                </a>
+                <div className="bg-blue-50/50 p-12 rounded-[3rem] border border-blue-100 hover:shadow-2xl transition duration-500 group">
+                    <div className="w-20 h-20 bg-blue-500 text-white rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-blue-500/20 group-hover:scale-110 transition duration-500"><Mail className="h-10 w-10" /></div>
+                    <h3 className="font-black text-2xl mb-2">Email Desk</h3>
+                    <p className="text-gray-500 text-sm font-medium">Technical & billing queries</p>
+                    <p className="text-blue-600 font-black mt-6 text-xs">{COMPANY_INFO.email}</p>
+                </div>
+                <div className="bg-red-50/50 p-12 rounded-[3rem] border border-red-100 hover:shadow-2xl transition duration-500 group">
+                    <div className="w-20 h-20 bg-red-600 text-white rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-red-600/20 group-hover:scale-110 transition duration-500"><MapPin className="h-10 w-10" /></div>
+                    <h3 className="font-black text-2xl mb-2">Office</h3>
+                    <p className="text-gray-500 text-sm font-medium">Visit our experience center</p>
+                    <p className="text-red-600 font-black mt-6 text-[10px] uppercase leading-tight tracking-widest">Ikeja, Lagos</p>
+                </div>
+            </div>
+
+            <div className="mt-24 p-12 bg-gray-50 rounded-[3rem] border border-gray-100 flex flex-col items-center">
+                <Monitor className="h-16 w-16 text-red-200 mb-6" />
+                <h3 className="text-2xl font-black mb-4">Self-Help Installation Guide</h3>
+                <p className="text-gray-500 mb-10 max-w-lg">Can't wait for a technician? Our step-by-step video guide shows you how to set up your Moreplex TV dish and decoder in 15 minutes.</p>
+                <button className="bg-gray-900 text-white px-12 py-5 rounded-2xl font-black text-lg hover:bg-red-600 transition flex items-center shadow-xl">
+                    <PlayCircle className="h-6 w-6 mr-3" /> Watch Guide
+                </button>
+            </div>
+        </div>
+    </div>
+);
+
+const Terms = () => (
+    <div className="bg-gray-50 min-h-screen py-24">
+        <div className="container mx-auto px-4 max-w-4xl">
+            <h1 className="text-5xl font-black mb-4 tracking-tighter">Terms of Service</h1>
+            <p className="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px] mb-12 ml-1">Last Updated: January 2025</p>
+            <div className="bg-white p-12 md:p-20 rounded-[4rem] shadow-sm border border-gray-100 prose prose-red max-w-none prose-headings:font-black prose-p:text-gray-600 prose-p:leading-relaxed">
+                <div className="whitespace-pre-wrap font-medium">
+                    {TERMS_TEXT}
+                </div>
+            </div>
+        </div>
+    </div>
+);
+
+// --- Main App Component ---
 
 const App = () => {
-    const [cart, setCart] = useState<CartItem[]>([]);
-    const [orders, setOrders] = useState<Order[]>([]);
-    const [users, setUsers] = useState<UserType[]>(INITIAL_USERS);
-    const [currentUser, setCurrentUser] = useState<UserType | null>(null);
-    const addToCart = (product: Product) => { setCart(prev => { const existing = prev.find(p => p.id === product.id); if (existing) return prev.map(p => p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p); return [...prev, { ...product, quantity: 1 }]; }); };
-    const removeFromCart = (id: string) => setCart(prev => prev.filter(p => p.id !== id));
-    const clearCart = () => setCart([]);
-    const addOrder = (order: Order) => setOrders(prev => [order, ...prev]);
-    const registerUser = (user: UserType) => { if (users.find(u => u.email === user.email)) return false; setUsers([...users, user]); setCurrentUser(user); return true; };
-    const loginUser = (email: string, pass: string) => { const user = users.find(u => u.email === email && u.password === pass); if (user) { setCurrentUser(user); return true; } return false; };
-    return (
-        <AppContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, orders, addOrder, users, currentUser, registerUser, loginUser, logoutUser: () => setCurrentUser(null) }}>
-            <Router><div className="flex flex-col min-h-screen"><Navbar /><main className="flex-grow"><Routes><Route path="/" element={<HomePage />} /><Route path="/shop" element={<ShopPage />} /><Route path="/cart" element={<CartPage />} /><Route path="/subscribe" element={<SubscriptionPage />} /><Route path="/admin" element={<AdminPage />} /><Route path="/signup" element={<SignupPage />} /><Route path="/login" element={<LoginPage />} /><Route path="/portal" element={<UserPortal />} /><Route path="/support" element={<ContactPage />} /><Route path="/contact" element={<ContactPage />} /><Route path="/terms" element={<TermsPage />} /></Routes></main><Footer /><ChatWidget /></div></Router>
-        </AppContext.Provider>
-    );
-};
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [users, setUsers] = useState<UserType[]>(INITIAL_USERS);
+  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
-const ContactPage = () => (<div className="container mx-auto px-4 py-12"><h1 className="text-3xl font-bold mb-8">Contact Us</h1><div className="bg-white p-8 rounded shadow-sm"><p><strong>Address:</strong> {COMPANY_INFO.address}</p><p><strong>Phone:</strong> {COMPANY_INFO.phone}</p><p><strong>Email:</strong> {COMPANY_INFO.email}</p></div></div>);
-const TermsPage = () => (<div className="container mx-auto px-4 py-12"><h1 className="text-3xl font-bold mb-8">Terms and Conditions</h1><div className="bg-white p-8 rounded shadow-sm whitespace-pre-wrap">{TERMS_TEXT}</div></div>);
+  const addToCart = (product: Product) => {
+    setCart(prev => {
+      const existing = prev.find(item => item.id === product.id);
+      if (existing) {
+        return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item);
+      }
+      return [...prev, { ...product, quantity: 1 }];
+    });
+  };
+
+  const removeFromCart = (productId: string) => {
+    setCart(prev => prev.filter(item => item.id !== productId));
+  };
+
+  const clearCart = () => setCart([]);
+
+  const addOrder = (order: Order) => setOrders(prev => [order, ...prev]);
+
+  const registerUser = (user: UserType) => {
+    if (users.find(u => u.email === user.email)) return false;
+    setUsers(prev => [...prev, user]);
+    setCurrentUser(user);
+    return true;
+  };
+
+  const loginUser = (email: string, pass: string) => {
+    const user = users.find(u => u.email === email && u.password === pass);
+    if (user) {
+      setCurrentUser(user);
+      return true;
+    }
+    return false;
+  };
+
+  const logoutUser = () => setCurrentUser(null);
+
+  return (
+    <AppContext.Provider value={{
+      cart, addToCart, removeFromCart, clearCart,
+      orders, addOrder, users, currentUser, registerUser, loginUser, logoutUser
+    }}>
+      <Router>
+        <div className="flex flex-col min-h-screen bg-white text-gray-900 font-sans antialiased">
+          <Navbar />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/subscribe" element={<Subscribe />} />
+              <Route path="/support" element={<Support />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/portal" element={currentUser ? <UserPortal /> : <Navigate to="/login" />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/terms" element={<Terms />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </AppContext.Provider>
+  );
+};
 
 export default App;
