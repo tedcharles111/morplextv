@@ -273,25 +273,27 @@ const Home = () => (
       </div>
     </section>
 
-    {/* FIXED SECTION: JOLLY DECODER VISUAL SHOWCASE */}
+    {/* SHOWCASE SECTION: JOLLY DECODER PROMOTIONAL FLYER */}
     <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
-        <div className="relative rounded-[3rem] overflow-hidden shadow-2xl border-4 border-red-600/10 group bg-gray-900">
+        <div className="text-center mb-12">
+            <h2 className="text-5xl font-black tracking-tighter mb-4">THE JOLLY DECODER</h2>
+            <p className="text-xl font-bold text-red-600 uppercase tracking-widest">Built for performance. Designed for delight.</p>
+        </div>
+        <div className="relative rounded-[3rem] overflow-hidden shadow-2xl border-8 border-gray-100 group bg-gray-900">
+          {/* USER SPECIFIED JOLLY DECODER PROMO IMAGE */}
           <img 
-            src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?q=80&w=2000&auto=format&fit=crop" 
-            alt="Moreplex Jolly Decoder Premium Experience" 
-            className="w-full h-auto min-h-[500px] object-cover transform transition duration-[1.5s] group-hover:scale-110 opacity-90"
+            src="https://ofstartups.com/wp-content/uploads/2024/01/jolly-decoder-full-promo.jpg" 
+            alt="Moreplex Jolly Decoder Full Promotional Flyer" 
+            className="w-full h-auto object-cover transform transition duration-[1.5s] group-hover:scale-[1.02]"
+            loading="lazy"
+            onError={(e) => {
+              // Fallback to high quality mirror if the primary link is blocked or broken
+              e.currentTarget.src = "https://images.unsplash.com/photo-1593305841991-05c297ba4575?q=80&w=2000&auto=format&fit=crop";
+              console.log("Primary flyer link failed, using high-quality fallback.");
+            }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex flex-col justify-end p-16 text-white">
-            <span className="text-red-600 font-black text-sm uppercase tracking-[0.5em] mb-4">Official Showcase</span>
-            <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter leading-none">THE JOLLY <br/>DECODER</h2>
-            <p className="text-xl md:text-2xl font-medium text-gray-300 max-w-2xl leading-relaxed">The pinnacle of Direct-To-Home technology. Built to handle 120+ channels with crystal-clear 1080p output and multi-device support.</p>
-            <div className="mt-10 flex gap-4">
-               <div className="h-1.5 w-12 bg-red-600 rounded-full"></div>
-               <div className="h-1.5 w-12 bg-white/20 rounded-full"></div>
-               <div className="h-1.5 w-12 bg-white/20 rounded-full"></div>
-            </div>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
         </div>
       </div>
     </section>
@@ -299,7 +301,7 @@ const Home = () => (
     <section className="py-24 bg-gray-900 text-white overflow-hidden relative">
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
             <div className="md:w-1/2 mb-12 md:mb-0">
-                <h2 className="text-4xl font-black mb-8">JOLLY HD DECODER FEATURES</h2>
+                <h2 className="text-4xl font-black mb-8 uppercase tracking-tighter">Premium Hardware Standards</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {JOLLY_FEATURES.slice(0, 10).map((f, i) => (
                         <div key={i} className="flex items-center space-x-3 text-sm text-gray-400">
@@ -313,7 +315,7 @@ const Home = () => (
             <div className="md:w-1/3">
                 <div className="relative group">
                     <div className="absolute -inset-4 bg-red-600 opacity-20 blur-3xl group-hover:opacity-40 transition"></div>
-                    <img src="https://picsum.photos/400/500?random=11" alt="Decoder" className="relative z-10 rounded-3xl shadow-2xl" />
+                    <img src="https://picsum.photos/400/500?random=11" alt="Decoder Detail" className="relative z-10 rounded-3xl shadow-2xl" />
                 </div>
             </div>
         </div>
@@ -439,7 +441,7 @@ const Subscribe = () => {
 
                 <div className="mt-24 max-w-5xl mx-auto bg-gradient-to-r from-red-600 to-red-800 rounded-[3rem] p-12 text-white flex flex-col md:flex-row items-center justify-between shadow-2xl shadow-red-600/30">
                     <div className="mb-8 md:mb-0 max-w-md">
-                        {/* Fixed missing opening tag for h3 on line 451 */}
+                        {/* Fixed missing opening tag for h3 here */}
                         <h3 className="text-3xl font-black mb-4">Moreplex FTA Mode</h3>
                         <p className="text-red-100 text-lg">Don't want to subscribe this month? Our decoder automatically switches to FTA mode with 15+ free local channels. Always connected.</p>
                     </div>
