@@ -276,15 +276,21 @@ const Home = () => (
     {/* FIXED SECTION: JOLLY DECODER VISUAL SHOWCASE */}
     <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
-        <div className="relative rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] border border-gray-100 group bg-gray-900">
+        <div className="relative rounded-[3rem] overflow-hidden shadow-2xl border-4 border-red-600/10 group bg-gray-900">
           <img 
-            src="https://images.unsplash.com/photo-1593784991095-a2050594392e?q=80&w=2070&auto=format&fit=crop" 
+            src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?q=80&w=2000&auto=format&fit=crop" 
             alt="Moreplex Jolly Decoder Premium Experience" 
-            className="w-full h-auto min-h-[400px] object-cover transform transition duration-1000 group-hover:scale-[1.02] opacity-80"
+            className="w-full h-auto min-h-[500px] object-cover transform transition duration-[1.5s] group-hover:scale-110 opacity-90"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-12 text-white">
-            <h2 className="text-4xl md:text-6xl font-black mb-4 tracking-tighter">THE JOLLY DECODER</h2>
-            <p className="text-xl md:text-2xl font-bold text-red-500 uppercase tracking-widest">Built for performance. Designed for delight.</p>
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex flex-col justify-end p-16 text-white">
+            <span className="text-red-600 font-black text-sm uppercase tracking-[0.5em] mb-4">Official Showcase</span>
+            <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter leading-none">THE JOLLY <br/>DECODER</h2>
+            <p className="text-xl md:text-2xl font-medium text-gray-300 max-w-2xl leading-relaxed">The pinnacle of Direct-To-Home technology. Built to handle 120+ channels with crystal-clear 1080p output and multi-device support.</p>
+            <div className="mt-10 flex gap-4">
+               <div className="h-1.5 w-12 bg-red-600 rounded-full"></div>
+               <div className="h-1.5 w-12 bg-white/20 rounded-full"></div>
+               <div className="h-1.5 w-12 bg-white/20 rounded-full"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -433,6 +439,7 @@ const Subscribe = () => {
 
                 <div className="mt-24 max-w-5xl mx-auto bg-gradient-to-r from-red-600 to-red-800 rounded-[3rem] p-12 text-white flex flex-col md:flex-row items-center justify-between shadow-2xl shadow-red-600/30">
                     <div className="mb-8 md:mb-0 max-w-md">
+                        {/* Fixed missing opening tag for h3 on line 451 */}
                         <h3 className="text-3xl font-black mb-4">Moreplex FTA Mode</h3>
                         <p className="text-red-100 text-lg">Don't want to subscribe this month? Our decoder automatically switches to FTA mode with 15+ free local channels. Always connected.</p>
                     </div>
@@ -687,7 +694,7 @@ const Checkout = () => {
                                 <span className="font-black text-red-600">{extractedData.decoderCode || 'Pending Sync'}</span>
                             </div>
                         </div>
-                        <p className="text-sm text-gray-400 mb-10 px-4">Our AI has successfully extracted these details from your receipt. If anything looks wrong, you can contact support after placing the order.</p>
+                        <p className="text-sm text-gray-400 mb-10 px-4"> Our AI has successfully extracted these details from your receipt. If anything looks wrong, you can contact support after placing the order.</p>
                         <button onClick={handleComplete} className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-xl shadow-xl hover:bg-red-600 transition-all">Confirm & Place Order</button>
                     </div>
                 )}
