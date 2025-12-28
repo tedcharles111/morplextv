@@ -273,19 +273,19 @@ const Home = () => (
       </div>
     </section>
 
-    {/* NEW SECTION: JOLLY DECODER VISUAL SHOWCASE */}
+    {/* FIXED SECTION: JOLLY DECODER VISUAL SHOWCASE */}
     <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
-        <div className="relative rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] border border-gray-100 group">
+        <div className="relative rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] border border-gray-100 group bg-gray-900">
           <img 
-            src="https://ofstartups.com/wp-content/uploads/2024/01/jolly-decoder-full-promo.jpg" 
-            alt="Jolly Decoder Feature Showcase" 
-            className="w-full h-auto object-cover transform transition duration-1000 group-hover:scale-[1.02]"
-            onError={(e) => {
-              // Fallback if specific URL isn't available yet
-              e.currentTarget.src = 'https://i.ibb.co/vzD7V6N/jolly-decoder-promo.png';
-            }}
+            src="https://images.unsplash.com/photo-1593784991095-a2050594392e?q=80&w=2070&auto=format&fit=crop" 
+            alt="Moreplex Jolly Decoder Premium Experience" 
+            className="w-full h-auto min-h-[400px] object-cover transform transition duration-1000 group-hover:scale-[1.02] opacity-80"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-12 text-white">
+            <h2 className="text-4xl md:text-6xl font-black mb-4 tracking-tighter">THE JOLLY DECODER</h2>
+            <p className="text-xl md:text-2xl font-bold text-red-500 uppercase tracking-widest">Built for performance. Designed for delight.</p>
+          </div>
         </div>
       </div>
     </section>
