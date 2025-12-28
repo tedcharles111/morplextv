@@ -273,6 +273,23 @@ const Home = () => (
       </div>
     </section>
 
+    {/* NEW SECTION: JOLLY DECODER VISUAL SHOWCASE */}
+    <section className="py-12 bg-white">
+      <div className="container mx-auto px-4">
+        <div className="relative rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] border border-gray-100 group">
+          <img 
+            src="https://ofstartups.com/wp-content/uploads/2024/01/jolly-decoder-full-promo.jpg" 
+            alt="Jolly Decoder Feature Showcase" 
+            className="w-full h-auto object-cover transform transition duration-1000 group-hover:scale-[1.02]"
+            onError={(e) => {
+              // Fallback if specific URL isn't available yet
+              e.currentTarget.src = 'https://i.ibb.co/vzD7V6N/jolly-decoder-promo.png';
+            }}
+          />
+        </div>
+      </div>
+    </section>
+
     <section className="py-24 bg-gray-900 text-white overflow-hidden relative">
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
             <div className="md:w-1/2 mb-12 md:mb-0">
@@ -382,7 +399,11 @@ const Subscribe = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
                     {SUBSCRIPTION_PLANS.filter(p => p.type === 'PayTV').map((plan, i) => (
-                        <div key={plan.id} className={`rounded-[3rem] p-10 border-2 transition-all duration-300 flex flex-col ${i === 2 ? 'bg-gray-900 text-white border-gray-900 shadow-2xl scale-105' : 'bg-white text-gray-900 border-gray-100 hover:border-red-600 shadow-sm'}`}>
+                        <div 
+                          key={plan.id} 
+                          className={`rounded-[3rem] p-10 border-2 transition-all duration-500 flex flex-col transform hover:-translate-y-4 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.2)] animate-slide-in-up ${i === 2 ? 'bg-gray-900 text-white border-gray-900 shadow-2xl scale-105 hover:scale-[1.08]' : 'bg-white text-gray-900 border-gray-100 hover:border-red-600 shadow-sm'}`}
+                          style={{ animationDelay: `${i * 150}ms` }}
+                        >
                             {i === 2 && <div className="bg-red-600 text-white text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-[0.2em] mb-6 self-start">Most Popular</div>}
                             <div className="mb-10">
                                 <h3 className={`text-2xl font-black mb-2 ${i === 2 ? 'text-white' : 'text-gray-900'}`}>{plan.name}</h3>
