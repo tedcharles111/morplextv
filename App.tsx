@@ -283,15 +283,10 @@ const Home = () => (
         <div className="relative rounded-[3rem] overflow-hidden shadow-2xl border-8 border-gray-100 group bg-gray-900">
           {/* USER SPECIFIED JOLLY DECODER PROMO IMAGE */}
           <img 
-            src="https://ofstartups.com/wp-content/uploads/2024/01/jolly-decoder-full-promo.jpg" 
+            src="https://ng.moreplextv.com/wp-content/uploads/2024/12/5.png" 
             alt="Moreplex Jolly Decoder Full Promotional Flyer" 
             className="w-full h-auto object-cover transform transition duration-[1.5s] group-hover:scale-[1.02]"
             loading="lazy"
-            onError={(e) => {
-              // Fallback to high quality mirror if the primary link is blocked or broken
-              e.currentTarget.src = "https://images.unsplash.com/photo-1593305841991-05c297ba4575?q=80&w=2000&auto=format&fit=crop";
-              console.log("Primary flyer link failed, using high-quality fallback.");
-            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
         </div>
@@ -999,7 +994,7 @@ const AdminDashboard = () => {
                                     <th className="px-10 py-6">Client</th>
                                     <th className="px-10 py-6">Value</th>
                                     <th className="px-10 py-6">Status</th>
-                                    <th className="px-10 py-6">IUC Sync</th>
+                                    <th className="px-10 py-6">Extracted Decoder Code</th>
                                     <th className="px-10 py-6 text-right">Actions</th>
                                 </tr>
                             </thead>
