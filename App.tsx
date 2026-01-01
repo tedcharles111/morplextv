@@ -316,6 +316,40 @@ const Home = () => (
         </div>
     </section>
 
+    {/* FAMILY FRIENDLY SECTION */}
+    <section className="py-24 bg-white relative overflow-hidden">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-16">
+            <div className="md:w-1/2 relative">
+                <div className="absolute -inset-4 bg-red-100 rounded-[3.5rem] transform -rotate-2 scale-105 z-0"></div>
+                <div className="relative z-10 rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white">
+                     <img 
+                        src="https://dano.com.ng/wp-content/uploads/2019/09/family-watching-tv-together.jpg" 
+                        alt="Family watching TV" 
+                        className="w-full h-auto object-cover hover:scale-105 transition duration-700" 
+                    />
+                </div>
+            </div>
+            <div className="md:w-1/2">
+                <span className="text-red-600 font-black tracking-widest uppercase text-xs mb-2 block">Wholesome Entertainment</span>
+                <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight text-gray-900">Content the Whole Family Will Love</h2>
+                <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                    Create lasting memories with entertainment that brings everyone together. Our channels are carefully selected to ensure safe, educational, and exciting viewing for all ages.
+                </p>
+                <div className="grid grid-cols-2 gap-y-4 gap-x-2 mb-10">
+                    {['Parental Controls', 'Kid-Friendly Zone', 'Educational Series', 'Family Movies'].map((feature, idx) => (
+                        <div key={idx} className="flex items-center space-x-2">
+                             <CheckCircle className="h-5 w-5 text-red-600" />
+                             <span className="font-bold text-gray-800">{feature}</span>
+                        </div>
+                    ))}
+                </div>
+                <Link to="/subscribe" className="inline-flex items-center bg-red-600 text-white px-10 py-4 rounded-2xl font-black hover:bg-red-700 transition shadow-xl shadow-red-600/20">
+                    Explore Channels
+                </Link>
+            </div>
+        </div>
+    </section>
+
     <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-4 text-center mb-16">
             <h2 className="text-4xl font-black mb-4">Join 1 Million+ Happy Viewers</h2>
