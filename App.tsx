@@ -51,6 +51,31 @@ const JOLLY_FEATURES = [
   "Aspect Ratio: Auto, 16:9 Pillar box, 4:3 Pan & Scan, 4:3 Letter Box"
 ];
 
+const CHANNEL_LOGOS = [
+  "https://unificationprod.azurewebsites.net/media/ghrfqv5t/artiicle-zee-world-unveils-enhanced-channel-offering-on-dstv_1920x1080.jpg",
+  "https://archive.org/download/supersport-tennis/supersport-tennis.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2025/09/black-Diamond.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2025/09/disney-jr.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2022/10/cinemachi-max.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2022/10/moreplex-music1.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2025/09/fix-foxi.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2025/09/fix-foxi.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2023/06/S-Premier-League-768x432.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2022/10/Sunna-tv.jpg",
+  "https://ng.moreplextv.com/wp-content/uploads/2022/10/lollykids.jpg",
+  "https://ng.moreplextv.com/wp-content/uploads/2022/10/Pentecost.jpg",
+  "https://ng.moreplextv.com/wp-content/uploads/2022/12/mbc-2.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2025/09/starLife.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2022/10/Arirang-1.jpg",
+  "https://ng.moreplextv.com/wp-content/uploads/2022/12/christainment-tv.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2022/10/KBS-KOREA.jpg",
+  "https://ng.moreplextv.com/wp-content/uploads/2022/12/foodies.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2022/12/MTV-BASE.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2022/12/top-sports.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2022/12/top-sports.png",
+  "https://ng.moreplextv.com/wp-content/uploads/2022/10/fitness.jpg"
+];
+
 // --- Components ---
 
 const Logo = ({ className }: { className?: string }) => (
@@ -350,7 +375,39 @@ const Home = () => (
         </div>
     </section>
 
-    <section className="py-24 bg-gray-50">
+    {/* OUR CHANNELS SECTION */}
+    <section className="py-24 bg-gray-50 overflow-hidden">
+        <div className="container mx-auto px-4 text-center mb-16">
+            <h2 className="text-4xl font-black mb-4">Our Channels</h2>
+            <div className="w-16 h-1.5 bg-red-600 mx-auto rounded-full"></div>
+        </div>
+        
+        <div className="relative w-full">
+            <div className="flex space-x-12 animate-marquee whitespace-nowrap hover:pause">
+                {/* Render logos twice for seamless loop */}
+                {[...CHANNEL_LOGOS, ...CHANNEL_LOGOS].map((logo, index) => (
+                    <div key={index} className="w-48 h-32 flex-shrink-0 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center p-4 hover:shadow-lg transition-shadow duration-300">
+                         <img src={logo} alt={`Channel ${index}`} className="max-w-full max-h-full object-contain grayscale hover:grayscale-0 transition duration-300" />
+                    </div>
+                ))}
+            </div>
+        </div>
+        
+        <style>{`
+            @keyframes marquee {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+            .animate-marquee {
+                animation: marquee 40s linear infinite;
+            }
+            .hover\\:pause:hover {
+                animation-play-state: paused;
+            }
+        `}</style>
+    </section>
+
+    <section className="py-24 bg-white">
         <div className="container mx-auto px-4 text-center mb-16">
             <h2 className="text-4xl font-black mb-4">Join 1 Million+ Happy Viewers</h2>
             <p className="text-gray-500">Moreplex TV is redefining African entertainment.</p>
