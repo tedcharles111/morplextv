@@ -80,18 +80,11 @@ const CHANNEL_LOGOS = [
 
 const Logo = ({ className }: { className?: string }) => (
   <div className={`bg-white rounded-lg p-1 inline-block ${className}`}>
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      viewBox="0 0 220 60" 
-      className="w-full h-full"
-      role="img" 
-      aria-label="Moreplex TV Logo"
-    >
-      <rect width="220" height="60" rx="8" fill="#dc2626" />
-      <path d="M20 15 H 30 L 40 30 L 50 15 H 60 V 45 H 50 V 25 L 40 40 L 30 25 V 45 H 20 Z" fill="white" />
-      <text x="70" y="42" fontFamily="sans-serif" fontWeight="900" fontSize="32" fill="white" letterSpacing="-0.5">MOREPLEX</text>
-      <text x="195" y="24" fontFamily="sans-serif" fontWeight="bold" fontSize="14" fill="white">TV</text>
-    </svg>
+    <img 
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPzhubhA7zHDKi6p3ZPfVKXRngf1upUQkL7A&s" 
+      alt="Moreplex TV Logo" 
+      className="h-full w-auto object-contain"
+    />
   </div>
 );
 
