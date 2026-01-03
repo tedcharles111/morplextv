@@ -423,6 +423,22 @@ const Home = () => (
             ))}
         </div>
     </section>
+
+    {/* Immersive Movie Wallpaper Section */}
+    <section className="relative w-full h-[600px] overflow-hidden bg-black">
+        <div className="absolute inset-0">
+             <img 
+                src="https://www.cockroachlabs.com/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2F00voh0j35590%2F2hcGftfw67krNyVIpkxAHn%2F34541f4c44d866214e3176d94a46a77a%2Fnetflix-banner-with-crl-overlay.png&w=2048&q=75" 
+                alt="Moreplex Entertainment Content" 
+                className="w-full h-full object-cover animate-ken-burns opacity-60"
+             />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-black/20"></div>
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
+             <h2 className="text-5xl md:text-7xl font-black text-white mb-6 drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] tracking-tight">Endless Entertainment</h2>
+             <p className="text-2xl text-white/90 font-medium drop-shadow-md max-w-3xl">Get ready to immerse yourself in a vast library of movies, series, and exclusive shows.</p>
+        </div>
+    </section>
   </div>
 );
 
