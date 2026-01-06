@@ -38,87 +38,45 @@ export const INITIAL_USERS: User[] = [
 export const PRODUCTS: Product[] = [
   {
     id: 'p1',
-    sku: 'MPX-DEC-001',
-    name: 'Moreplex HD Decoder + 1 Month Sub',
-    description: 'High Definition DTH Decoder with PVR functionality. Includes HDMI cable, Remote, and 1 month free Premium subscription.',
+    sku: 'MPX-DEC-STD',
+    name: 'Moreplex Classic HD Decoder',
+    description: 'High Definition DTH Decoder with crystal clear output. Comes with 1 Month Free Subscription.',
     price: 15000,
     installationFee: 5000,
     category: 'decoder',
     stock: 50,
-    image: 'https://picsum.photos/400/300?random=1'
+    image: 'https://freepressnews.com.ng/wp-content/uploads/2026/01/decoder-dth_1-removebg-preview.png'
   },
   {
     id: 'p2',
-    sku: 'MPX-DISH-60',
-    name: '60cm Satellite Dish',
-    description: 'Ku-Band High Gain Satellite Dish. Weather resistant coating. Best for urban areas.',
-    price: 8000,
-    installationFee: 3000,
-    category: 'dish',
+    sku: 'MPX-DEC-JOLLY',
+    name: 'Moreplex Jolly Decoder',
+    description: 'The all-new Jolly Decoder. Compact, powerful, and designed for sheer delight. Supports YouTube and PVR.',
+    price: 18000,
+    installationFee: 5000,
+    category: 'decoder',
     stock: 100,
-    image: 'https://picsum.photos/400/300?random=2'
+    image: 'https://freepressnews.com.ng/wp-content/uploads/2026/01/jolly_2-removebg-preview.png'
   },
   {
     id: 'p3',
-    sku: 'MPX-COMBO-01',
-    name: 'Full Kit (Decoder + Dish)',
-    description: 'Complete setup including HD Decoder, 60cm Dish, LNB, and 20m Cable. The best starter pack.',
-    price: 22000,
-    installationFee: 7000,
-    category: 'decoder',
-    stock: 30,
-    image: 'https://picsum.photos/400/300?random=3'
-  },
-  {
-    id: 'p4',
     sku: 'MPX-LNB-QUAD',
-    name: 'Quad LNB',
-    description: 'High performance Quad LNB for multiple signal distribution. Connect up to 4 decoders.',
+    name: 'High-Gain Quad LNB',
+    description: 'Premium Quad LNB for connecting multiple decoders to a single dish without signal loss.',
     price: 4500,
     category: 'accessory',
     stock: 200,
-    image: 'https://picsum.photos/400/300?random=4'
+    image: 'https://freepressnews.com.ng/wp-content/uploads/2026/01/multi-4.png'
   },
   {
-    id: 'p5',
-    sku: 'MPX-REM-001',
-    name: 'Universal Remote Control',
-    description: 'Replacement remote control for all Moreplex decoder models. Long battery life.',
-    price: 2500,
+    id: 'p4',
+    sku: 'MPX-WIFI-ANT',
+    name: 'USB WiFi Antenna',
+    description: 'Long-range USB WiFi adapter for Moreplex decoders. Enable online features like YouTube.',
+    price: 3500,
     category: 'accessory',
     stock: 150,
-    image: 'https://picsum.photos/400/300?random=5'
-  },
-  {
-    id: 'p6',
-    sku: 'MPX-DISH-90',
-    name: '90cm Satellite Dish',
-    description: 'Larger dish for areas with weaker signal reception or extreme weather conditions.',
-    price: 12000,
-    installationFee: 4000,
-    category: 'dish',
-    stock: 40,
-    image: 'https://picsum.photos/400/300?random=6'
-  },
-  {
-    id: 'p7',
-    sku: 'MPX-CAB-HDMI',
-    name: 'High-Speed HDMI Cable (2m)',
-    description: 'Gold-plated connectors for 4K video support and crystal clear audio.',
-    price: 3000,
-    category: 'accessory',
-    stock: 300,
-    image: 'https://picsum.photos/400/300?random=7'
-  },
-  {
-    id: 'p8',
-    sku: 'MPX-SERV-REPAIR',
-    name: 'On-Site Maintenance Visit',
-    description: 'Book a technician for re-alignment, signal loss issues, or relocation setup.',
-    price: 5000,
-    category: 'service',
-    stock: 999,
-    image: 'https://picsum.photos/400/300?random=8'
+    image: 'https://freepressnews.com.ng/wp-content/uploads/2026/01/wifi-modem-antenna-3.png'
   }
 ];
 
