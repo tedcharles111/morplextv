@@ -38,10 +38,10 @@ export const INITIAL_USERS: User[] = [
 export const PRODUCTS: Product[] = [
   {
     id: 'p1',
-    sku: 'MPX-DEC-STD',
-    name: 'Moreplex Classic HD Decoder',
-    description: 'High Definition DTH Decoder with crystal clear output. Comes with 1 Month Free Subscription.',
-    price: 15000,
+    sku: 'MPX-DEC-HERO',
+    name: 'MOREPLEXTV HERO DECODER- HD Quality (DTH satellite only)',
+    description: 'On Sales for N7,500 while N5,000 for Activation with Active subscription',
+    price: 7500,
     installationFee: 5000,
     category: 'decoder',
     stock: 50,
