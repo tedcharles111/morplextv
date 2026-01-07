@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useRef } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { 
   ShoppingCart, Menu, X, Phone, Mail, MapPin, Search, 
   Upload, CheckCircle, AlertCircle, PlayCircle, Monitor, Tv,
-  Star, Shield, Clock, Users, Zap, Lock, User, LogOut, LayoutDashboard, History, Settings, CreditCard, FileText
+  Star, Shield, Clock, Users, Zap, Lock, User, LogOut, LayoutDashboard, History, Settings, CreditCard, FileText,
+  MessageCircle, Send, Bot, Trash2
 } from 'lucide-react';
 import { COMPANY_INFO, PRODUCTS, SUBSCRIPTION_PLANS, TERMS_TEXT, TESTIMONIALS, ADMIN_AUTH, INITIAL_USERS } from './constants';
 import { Product, CartItem, Order, SubscriptionPlan, ReceiptData, User as UserType } from './types';
-import { analyzeReceipt } from './services/geminiService';
+import { analyzeReceipt, sendChatMessage } from './services/geminiService';
 
 // --- Global Context ---
 interface AppContextType {
@@ -87,6 +89,113 @@ const Logo = ({ className }: { className?: string }) => (
     />
   </div>
 );
+
+const ChatWidget = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [messages, setMessages] = useState<Array<{sender: 'user' | 'bot', text: string}>>([
+        { sender: 'bot', text: "Hello! I'm Plexy. How can I assist you with your Moreplex TV experience today?" }
+    ]);
+    const [input, setInput] = useState("");
+    const [isTyping, setIsTyping] = useState(false);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        if (isOpen) scrollToBottom();
+    }, [messages, isOpen]);
+
+    const handleSend = async (e?: React.FormEvent) => {
+        e?.preventDefault();
+        if (!input.trim()) return;
+
+        const userMsg = input;
+        setInput("");
+        setMessages(prev => [...prev, { sender: 'user', text: userMsg }]);
+        setIsTyping(true);
+
+        const response = await sendChatMessage(userMsg);
+        
+        setMessages(prev => [...prev, { sender: 'bot', text: response }]);
+        setIsTyping(false);
+    };
+
+    return (
+        <>
+            <div className={`fixed bottom-24 right-6 z-50 w-80 md:w-96 bg-white rounded-3xl shadow-2xl flex flex-col transition-all duration-300 transform origin-bottom-right border border-gray-100 ${isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}`} style={{ maxHeight: '600px' }}>
+                <div className="bg-gradient-to-r from-red-600 to-red-700 p-6 rounded-t-3xl flex justify-between items-center text-white">
+                    <div className="flex items-center space-x-3">
+                        <div className="bg-white/20 p-2 rounded-full"><Bot className="h-6 w-6" /></div>
+                        <div>
+                            <h3 className="font-black text-lg">Live Support</h3>
+                            <div className="flex items-center space-x-1">
+                                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                                <span className="text-xs opacity-80">Online</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 p-2 rounded-full transition"><X className="h-5 w-5" /></button>
+                </div>
+                
+                <div className="flex-grow overflow-y-auto p-6 space-y-4 bg-gray-50 h-[350px]">
+                    {messages.map((msg, i) => (
+                        <div key={i} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                            {msg.sender === 'bot' && <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-2 text-red-600 flex-shrink-0"><Bot className="h-4 w-4" /></div>}
+                            <div className={`max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed ${msg.sender === 'user' ? 'bg-gray-900 text-white rounded-br-none' : 'bg-white text-gray-700 shadow-sm rounded-bl-none border border-gray-100'}`}>
+                                {msg.text}
+                            </div>
+                        </div>
+                    ))}
+                    {isTyping && (
+                        <div className="flex justify-start">
+                             <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-2 text-red-600 flex-shrink-0"><Bot className="h-4 w-4" /></div>
+                             <div className="bg-white text-gray-500 p-4 rounded-2xl rounded-bl-none shadow-sm border border-gray-100">
+                                <div className="flex space-x-1">
+                                    <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce"></div>
+                                    <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce delay-75"></div>
+                                    <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce delay-150"></div>
+                                </div>
+                             </div>
+                        </div>
+                    )}
+                    <div ref={messagesEndRef} />
+                </div>
+
+                <form onSubmit={handleSend} className="p-4 bg-white rounded-b-3xl border-t border-gray-100">
+                    <div className="relative">
+                        <input 
+                            type="text" 
+                            className="w-full bg-gray-100 rounded-xl py-3 pl-4 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-red-600/50 transition" 
+                            placeholder="Type your message..."
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                        />
+                        <button 
+                            type="submit" 
+                            disabled={!input.trim()}
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <Send className="h-4 w-4" />
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <button 
+                onClick={() => setIsOpen(!isOpen)} 
+                className="fixed bottom-6 right-6 z-50 bg-red-600 text-white p-4 rounded-full shadow-[0_8px_30px_rgb(220,38,38,0.4)] hover:bg-red-700 transition transform hover:scale-110 active:scale-95 group"
+            >
+                {isOpen ? <X className="h-8 w-8" /> : <MessageCircle className="h-8 w-8" />}
+                <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500"></span>
+                </span>
+            </button>
+        </>
+    );
+};
 
 const Navbar = () => {
   const { cart, currentUser, logoutUser } = useAppContext();
@@ -472,7 +581,11 @@ const Shop = () => {
                 <p className="text-gray-500 text-sm mb-6 line-clamp-2 leading-relaxed">{product.description}</p>
                 <div className="mt-auto">
                     <div className="flex items-center justify-between mb-6">
-                        <span className="text-3xl font-black text-gray-900">₦{product.price.toLocaleString()}</span>
+                        {product.customPriceDisplay ? (
+                          <span className="text-xl font-black text-gray-900">{product.customPriceDisplay}</span>
+                        ) : (
+                          <span className="text-3xl font-black text-gray-900">₦{product.price.toLocaleString()}</span>
+                        )}
                         {product.installationFee && <span className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">Install Fee: ₦{product.installationFee}</span>}
                     </div>
                     <button 
@@ -1018,6 +1131,7 @@ const AdminDashboard = () => {
     const { orders, users } = useAppContext();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loginData, setLoginData] = useState({ user: '', pass: '' });
+    const [activeTab, setActiveTab] = useState<'orders' | 'users'>('orders');
 
     if (!isAuthenticated) {
         return (
@@ -1081,50 +1195,102 @@ const AdminDashboard = () => {
 
                 <div className="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden shadow-sm">
                     <div className="p-10 border-b border-gray-50 flex flex-col md:flex-row justify-between items-center gap-6">
-                        <h2 className="font-black text-2xl">Order Management</h2>
-                        <div className="flex bg-gray-50 p-1.5 rounded-2xl">
-                            {['All', 'Pending', 'Verified'].map((f, i) => <button key={i} className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition ${i === 0 ? 'bg-white shadow-md text-gray-900' : 'text-gray-400 hover:text-gray-600'}`}>{f}</button>)}
+                        <div className="flex bg-gray-50 p-1.5 rounded-2xl inline-flex">
+                            <button onClick={() => setActiveTab('orders')} className={`px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition ${activeTab === 'orders' ? 'bg-white shadow-md text-gray-900' : 'text-gray-400 hover:text-gray-600'}`}>Orders</button>
+                            <button onClick={() => setActiveTab('users')} className={`px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition ${activeTab === 'users' ? 'bg-white shadow-md text-gray-900' : 'text-gray-400 hover:text-gray-600'}`}>Users</button>
+                        </div>
+                        <div className="flex space-x-2">
+                             <button className="bg-gray-50 hover:bg-gray-100 text-gray-600 p-2 rounded-xl transition"><Search className="h-5 w-5" /></button>
+                             <button className="bg-gray-50 hover:bg-gray-100 text-gray-600 p-2 rounded-xl transition"><Settings className="h-5 w-5" /></button>
                         </div>
                     </div>
+                    
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left">
-                            <thead className="bg-gray-50/50 text-gray-400 uppercase text-[10px] tracking-[0.2em] font-black border-b border-gray-50">
-                                <tr>
-                                    <th className="px-10 py-6">Reference</th>
-                                    <th className="px-10 py-6">Client</th>
-                                    <th className="px-10 py-6">Value</th>
-                                    <th className="px-10 py-6">Status</th>
-                                    <th className="px-10 py-6">Extracted Decoder Code</th>
-                                    <th className="px-10 py-6 text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-50">
-                                {orders.map(o => (
-                                    <tr key={o.id} className="hover:bg-gray-50/50 transition duration-300">
-                                        <td className="px-10 py-8">
-                                            <span className="font-mono text-sm font-black text-gray-900 bg-gray-100 px-3 py-1.5 rounded-lg">#{o.id}</span>
-                                        </td>
-                                        <td className="px-10 py-8">
-                                            <p className="font-black text-gray-900 leading-none mb-1">{o.customerName}</p>
-                                            <p className="text-xs text-gray-400 font-medium">{o.customerEmail}</p>
-                                        </td>
-                                        <td className="px-10 py-8 font-black text-gray-900">₦{o.total.toLocaleString()}</td>
-                                        <td className="px-10 py-8">
-                                            <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${o.status === 'awaiting_ocr' ? 'bg-yellow-50 text-yellow-600 border border-yellow-100' : 'bg-green-50 text-green-600 border border-green-100'}`}>{o.status.replace('_', ' ')}</span>
-                                        </td>
-                                        <td className="px-10 py-8">
-                                            <span className="font-mono text-xs font-black text-red-600">{o.extractedDecoderCode || 'MANUAL REQ'}</span>
-                                        </td>
-                                        <td className="px-10 py-8 text-right">
-                                            <div className="flex items-center justify-end space-x-2">
-                                                <button className="p-3 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded-xl transition"><FileText className="h-5 w-5" /></button>
-                                                <button className="p-3 text-gray-300 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition"><Settings className="h-5 w-5" /></button>
-                                            </div>
-                                        </td>
+                        {activeTab === 'orders' ? (
+                            <table className="w-full text-left">
+                                <thead className="bg-gray-50/50 text-gray-400 uppercase text-[10px] tracking-[0.2em] font-black border-b border-gray-50">
+                                    <tr>
+                                        <th className="px-10 py-6">Reference</th>
+                                        <th className="px-10 py-6">Client</th>
+                                        <th className="px-10 py-6">Value</th>
+                                        <th className="px-10 py-6">Status</th>
+                                        <th className="px-10 py-6">Extracted Decoder Code</th>
+                                        <th className="px-10 py-6 text-right">Actions</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody className="divide-y divide-gray-50">
+                                    {orders.map(o => (
+                                        <tr key={o.id} className="hover:bg-gray-50/50 transition duration-300">
+                                            <td className="px-10 py-8">
+                                                <span className="font-mono text-sm font-black text-gray-900 bg-gray-100 px-3 py-1.5 rounded-lg">#{o.id}</span>
+                                            </td>
+                                            <td className="px-10 py-8">
+                                                <p className="font-black text-gray-900 leading-none mb-1">{o.customerName}</p>
+                                                <p className="text-xs text-gray-400 font-medium">{o.customerEmail}</p>
+                                            </td>
+                                            <td className="px-10 py-8 font-black text-gray-900">₦{o.total.toLocaleString()}</td>
+                                            <td className="px-10 py-8">
+                                                <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${o.status === 'awaiting_ocr' ? 'bg-yellow-50 text-yellow-600 border border-yellow-100' : 'bg-green-50 text-green-600 border border-green-100'}`}>{o.status.replace('_', ' ')}</span>
+                                            </td>
+                                            <td className="px-10 py-8">
+                                                <span className="font-mono text-xs font-black text-red-600">{o.extractedDecoderCode || 'MANUAL REQ'}</span>
+                                            </td>
+                                            <td className="px-10 py-8 text-right">
+                                                <div className="flex items-center justify-end space-x-2">
+                                                    <button className="p-3 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded-xl transition"><FileText className="h-5 w-5" /></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <table className="w-full text-left">
+                                <thead className="bg-gray-50/50 text-gray-400 uppercase text-[10px] tracking-[0.2em] font-black border-b border-gray-50">
+                                    <tr>
+                                        <th className="px-10 py-6">User ID</th>
+                                        <th className="px-10 py-6">Identity</th>
+                                        <th className="px-10 py-6">Contact</th>
+                                        <th className="px-10 py-6">Role</th>
+                                        <th className="px-10 py-6">Joined Date</th>
+                                        <th className="px-10 py-6 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-50">
+                                    {users.map(u => (
+                                        <tr key={u.id} className="hover:bg-gray-50/50 transition duration-300">
+                                            <td className="px-10 py-8">
+                                                <span className="font-mono text-sm font-black text-gray-900 bg-gray-100 px-3 py-1.5 rounded-lg">#{u.id}</span>
+                                            </td>
+                                            <td className="px-10 py-8">
+                                                <div className="flex items-center">
+                                                    <div className="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-black mr-3">{u.name[0]}</div>
+                                                    <div>
+                                                        <p className="font-black text-gray-900 leading-none mb-1">{u.name}</p>
+                                                        <p className="text-xs text-gray-400 font-medium">{u.decoderCode || 'No Decoder Linked'}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-10 py-8">
+                                                <p className="text-sm font-bold text-gray-900">{u.email}</p>
+                                                <p className="text-xs text-gray-400">{u.phone}</p>
+                                            </td>
+                                            <td className="px-10 py-8">
+                                                <span className="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-blue-50 text-blue-600 border border-blue-100">{u.role}</span>
+                                            </td>
+                                            <td className="px-10 py-8">
+                                                <span className="text-sm font-medium text-gray-600">{new Date(u.joinedDate).toLocaleDateString()}</span>
+                                            </td>
+                                            <td className="px-10 py-8 text-right">
+                                                <div className="flex items-center justify-end space-x-2">
+                                                    <button className="p-3 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded-xl transition" title="Delete User"><Trash2 className="h-5 w-5" /></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
                     </div>
                 </div>
             </div>
@@ -1253,6 +1419,7 @@ const App = () => {
             </Routes>
           </main>
           <Footer />
+          <ChatWidget />
         </div>
       </Router>
     </AppContext.Provider>

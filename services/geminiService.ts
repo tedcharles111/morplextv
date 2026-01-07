@@ -1,6 +1,7 @@
 
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type, Chat } from "@google/genai";
 import { ReceiptData } from '../types';
+import { COMPANY_INFO, PRODUCTS, SUBSCRIPTION_PLANS } from '../constants';
 
 /**
  * Converts a file object to a base64 encoded string.
@@ -96,5 +97,64 @@ export const analyzeReceipt = async (file: File): Promise<ReceiptData | null> =>
     console.error("OCR Analysis Error:", error);
     // Gracefully handle API errors by returning null.
     return null;
+  }
+};
+
+// --- LIVE CHAT SERVICE ---
+
+let chatSession: Chat | null = null;
+
+const getChatSession = () => {
+  if (chatSession) return chatSession;
+
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
+  const systemContext = `
+    You are "Plexy", the intelligent and helpful customer support agent for Moreplex TV.
+    
+    About Moreplex TV:
+    - We are a Direct To Home (DTH) TV platform in Africa.
+    - Slogan: "${COMPANY_INFO.tagline}"
+    - Address: ${COMPANY_INFO.address}
+    - Phone: ${COMPANY_INFO.phone}
+    - Email: ${COMPANY_INFO.email}
+    
+    Available Products:
+    ${PRODUCTS.map(p => `- ${p.name}: ₦${p.price.toLocaleString()} (${p.description})`).join('\n')}
+    
+    Subscription Plans:
+    ${SUBSCRIPTION_PLANS.map(p => `- ${p.name}: ₦${p.price.toLocaleString()} for ${p.duration} with ${p.channels} channels.`).join('\n')}
+    
+    Payment:
+    Bank: ${COMPANY_INFO.bankDetails.bankName}
+    Account: ${COMPANY_INFO.bankDetails.accountNumber}
+    Name: ${COMPANY_INFO.bankDetails.accountName}
+    
+    Support Guidelines:
+    1. Be concise, friendly, and enthusiastic.
+    2. If a user asks about buying a decoder, recommend the 'Moreplex Jolly Decoder' for best value.
+    3. If a user has signal issues, suggest checking the LNB alignment.
+    4. If asked about prices, use the data above.
+    5. Keep responses under 3 sentences unless detailed technical help is needed.
+  `;
+
+  chatSession = ai.chats.create({
+    model: 'gemini-3-flash-preview',
+    config: {
+      systemInstruction: systemContext,
+    },
+  });
+
+  return chatSession;
+};
+
+export const sendChatMessage = async (message: string): Promise<string> => {
+  try {
+    const session = getChatSession();
+    const response = await session.sendMessage({ message });
+    return response.text || "I'm having a bit of trouble connecting. Could you say that again?";
+  } catch (error) {
+    console.error("Chat Error:", error);
+    return "I'm currently offline. Please contact us via WhatsApp: " + COMPANY_INFO.phone;
   }
 };

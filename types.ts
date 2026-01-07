@@ -4,6 +4,7 @@ export interface Product {
   name: string;
   description: string;
   price: number;
+  customPriceDisplay?: string;
   installationFee?: number;
   image: string;
   category: 'decoder' | 'dish' | 'accessory' | 'service';
