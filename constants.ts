@@ -51,10 +51,10 @@ export const PRODUCTS: Product[] = [
   {
     id: 'p2',
     sku: 'MPX-DEC-JOLLY',
-    name: 'Moreplex Jolly Decoder',
-    description: 'The all-new Jolly Decoder. Compact, powerful, and designed for sheer delight. Supports YouTube and PVR.',
-    price: 18000,
-    installationFee: 5000,
+    name: 'MOREPLEX TV JOLLY DECODER - HD Quality (DTH satellite + IPTV Internet TV) Read more',
+    description: 'On Sales for N15,000 while N5,000 for Activation with Active subscription',
+    price: 20000,
+    customPriceDisplay: '50,000.00 N20,000.00',
     category: 'decoder',
     stock: 100,
     image: 'https://freepressnews.com.ng/wp-content/uploads/2026/01/jolly_2-removebg-preview.png'
