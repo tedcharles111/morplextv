@@ -80,6 +80,14 @@ const CHANNEL_LOGOS = [
 
 // --- Components ---
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
 const Logo = ({ className }: { className?: string }) => (
   <div className={`bg-white rounded-lg p-1 inline-block ${className}`}>
     <img 
@@ -789,6 +797,10 @@ const Checkout = () => {
         setStep(4);
     };
 
+    if (cart.length === 0 && step !== 4) {
+        return <Navigate to="/shop" replace />;
+    }
+
     return (
         <div className="bg-white min-h-screen py-20">
             <div className="container mx-auto px-4 max-w-2xl">
@@ -1401,6 +1413,7 @@ const App = () => {
       orders, addOrder, users, currentUser, registerUser, loginUser, logoutUser
     }}>
       <Router>
+        <ScrollToTop />
         <div className="flex flex-col min-h-screen bg-white text-gray-900 font-sans antialiased">
           <Navbar />
           <main className="flex-grow">

@@ -86,10 +86,11 @@ export const analyzeReceipt = async (file: File): Promise<ReceiptData | null> =>
       }
     });
 
-    // Directly access the text property as per the latest SDK guidelines.
     const textOutput = response.text;
     if (textOutput) {
-        return JSON.parse(textOutput.trim()) as ReceiptData;
+        // Robustly clean the output in case markdown fences are included
+        const cleanedText = textOutput.replace(/```json\n?|```/g, '').trim();
+        return JSON.parse(cleanedText) as ReceiptData;
     }
     return null;
 
