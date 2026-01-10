@@ -61,10 +61,11 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'p3',
-    sku: 'MPX-LNB-QUAD',
-    name: 'High-Gain Quad LNB',
-    description: 'Premium Quad LNB for connecting multiple decoders to a single dish without signal loss.',
-    price: 4500,
+    sku: 'MPX-LNB-MULTI',
+    name: 'Multi Satellite TV Dish Antenna Multi LNB Bracket Holder',
+    description: 'Multi Satellite TV Dish Antenna Multi LNB  Read more',
+    price: 8000,
+    customPriceDisplay: '11,000.00 N8,000.00',
     category: 'accessory',
     stock: 200,
     image: 'https://freepressnews.com.ng/wp-content/uploads/2026/01/multi-4.png'
