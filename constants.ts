@@ -73,9 +73,10 @@ export const PRODUCTS: Product[] = [
   {
     id: 'p4',
     sku: 'MPX-WIFI-ANT',
-    name: 'USB WiFi Antenna',
-    description: 'Long-range USB WiFi adapter for Moreplex decoders. Enable online features like YouTube.',
-    price: 3500,
+    name: 'MOREPLEXTV JOLLY/INFINITY WIFI MODEM ANTENNA',
+    description: '(You can connect to the Internet) Read more',
+    price: 7000,
+    customPriceDisplay: '10,000.00 N7,000.00',
     category: 'accessory',
     stock: 150,
     image: 'https://freepressnews.com.ng/wp-content/uploads/2026/01/wifi-modem-antenna-3.png'
