@@ -5,9 +5,9 @@ import {
   ShoppingCart, Menu, X, Phone, Mail, MapPin, Search, 
   Upload, CheckCircle, AlertCircle, PlayCircle, Monitor, Tv,
   Star, Shield, Clock, Users, Zap, Lock, User, LogOut, LayoutDashboard, History, Settings, CreditCard, FileText,
-  MessageCircle, Send, Bot, Trash2
+  MessageCircle, Send, Bot, Trash2, Truck, Check, Package
 } from 'lucide-react';
-import { COMPANY_INFO, PRODUCTS, SUBSCRIPTION_PLANS, TERMS_TEXT, TESTIMONIALS, ADMIN_AUTH, INITIAL_USERS } from './constants';
+import { COMPANY_INFO, PRODUCTS, SUBSCRIPTION_PLANS, TERMS_TEXT, TESTIMONIALS, ADMIN_AUTH, INITIAL_USERS, INITIAL_ORDERS } from './constants';
 import { Product, CartItem, Order, SubscriptionPlan, ReceiptData, User as UserType } from './types';
 import { analyzeReceipt, sendChatMessage } from './services/geminiService';
 
@@ -19,6 +19,7 @@ interface AppContextType {
   clearCart: () => void;
   orders: Order[];
   addOrder: (order: Order) => void;
+  updateOrderStatus: (orderId: string, status: Order['status']) => void;
   users: UserType[];
   currentUser: UserType | null;
   registerUser: (user: UserType) => boolean;
@@ -1120,7 +1121,7 @@ const UserPortal = () => {
                                         </div>
                                         <div className="text-center sm:text-right">
                                             <p className="font-black text-2xl text-gray-900 mb-2">₦{order.total.toLocaleString()}</p>
-                                            <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${order.status === 'verified' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'}`}>{order.status.replace('_', ' ')}</span>
+                                            <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${order.status === 'verified' || order.status === 'shipped' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'}`}>{order.status.replace('_', ' ')}</span>
                                         </div>
                                     </div>
                                 ))}
@@ -1140,7 +1141,7 @@ const UserPortal = () => {
 };
 
 const AdminDashboard = () => {
-    const { orders, users } = useAppContext();
+    const { orders, users, updateOrderStatus } = useAppContext();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loginData, setLoginData] = useState({ user: '', pass: '' });
     const [activeTab, setActiveTab] = useState<'orders' | 'users'>('orders');
@@ -1242,14 +1243,32 @@ const AdminDashboard = () => {
                                             </td>
                                             <td className="px-10 py-8 font-black text-gray-900">₦{o.total.toLocaleString()}</td>
                                             <td className="px-10 py-8">
-                                                <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${o.status === 'awaiting_ocr' ? 'bg-yellow-50 text-yellow-600 border border-yellow-100' : 'bg-green-50 text-green-600 border border-green-100'}`}>{o.status.replace('_', ' ')}</span>
+                                                <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${o.status === 'verified' || o.status === 'shipped' ? 'bg-green-100 text-green-600 border border-green-100' : 'bg-yellow-50 text-yellow-600 border border-yellow-100'}`}>{o.status.replace('_', ' ')}</span>
                                             </td>
                                             <td className="px-10 py-8">
                                                 <span className="font-mono text-xs font-black text-red-600">{o.extractedDecoderCode || 'MANUAL REQ'}</span>
                                             </td>
                                             <td className="px-10 py-8 text-right">
                                                 <div className="flex items-center justify-end space-x-2">
-                                                    <button className="p-3 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded-xl transition"><FileText className="h-5 w-5" /></button>
+                                                    {(o.status === 'awaiting_ocr' || o.status === 'pending_payment') && (
+                                                        <button 
+                                                            onClick={() => updateOrderStatus(o.id, 'verified')}
+                                                            className="p-3 text-green-500 hover:bg-green-100 hover:text-green-700 rounded-xl transition" 
+                                                            title="Verify Order"
+                                                        >
+                                                            <CheckCircle className="h-5 w-5" />
+                                                        </button>
+                                                    )}
+                                                    {o.status === 'verified' && (
+                                                        <button 
+                                                            onClick={() => updateOrderStatus(o.id, 'shipped')}
+                                                            className="p-3 text-blue-500 hover:bg-blue-100 hover:text-blue-700 rounded-xl transition" 
+                                                            title="Ship Order"
+                                                        >
+                                                            <Truck className="h-5 w-5" />
+                                                        </button>
+                                                    )}
+                                                    <button className="p-3 text-gray-300 hover:text-gray-600 hover:bg-gray-50 rounded-xl transition"><FileText className="h-5 w-5" /></button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -1367,7 +1386,7 @@ const Terms = () => (
 
 const App = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
   const [users, setUsers] = useState<UserType[]>(INITIAL_USERS);
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
@@ -1388,6 +1407,12 @@ const App = () => {
   const clearCart = () => setCart([]);
 
   const addOrder = (order: Order) => setOrders(prev => [order, ...prev]);
+
+  const updateOrderStatus = (orderId: string, status: Order['status']) => {
+    setOrders(prev => prev.map(order => 
+      order.id === orderId ? { ...order, status } : order
+    ));
+  };
 
   const registerUser = (user: UserType) => {
     if (users.find(u => u.email === user.email)) return false;
@@ -1410,7 +1435,7 @@ const App = () => {
   return (
     <AppContext.Provider value={{
       cart, addToCart, removeFromCart, clearCart,
-      orders, addOrder, users, currentUser, registerUser, loginUser, logoutUser
+      orders, addOrder, updateOrderStatus, users, currentUser, registerUser, loginUser, logoutUser
     }}>
       <Router>
         <ScrollToTop />
