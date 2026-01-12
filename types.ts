@@ -1,3 +1,4 @@
+
 export interface Product {
   id: string;
   sku: string;
@@ -50,7 +51,7 @@ export interface Order {
   total: number;
   customerName: string;
   customerEmail: string;
-  status: 'pending_payment' | 'awaiting_ocr' | 'verified' | 'shipped';
+  status: 'pending_payment' | 'pending_verification' | 'verified' | 'shipped';
   receiptUrl?: string;
   extractedDecoderCode?: string;
   timestamp: Date;

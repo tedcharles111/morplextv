@@ -5,11 +5,11 @@ import {
   ShoppingCart, Menu, X, Phone, Mail, MapPin, Search, 
   Upload, CheckCircle, AlertCircle, PlayCircle, Monitor, Tv,
   Star, Shield, Clock, Users, Zap, Lock, User, LogOut, LayoutDashboard, History, Settings, CreditCard, FileText,
-  MessageCircle, Send, Bot, Trash2, Truck, Check, Package, Inbox
+  MessageCircle, Send, Bot, Trash2, Truck, Check, Package, Inbox, Eye, ExternalLink
 } from 'lucide-react';
 import { COMPANY_INFO, PRODUCTS, SUBSCRIPTION_PLANS, TERMS_TEXT, TESTIMONIALS, ADMIN_AUTH, INITIAL_USERS, INITIAL_ORDERS } from './constants';
 import { Product, CartItem, Order, SubscriptionPlan, ReceiptData, User as UserType } from './types';
-import { analyzeReceipt, sendChatMessage } from './services/geminiService';
+import { sendChatMessage } from './services/geminiService';
 
 // --- Global Context ---
 interface AppContextType {
@@ -78,6 +78,16 @@ const CHANNEL_LOGOS = [
   "https://ng.moreplextv.com/wp-content/uploads/2022/12/top-sports.png",
   "https://ng.moreplextv.com/wp-content/uploads/2022/10/fitness.jpg"
 ];
+
+// --- Helper Functions ---
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = error => reject(error);
+  });
+};
 
 // --- Components ---
 
@@ -754,8 +764,6 @@ const Checkout = () => {
     const { cart, addOrder, clearCart, currentUser } = useAppContext();
     const [step, setStep] = useState(1);
     const [receiptFile, setReceiptFile] = useState<File | null>(null);
-    const [isAnalyzing, setIsAnalyzing] = useState(false);
-    const [extractedData, setExtractedData] = useState<ReceiptData | null>(null);
     const [customerInfo, setCustomerInfo] = useState({
         name: currentUser?.name || '',
         email: currentUser?.email || '',
@@ -772,33 +780,35 @@ const Checkout = () => {
         }
     };
 
-    const handleAnalyze = async () => {
-        if (!receiptFile) return;
-        setIsAnalyzing(true);
-        const data = await analyzeReceipt(receiptFile);
-        setExtractedData(data);
-        setIsAnalyzing(false);
-        if (data) setStep(3);
-        else alert("Failed to analyze receipt. Please try again or fill manually.");
-    };
+    const handleComplete = async () => {
+        let receiptUrl = undefined;
+        if (receiptFile) {
+            // Convert file to base64 to store in the order for admin viewing
+            try {
+                const base64 = await fileToBase64(receiptFile);
+                receiptUrl = `data:${receiptFile.type || 'image/jpeg'};base64,${base64}`;
+            } catch (err) {
+                console.error("Failed to read receipt file", err);
+            }
+        }
 
-    const handleComplete = () => {
         const order: Order = {
             id: Math.random().toString(36).substr(2, 9).toUpperCase(),
             items: cart,
             total,
             customerName: customerInfo.name,
             customerEmail: customerInfo.email,
-            status: 'awaiting_ocr',
+            status: 'pending_verification',
             timestamp: new Date(),
-            extractedDecoderCode: extractedData?.decoderCode
+            receiptUrl,
+            extractedDecoderCode: undefined // No manual entry provided in form, could add one if desired
         };
         addOrder(order);
         clearCart();
-        setStep(4);
+        setStep(3);
     };
 
-    if (cart.length === 0 && step !== 4) {
+    if (cart.length === 0 && step !== 3) {
         return <Navigate to="/shop" replace />;
     }
 
@@ -807,7 +817,7 @@ const Checkout = () => {
             <div className="container mx-auto px-4 max-w-2xl">
                 <div className="flex justify-between items-center mb-16 relative">
                     <div className="absolute h-1 bg-gray-100 top-1/2 left-0 right-0 -z-10"></div>
-                    {[1, 2, 3, 4].map(s => (
+                    {[1, 2, 3].map(s => (
                         <div key={s} className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black transition-all ${step >= s ? 'bg-red-600 text-white shadow-xl shadow-red-600/30' : 'bg-white border-2 border-gray-100 text-gray-300'}`}>{s}</div>
                     ))}
                 </div>
@@ -881,54 +891,22 @@ const Checkout = () => {
                         </div>
 
                         <button 
-                            disabled={!receiptFile || isAnalyzing}
-                            onClick={handleAnalyze}
+                            disabled={!receiptFile}
+                            onClick={handleComplete}
                             className="w-full bg-red-600 text-white py-5 rounded-2xl mt-10 font-black text-xl disabled:bg-gray-200 disabled:text-gray-400 shadow-2xl shadow-red-600/20 flex items-center justify-center space-x-3"
                         >
-                            {isAnalyzing ? (
-                                <>
-                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                    <span>AI Verification...</span>
-                                </>
-                            ) : (
-                                <span>Verify & Continue</span>
-                            )}
+                             <span>Complete Order</span>
                         </button>
                     </div>
                 )}
 
-                {step === 3 && extractedData && (
-                    <div className="bg-gray-50 p-10 rounded-[3rem] border border-gray-100 shadow-sm">
-                        <div className="flex items-center space-x-4 mb-10">
-                            <div className="bg-green-500 p-3 rounded-2xl"><CheckCircle className="h-8 w-8 text-white" /></div>
-                            <h2 className="text-3xl font-black">AI Verification Success</h2>
-                        </div>
-                        <div className="bg-white p-8 rounded-[2rem] border border-gray-100 mb-10 space-y-6">
-                            <div className="flex justify-between items-center border-b border-gray-50 pb-4">
-                                <span className="text-gray-400 font-bold text-xs uppercase tracking-widest">Detected Amount</span>
-                                <span className="font-black text-xl text-green-600">₦{extractedData.amount?.toLocaleString() || '---'}</span>
-                            </div>
-                            <div className="flex justify-between items-center border-b border-gray-50 pb-4">
-                                <span className="text-gray-400 font-bold text-xs uppercase tracking-widest">Transaction Ref</span>
-                                <span className="font-mono text-sm font-black">{extractedData.transactionRef || '---'}</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-gray-400 font-bold text-xs uppercase tracking-widest">Decoder IUC</span>
-                                <span className="font-black text-red-600">{extractedData.decoderCode || 'Pending Sync'}</span>
-                            </div>
-                        </div>
-                        <p className="text-sm text-gray-400 mb-10 px-4"> Our AI has successfully extracted these details from your receipt. If anything looks wrong, you can contact support after placing the order.</p>
-                        <button onClick={handleComplete} className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-xl shadow-xl hover:bg-red-600 transition-all">Confirm & Place Order</button>
-                    </div>
-                )}
-
-                {step === 4 && (
+                {step === 3 && (
                     <div className="text-center py-10 animate-in fade-in zoom-in duration-500">
                         <div className="w-24 h-24 bg-green-500 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-10 shadow-2xl shadow-green-500/30">
                             <CheckCircle className="h-12 w-12" />
                         </div>
                         <h2 className="text-4xl font-black mb-6">Order Placed!</h2>
-                        <p className="text-gray-500 mb-12 text-lg leading-relaxed">Your entertainment is on the way. We've received your payment and will dispatch your order immediately. A confirmation has been sent to your email.</p>
+                        <p className="text-gray-500 mb-12 text-lg leading-relaxed">Your entertainment is on the way. We've received your payment details. Please allow 1-2 hours for manual verification.</p>
                         <Link to="/" className="bg-gray-900 text-white px-12 py-5 rounded-2xl font-black text-lg hover:bg-red-600 transition shadow-xl">Return to Home</Link>
                     </div>
                 )}
@@ -1194,7 +1172,7 @@ const AdminDashboard = () => {
                         { label: "Volume", value: orders.length, icon: <ShoppingCart className="h-6 w-6" />, color: "red" },
                         { label: "Revenue", value: `₦${orders.reduce((s, o) => s + o.total, 0).toLocaleString()}`, icon: <CreditCard className="h-6 w-6" />, color: "blue" },
                         { label: "Members", value: users.length, icon: <Users className="h-6 w-6" />, color: "green" },
-                        { label: "Verification", value: orders.filter(o => o.status === 'awaiting_ocr').length, icon: <Clock className="h-6 w-6" />, color: "yellow" }
+                        { label: "Pending", value: orders.filter(o => o.status === 'pending_verification').length, icon: <Clock className="h-6 w-6" />, color: "yellow" }
                     ].map((stat, i) => (
                         <div key={i} className="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100 flex items-center justify-between group hover:shadow-xl transition duration-500">
                             <div>
@@ -1228,7 +1206,7 @@ const AdminDashboard = () => {
                                             <th className="px-10 py-6">Client</th>
                                             <th className="px-10 py-6">Value</th>
                                             <th className="px-10 py-6">Status</th>
-                                            <th className="px-10 py-6">Extracted Decoder Code</th>
+                                            <th className="px-10 py-6">Receipt</th>
                                             <th className="px-10 py-6 text-right">Actions</th>
                                         </tr>
                                     </thead>
@@ -1247,11 +1225,17 @@ const AdminDashboard = () => {
                                                     <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${o.status === 'verified' || o.status === 'shipped' ? 'bg-green-100 text-green-600 border border-green-100' : 'bg-yellow-50 text-yellow-600 border border-yellow-100'}`}>{o.status.replace('_', ' ')}</span>
                                                 </td>
                                                 <td className="px-10 py-8">
-                                                    <span className="font-mono text-xs font-black text-red-600">{o.extractedDecoderCode || 'MANUAL REQ'}</span>
+                                                   {o.receiptUrl ? (
+                                                       <a href={o.receiptUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-600 hover:text-blue-800 font-bold text-sm">
+                                                           <Eye className="h-4 w-4 mr-1" /> View Receipt
+                                                       </a>
+                                                   ) : (
+                                                       <span className="text-xs text-gray-400 font-medium">No Receipt</span>
+                                                   )}
                                                 </td>
                                                 <td className="px-10 py-8 text-right">
                                                     <div className="flex items-center justify-end space-x-2">
-                                                        {(o.status === 'awaiting_ocr' || o.status === 'pending_payment') && (
+                                                        {(o.status === 'pending_verification' || o.status === 'pending_payment') && (
                                                             <button 
                                                                 onClick={() => updateOrderStatus(o.id, 'verified')}
                                                                 className="p-3 text-green-500 hover:bg-green-100 hover:text-green-700 rounded-xl transition" 
