@@ -21,19 +21,8 @@ export const ADMIN_AUTH = {
   password: "moreplex2025"
 };
 
-// Mock Initial Users
-export const INITIAL_USERS: User[] = [
-  {
-    id: 'user-1',
-    name: 'John Doe',
-    email: 'john@example.com',
-    phone: '08012345678',
-    decoderCode: 'MPX-882910',
-    password: 'password123',
-    role: 'customer',
-    joinedDate: new Date('2024-01-15')
-  }
-];
+// Empty initial users to ensure real data usage only
+export const INITIAL_USERS: User[] = [];
 
 export const PRODUCTS: Product[] = [
   {
@@ -83,58 +72,8 @@ export const PRODUCTS: Product[] = [
   }
 ];
 
-// Mock Initial Orders to populate Admin Dashboard
-export const INITIAL_ORDERS: Order[] = [
-  {
-    id: 'ORD-7729-XJ',
-    items: [
-      { ...PRODUCTS[0], quantity: 1 }
-    ],
-    total: 12500,
-    customerName: 'Chioma Adebayo',
-    customerEmail: 'chioma@example.com',
-    status: 'awaiting_ocr',
-    timestamp: new Date('2024-01-20T10:30:00'),
-    extractedDecoderCode: 'MPX-882910',
-    receiptUrl: 'mock-receipt-1.jpg'
-  },
-  {
-    id: 'ORD-9921-MC',
-    items: [
-      { ...PRODUCTS[1], quantity: 1 },
-      { ...PRODUCTS[2], quantity: 1 }
-    ],
-    total: 28000,
-    customerName: 'Emmanuel Kalu',
-    customerEmail: 'emmanuel@example.com',
-    status: 'verified',
-    timestamp: new Date('2024-01-18T14:15:00'),
-    extractedDecoderCode: undefined
-  },
-  {
-    id: 'ORD-1102-AB',
-    items: [
-      { ...PRODUCTS[3], quantity: 2 }
-    ],
-    total: 14000,
-    customerName: 'Amina Yusuf',
-    customerEmail: 'amina@example.com',
-    status: 'shipped',
-    timestamp: new Date('2024-01-15T09:00:00'),
-    extractedDecoderCode: undefined
-  },
-  {
-      id: 'ORD-3321-KL',
-      items: [
-          { ...PRODUCTS[0], quantity: 1 }
-      ],
-      total: 12500,
-      customerName: 'David West',
-      customerEmail: 'david.west@example.com',
-      status: 'pending_payment',
-      timestamp: new Date('2024-01-21T16:45:00')
-  }
-];
+// Empty initial orders to ensure real data usage only
+export const INITIAL_ORDERS: Order[] = [];
 
 export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   { id: 'sub-1', name: 'Moreplex Starter', price: 1500, duration: '1 Month', channels: 25, type: 'PayTV' },

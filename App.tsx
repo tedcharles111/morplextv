@@ -5,7 +5,7 @@ import {
   ShoppingCart, Menu, X, Phone, Mail, MapPin, Search, 
   Upload, CheckCircle, AlertCircle, PlayCircle, Monitor, Tv,
   Star, Shield, Clock, Users, Zap, Lock, User, LogOut, LayoutDashboard, History, Settings, CreditCard, FileText,
-  MessageCircle, Send, Bot, Trash2, Truck, Check, Package
+  MessageCircle, Send, Bot, Trash2, Truck, Check, Package, Inbox
 } from 'lucide-react';
 import { COMPANY_INFO, PRODUCTS, SUBSCRIPTION_PLANS, TERMS_TEXT, TESTIMONIALS, ADMIN_AUTH, INITIAL_USERS, INITIAL_ORDERS } from './constants';
 import { Product, CartItem, Order, SubscriptionPlan, ReceiptData, User as UserType } from './types';
@@ -1206,7 +1206,7 @@ const AdminDashboard = () => {
                     ))}
                 </div>
 
-                <div className="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden shadow-sm">
+                <div className="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden shadow-sm min-h-[400px]">
                     <div className="p-10 border-b border-gray-50 flex flex-col md:flex-row justify-between items-center gap-6">
                         <div className="flex bg-gray-50 p-1.5 rounded-2xl inline-flex">
                             <button onClick={() => setActiveTab('orders')} className={`px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition ${activeTab === 'orders' ? 'bg-white shadow-md text-gray-900' : 'text-gray-400 hover:text-gray-600'}`}>Orders</button>
@@ -1220,107 +1220,123 @@ const AdminDashboard = () => {
                     
                     <div className="overflow-x-auto">
                         {activeTab === 'orders' ? (
-                            <table className="w-full text-left">
-                                <thead className="bg-gray-50/50 text-gray-400 uppercase text-[10px] tracking-[0.2em] font-black border-b border-gray-50">
-                                    <tr>
-                                        <th className="px-10 py-6">Reference</th>
-                                        <th className="px-10 py-6">Client</th>
-                                        <th className="px-10 py-6">Value</th>
-                                        <th className="px-10 py-6">Status</th>
-                                        <th className="px-10 py-6">Extracted Decoder Code</th>
-                                        <th className="px-10 py-6 text-right">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-50">
-                                    {orders.map(o => (
-                                        <tr key={o.id} className="hover:bg-gray-50/50 transition duration-300">
-                                            <td className="px-10 py-8">
-                                                <span className="font-mono text-sm font-black text-gray-900 bg-gray-100 px-3 py-1.5 rounded-lg">#{o.id}</span>
-                                            </td>
-                                            <td className="px-10 py-8">
-                                                <p className="font-black text-gray-900 leading-none mb-1">{o.customerName}</p>
-                                                <p className="text-xs text-gray-400 font-medium">{o.customerEmail}</p>
-                                            </td>
-                                            <td className="px-10 py-8 font-black text-gray-900">₦{o.total.toLocaleString()}</td>
-                                            <td className="px-10 py-8">
-                                                <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${o.status === 'verified' || o.status === 'shipped' ? 'bg-green-100 text-green-600 border border-green-100' : 'bg-yellow-50 text-yellow-600 border border-yellow-100'}`}>{o.status.replace('_', ' ')}</span>
-                                            </td>
-                                            <td className="px-10 py-8">
-                                                <span className="font-mono text-xs font-black text-red-600">{o.extractedDecoderCode || 'MANUAL REQ'}</span>
-                                            </td>
-                                            <td className="px-10 py-8 text-right">
-                                                <div className="flex items-center justify-end space-x-2">
-                                                    {(o.status === 'awaiting_ocr' || o.status === 'pending_payment') && (
-                                                        <button 
-                                                            onClick={() => updateOrderStatus(o.id, 'verified')}
-                                                            className="p-3 text-green-500 hover:bg-green-100 hover:text-green-700 rounded-xl transition" 
-                                                            title="Verify Order"
-                                                        >
-                                                            <CheckCircle className="h-5 w-5" />
-                                                        </button>
-                                                    )}
-                                                    {o.status === 'verified' && (
-                                                        <button 
-                                                            onClick={() => updateOrderStatus(o.id, 'shipped')}
-                                                            className="p-3 text-blue-500 hover:bg-blue-100 hover:text-blue-700 rounded-xl transition" 
-                                                            title="Ship Order"
-                                                        >
-                                                            <Truck className="h-5 w-5" />
-                                                        </button>
-                                                    )}
-                                                    <button className="p-3 text-gray-300 hover:text-gray-600 hover:bg-gray-50 rounded-xl transition"><FileText className="h-5 w-5" /></button>
-                                                </div>
-                                            </td>
+                            orders.length > 0 ? (
+                                <table className="w-full text-left">
+                                    <thead className="bg-gray-50/50 text-gray-400 uppercase text-[10px] tracking-[0.2em] font-black border-b border-gray-50">
+                                        <tr>
+                                            <th className="px-10 py-6">Reference</th>
+                                            <th className="px-10 py-6">Client</th>
+                                            <th className="px-10 py-6">Value</th>
+                                            <th className="px-10 py-6">Status</th>
+                                            <th className="px-10 py-6">Extracted Decoder Code</th>
+                                            <th className="px-10 py-6 text-right">Actions</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        ) : (
-                            <table className="w-full text-left">
-                                <thead className="bg-gray-50/50 text-gray-400 uppercase text-[10px] tracking-[0.2em] font-black border-b border-gray-50">
-                                    <tr>
-                                        <th className="px-10 py-6">User ID</th>
-                                        <th className="px-10 py-6">Identity</th>
-                                        <th className="px-10 py-6">Contact</th>
-                                        <th className="px-10 py-6">Role</th>
-                                        <th className="px-10 py-6">Joined Date</th>
-                                        <th className="px-10 py-6 text-right">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-50">
-                                    {users.map(u => (
-                                        <tr key={u.id} className="hover:bg-gray-50/50 transition duration-300">
-                                            <td className="px-10 py-8">
-                                                <span className="font-mono text-sm font-black text-gray-900 bg-gray-100 px-3 py-1.5 rounded-lg">#{u.id}</span>
-                                            </td>
-                                            <td className="px-10 py-8">
-                                                <div className="flex items-center">
-                                                    <div className="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-black mr-3">{u.name[0]}</div>
-                                                    <div>
-                                                        <p className="font-black text-gray-900 leading-none mb-1">{u.name}</p>
-                                                        <p className="text-xs text-gray-400 font-medium">{u.decoderCode || 'No Decoder Linked'}</p>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-50">
+                                        {orders.map(o => (
+                                            <tr key={o.id} className="hover:bg-gray-50/50 transition duration-300">
+                                                <td className="px-10 py-8">
+                                                    <span className="font-mono text-sm font-black text-gray-900 bg-gray-100 px-3 py-1.5 rounded-lg">#{o.id}</span>
+                                                </td>
+                                                <td className="px-10 py-8">
+                                                    <p className="font-black text-gray-900 leading-none mb-1">{o.customerName}</p>
+                                                    <p className="text-xs text-gray-400 font-medium">{o.customerEmail}</p>
+                                                </td>
+                                                <td className="px-10 py-8 font-black text-gray-900">₦{o.total.toLocaleString()}</td>
+                                                <td className="px-10 py-8">
+                                                    <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${o.status === 'verified' || o.status === 'shipped' ? 'bg-green-100 text-green-600 border border-green-100' : 'bg-yellow-50 text-yellow-600 border border-yellow-100'}`}>{o.status.replace('_', ' ')}</span>
+                                                </td>
+                                                <td className="px-10 py-8">
+                                                    <span className="font-mono text-xs font-black text-red-600">{o.extractedDecoderCode || 'MANUAL REQ'}</span>
+                                                </td>
+                                                <td className="px-10 py-8 text-right">
+                                                    <div className="flex items-center justify-end space-x-2">
+                                                        {(o.status === 'awaiting_ocr' || o.status === 'pending_payment') && (
+                                                            <button 
+                                                                onClick={() => updateOrderStatus(o.id, 'verified')}
+                                                                className="p-3 text-green-500 hover:bg-green-100 hover:text-green-700 rounded-xl transition" 
+                                                                title="Verify Order"
+                                                            >
+                                                                <CheckCircle className="h-5 w-5" />
+                                                            </button>
+                                                        )}
+                                                        {o.status === 'verified' && (
+                                                            <button 
+                                                                onClick={() => updateOrderStatus(o.id, 'shipped')}
+                                                                className="p-3 text-blue-500 hover:bg-blue-100 hover:text-blue-700 rounded-xl transition" 
+                                                                title="Ship Order"
+                                                            >
+                                                                <Truck className="h-5 w-5" />
+                                                            </button>
+                                                        )}
+                                                        <button className="p-3 text-gray-300 hover:text-gray-600 hover:bg-gray-50 rounded-xl transition"><FileText className="h-5 w-5" /></button>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td className="px-10 py-8">
-                                                <p className="text-sm font-bold text-gray-900">{u.email}</p>
-                                                <p className="text-xs text-gray-400">{u.phone}</p>
-                                            </td>
-                                            <td className="px-10 py-8">
-                                                <span className="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-blue-50 text-blue-600 border border-blue-100">{u.role}</span>
-                                            </td>
-                                            <td className="px-10 py-8">
-                                                <span className="text-sm font-medium text-gray-600">{new Date(u.joinedDate).toLocaleDateString()}</span>
-                                            </td>
-                                            <td className="px-10 py-8 text-right">
-                                                <div className="flex items-center justify-end space-x-2">
-                                                    <button className="p-3 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded-xl transition" title="Delete User"><Trash2 className="h-5 w-5" /></button>
-                                                </div>
-                                            </td>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <div className="text-center py-24">
+                                    <Inbox className="h-16 w-16 text-gray-200 mx-auto mb-4" />
+                                    <h3 className="text-gray-900 font-black text-xl mb-2">No Orders Yet</h3>
+                                    <p className="text-gray-500 max-w-sm mx-auto">Orders placed by customers will appear here in real-time. Wait for the magic to happen!</p>
+                                </div>
+                            )
+                        ) : (
+                            users.length > 0 ? (
+                                <table className="w-full text-left">
+                                    <thead className="bg-gray-50/50 text-gray-400 uppercase text-[10px] tracking-[0.2em] font-black border-b border-gray-50">
+                                        <tr>
+                                            <th className="px-10 py-6">User ID</th>
+                                            <th className="px-10 py-6">Identity</th>
+                                            <th className="px-10 py-6">Contact</th>
+                                            <th className="px-10 py-6">Role</th>
+                                            <th className="px-10 py-6">Joined Date</th>
+                                            <th className="px-10 py-6 text-right">Actions</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-50">
+                                        {users.map(u => (
+                                            <tr key={u.id} className="hover:bg-gray-50/50 transition duration-300">
+                                                <td className="px-10 py-8">
+                                                    <span className="font-mono text-sm font-black text-gray-900 bg-gray-100 px-3 py-1.5 rounded-lg">#{u.id}</span>
+                                                </td>
+                                                <td className="px-10 py-8">
+                                                    <div className="flex items-center">
+                                                        <div className="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-black mr-3">{u.name[0]}</div>
+                                                        <div>
+                                                            <p className="font-black text-gray-900 leading-none mb-1">{u.name}</p>
+                                                            <p className="text-xs text-gray-400 font-medium">{u.decoderCode || 'No Decoder Linked'}</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td className="px-10 py-8">
+                                                    <p className="text-sm font-bold text-gray-900">{u.email}</p>
+                                                    <p className="text-xs text-gray-400">{u.phone}</p>
+                                                </td>
+                                                <td className="px-10 py-8">
+                                                    <span className="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-blue-50 text-blue-600 border border-blue-100">{u.role}</span>
+                                                </td>
+                                                <td className="px-10 py-8">
+                                                    <span className="text-sm font-medium text-gray-600">{new Date(u.joinedDate).toLocaleDateString()}</span>
+                                                </td>
+                                                <td className="px-10 py-8 text-right">
+                                                    <div className="flex items-center justify-end space-x-2">
+                                                        <button className="p-3 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded-xl transition" title="Delete User"><Trash2 className="h-5 w-5" /></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <div className="text-center py-24">
+                                    <Users className="h-16 w-16 text-gray-200 mx-auto mb-4" />
+                                    <h3 className="text-gray-900 font-black text-xl mb-2">No Users Yet</h3>
+                                    <p className="text-gray-500 max-w-sm mx-auto">Registered users will appear here. No one has joined the party just yet.</p>
+                                </div>
+                            )
                         )}
                     </div>
                 </div>
@@ -1329,67 +1345,15 @@ const AdminDashboard = () => {
     );
 };
 
-const Support = () => (
-    <div className="bg-white min-h-screen py-24">
-        <div className="container mx-auto px-4 text-center max-w-4xl">
-            <h1 className="text-6xl font-black mb-6 tracking-tighter">How can we help?</h1>
-            <p className="text-xl text-gray-500 mb-20 leading-relaxed">Our support heroes are available 24/7 to ensure your entertainment never stops. Reach out via your preferred channel.</p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <a href={COMPANY_INFO.whatsappUrl} target="_blank" rel="noopener noreferrer" className="bg-green-50/50 p-12 rounded-[3rem] border border-green-100 hover:shadow-2xl transition duration-500 group">
-                    <div className="w-20 h-20 bg-green-500 text-white rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-green-500/20 group-hover:scale-110 transition duration-500"><Phone className="h-10 w-10" /></div>
-                    <h3 className="font-black text-2xl mb-2">WhatsApp</h3>
-                    <p className="text-gray-500 text-sm font-medium">Instant chat with an agent</p>
-                    <p className="text-green-600 font-black mt-6 uppercase tracking-widest text-xs">Start Conversation</p>
-                </a>
-                <div className="bg-blue-50/50 p-12 rounded-[3rem] border border-blue-100 hover:shadow-2xl transition duration-500 group">
-                    <div className="w-20 h-20 bg-blue-500 text-white rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-blue-500/20 group-hover:scale-110 transition duration-500"><Mail className="h-10 w-10" /></div>
-                    <h3 className="font-black text-2xl mb-2">Email Desk</h3>
-                    <p className="text-gray-500 text-sm font-medium">Technical & billing queries</p>
-                    <p className="text-blue-600 font-black mt-6 text-xs">{COMPANY_INFO.email}</p>
-                </div>
-                <div className="bg-red-50/50 p-12 rounded-[3rem] border border-red-100 hover:shadow-2xl transition duration-500 group">
-                    <div className="w-20 h-20 bg-red-600 text-white rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-red-600/20 group-hover:scale-110 transition duration-500"><MapPin className="h-10 w-10" /></div>
-                    <h3 className="font-black text-2xl mb-2">Office</h3>
-                    <p className="text-gray-500 text-sm font-medium">Visit our experience center</p>
-                    <p className="text-red-600 font-black mt-6 text-[10px] uppercase leading-tight tracking-widest">Ikeja, Lagos</p>
-                </div>
-            </div>
-
-            <div className="mt-24 p-12 bg-gray-50 rounded-[3rem] border border-gray-100 flex flex-col items-center">
-                <Monitor className="h-16 w-16 text-red-200 mb-6" />
-                <h3 className="text-2xl font-black mb-4">Self-Help Installation Guide</h3>
-                <p className="text-gray-500 mb-10 max-w-lg">Can't wait for a technician? Our step-by-step video guide shows you how to set up your Moreplex TV dish and decoder in 15 minutes.</p>
-                <button className="bg-gray-900 text-white px-12 py-5 rounded-2xl font-black text-lg hover:bg-red-600 transition flex items-center shadow-xl">
-                    <PlayCircle className="h-6 w-6 mr-3" /> Watch Guide
-                </button>
-            </div>
-        </div>
-    </div>
-);
-
-const Terms = () => (
-    <div className="bg-gray-50 min-h-screen py-24">
-        <div className="container mx-auto px-4 max-w-4xl">
-            <h1 className="text-5xl font-black mb-4 tracking-tighter">Terms of Service</h1>
-            <p className="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px] mb-12 ml-1">Last Updated: January 2025</p>
-            <div className="bg-white p-12 md:p-20 rounded-[4rem] shadow-sm border border-gray-100 prose prose-red max-w-none prose-headings:font-black prose-p:text-gray-600 prose-p:leading-relaxed">
-                <div className="whitespace-pre-wrap font-medium">
-                    {TERMS_TEXT}
-                </div>
-            </div>
-        </div>
-    </div>
-);
-
-// --- Main App Component ---
-
 const App = () => {
+  // State initialization
   const [cart, setCart] = useState<CartItem[]>([]);
+  // Use INITIAL_ORDERS for demo purposes if needed, or empty
   const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
   const [users, setUsers] = useState<UserType[]>(INITIAL_USERS);
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
+  // Context methods
   const addToCart = (product: Product) => {
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id);
@@ -1406,23 +1370,25 @@ const App = () => {
 
   const clearCart = () => setCart([]);
 
-  const addOrder = (order: Order) => setOrders(prev => [order, ...prev]);
+  const addOrder = (order: Order) => {
+    setOrders(prev => [order, ...prev]);
+  };
 
   const updateOrderStatus = (orderId: string, status: Order['status']) => {
-    setOrders(prev => prev.map(order => 
-      order.id === orderId ? { ...order, status } : order
-    ));
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
   };
 
   const registerUser = (user: UserType) => {
-    if (users.find(u => u.email === user.email)) return false;
+    if (users.some(u => u.email === user.email)) return false;
     setUsers(prev => [...prev, user]);
     setCurrentUser(user);
     return true;
   };
 
   const loginUser = (email: string, pass: string) => {
-    const user = users.find(u => u.email === email && u.password === pass);
+    const user = users.find(u => u.email === email && u.password === pass); 
+    // In real app, password hashing comparison. 
+    // Allowing loose check for demo if needed, but strict is better given code.
     if (user) {
       setCurrentUser(user);
       return true;
@@ -1435,29 +1401,30 @@ const App = () => {
   return (
     <AppContext.Provider value={{
       cart, addToCart, removeFromCart, clearCart,
-      orders, addOrder, updateOrderStatus, users, currentUser, registerUser, loginUser, logoutUser
+      orders, addOrder, updateOrderStatus,
+      users, currentUser, registerUser, loginUser, logoutUser
     }}>
       <Router>
         <ScrollToTop />
-        <div className="flex flex-col min-h-screen bg-white text-gray-900 font-sans antialiased">
-          <Navbar />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/shop" element={<Shop />} />
-              <Route path="/subscribe" element={<Subscribe />} />
-              <Route path="/support" element={<Support />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/portal" element={currentUser ? <UserPortal /> : <Navigate to="/login" />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/terms" element={<Terms />} />
-            </Routes>
-          </main>
-          <Footer />
-          <ChatWidget />
+        <div className="flex flex-col min-h-screen font-sans text-gray-900">
+           <Navbar />
+           <div className="flex-grow">
+             <Routes>
+               <Route path="/" element={<Home />} />
+               <Route path="/shop" element={<Shop />} />
+               <Route path="/subscribe" element={<Subscribe />} />
+               <Route path="/cart" element={<Cart />} />
+               <Route path="/checkout" element={<Checkout />} />
+               <Route path="/login" element={<Login />} />
+               <Route path="/signup" element={<SignUp />} />
+               <Route path="/portal" element={currentUser ? <UserPortal /> : <Navigate to="/login" replace />} />
+               <Route path="/admin" element={<AdminDashboard />} />
+               {/* Redirect unknown routes to home */}
+               <Route path="*" element={<Navigate to="/" replace />} />
+             </Routes>
+           </div>
+           <Footer />
+           <ChatWidget />
         </div>
       </Router>
     </AppContext.Provider>
