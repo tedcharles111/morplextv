@@ -1329,6 +1329,126 @@ const AdminDashboard = () => {
     );
 };
 
+const Support = () => {
+  return (
+    <div className="bg-white min-h-screen">
+      {/* Hero */}
+      <section className="bg-gray-900 text-white py-24 pb-32 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-red-600/10 blur-3xl rounded-full scale-150 opacity-20 animate-pulse"></div>
+        <div className="container mx-auto px-4 relative z-10">
+            <h1 className="text-5xl md:text-6xl font-black mb-6 tracking-tight">We're Here To Help</h1>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+              Need assistance with your decoder, subscription, or installation? Our support team is available to ensure your entertainment never stops.
+            </p>
+        </div>
+      </section>
+
+      {/* Contact Grid */}
+      <section className="container mx-auto px-4 -mt-20 relative z-20 mb-24">
+        <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-gray-100 text-center hover:-translate-y-2 transition duration-500 group">
+                <div className="w-20 h-20 bg-red-50 text-red-600 rounded-3xl flex items-center justify-center mx-auto mb-8 group-hover:bg-red-600 group-hover:text-white transition duration-500 shadow-lg shadow-red-100">
+                    <Phone className="h-8 w-8" />
+                </div>
+                <h3 className="font-black text-2xl mb-3 text-gray-900">Call Support</h3>
+                <p className="text-gray-500 mb-6 px-4">Speak directly to a customer care agent for immediate assistance.</p>
+                <a href={`tel:${COMPANY_INFO.phone}`} className="inline-block bg-gray-50 text-gray-900 px-6 py-3 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-gray-900 hover:text-white transition">{COMPANY_INFO.phone}</a>
+            </div>
+
+            <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-gray-100 text-center hover:-translate-y-2 transition duration-500 group">
+                <div className="w-20 h-20 bg-green-50 text-green-600 rounded-3xl flex items-center justify-center mx-auto mb-8 group-hover:bg-green-600 group-hover:text-white transition duration-500 shadow-lg shadow-green-100">
+                    <MessageCircle className="h-8 w-8" />
+                </div>
+                <h3 className="font-black text-2xl mb-3 text-gray-900">WhatsApp Chat</h3>
+                <p className="text-gray-500 mb-6 px-4">Fast responses via chat for troubleshooting and account renewal.</p>
+                <a href={COMPANY_INFO.whatsappUrl} target="_blank" rel="noreferrer" className="inline-block bg-green-50 text-green-700 px-8 py-3 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-green-600 hover:text-white transition">Start Chat</a>
+            </div>
+
+             <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-gray-100 text-center hover:-translate-y-2 transition duration-500 group">
+                <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-8 group-hover:bg-blue-600 group-hover:text-white transition duration-500 shadow-lg shadow-blue-100">
+                    <Mail className="h-8 w-8" />
+                </div>
+                <h3 className="font-black text-2xl mb-3 text-gray-900">Email Us</h3>
+                <p className="text-gray-500 mb-6 px-4">Send us a detailed message for complex inquiries or business proposals.</p>
+                <a href={`mailto:${COMPANY_INFO.email}`} className="inline-block bg-blue-50 text-blue-700 px-8 py-3 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-blue-600 hover:text-white transition">Send Email</a>
+            </div>
+        </div>
+      </section>
+
+      {/* FAQ & Form Split */}
+      <section className="container mx-auto px-4 pb-24">
+         <div className="flex flex-col lg:flex-row gap-16">
+            <div className="lg:w-1/2">
+                <h2 className="text-4xl font-black mb-8 text-gray-900">Common Questions</h2>
+                <div className="space-y-6">
+                    {[
+                        { q: "How do I activate my decoder?", a: "After installation, keep your decoder on channel 1. Send your IUC number (found on the smart card) to our activation line via SMS or WhatsApp." },
+                        { q: "Why is my signal scrambling?", a: "Scrambled channels usually mean your subscription has expired. If you just paid, please wait 5-10 minutes on an active channel for the signal to refresh." },
+                        { q: "Can I install the dish myself?", a: "While possible, we strongly recommend using a certified Moreplex installer to ensure optimal signal quality (minimum 70%) and prevent weather disruptions." },
+                        { q: "Where can I renew my subscription?", a: "You can renew right here on the website under the 'Subscription' tab, via our mobile app, or through authorized dealers nationwide." }
+                    ].map((faq, i) => (
+                        <div key={i} className="bg-gray-50 p-8 rounded-[2rem] border border-gray-100 hover:border-gray-200 transition">
+                            <h4 className="font-black text-xl mb-3 text-gray-900 flex items-start">
+                                <span className="text-red-600 mr-3 text-2xl leading-none">•</span>
+                                {faq.q}
+                            </h4>
+                            <p className="text-gray-600 leading-relaxed pl-6">{faq.a}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            
+            <div className="lg:w-1/2">
+                <div className="bg-gray-900 text-white p-10 rounded-[3rem] shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-red-600 rounded-full filter blur-[100px] opacity-20 -mr-20 -mt-20"></div>
+                    <h2 className="text-3xl font-black mb-2 relative z-10">Send a Message</h2>
+                    <p className="text-gray-400 mb-8 relative z-10">We usually respond within 24 hours.</p>
+                    <form className="space-y-4 relative z-10" onSubmit={(e) => { e.preventDefault(); alert("Message sent! We will contact you shortly."); }}>
+                        <div>
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1 mb-1 block">Your Name</label>
+                            <input type="text" className="w-full bg-gray-800 border-none rounded-xl p-4 text-white placeholder-gray-600 focus:ring-2 focus:ring-red-600 transition" placeholder="John Doe" />
+                        </div>
+                        <div>
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1 mb-1 block">Email Address</label>
+                            <input type="email" className="w-full bg-gray-800 border-none rounded-xl p-4 text-white placeholder-gray-600 focus:ring-2 focus:ring-red-600 transition" placeholder="john@example.com" />
+                        </div>
+                         <div>
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1 mb-1 block">Topic</label>
+                            <select className="w-full bg-gray-800 border-none rounded-xl p-4 text-white placeholder-gray-600 focus:ring-2 focus:ring-red-600 transition">
+                                <option>General Inquiry</option>
+                                <option>Technical Support</option>
+                                <option>Billing Issue</option>
+                                <option>Dealer Partnership</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1 mb-1 block">Message</label>
+                            <textarea className="w-full bg-gray-800 border-none rounded-xl p-4 text-white placeholder-gray-600 h-32 focus:ring-2 focus:ring-red-600 transition" placeholder="How can we help?"></textarea>
+                        </div>
+                        <button className="w-full bg-red-600 hover:bg-red-700 text-white py-5 rounded-2xl font-black text-lg transition shadow-xl shadow-red-600/20 mt-4">Send Message</button>
+                    </form>
+                </div>
+            </div>
+         </div>
+      </section>
+
+      {/* Office Map Placeholder */}
+      <section className="h-96 w-full relative bg-gray-200">
+         <img src="https://static.giga.de/wp-content/uploads/2017/08/google-maps-logo-rcm1200x627u.jpg" alt="Map Location" className="w-full h-full object-cover filter grayscale opacity-60" />
+         <div className="absolute inset-0 flex items-center justify-center">
+             <div className="bg-white p-6 rounded-2xl shadow-xl flex items-center space-x-4">
+                 <div className="bg-red-600 p-3 rounded-full text-white"><MapPin className="h-6 w-6" /></div>
+                 <div>
+                     <p className="font-black text-gray-900">Head Office</p>
+                     <p className="text-sm text-gray-500">{COMPANY_INFO.address}</p>
+                 </div>
+             </div>
+         </div>
+      </section>
+    </div>
+  );
+};
+
 const App = () => {
   // State initialization
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -1401,6 +1521,7 @@ const App = () => {
                <Route path="/checkout" element={<Checkout />} />
                <Route path="/login" element={<Login />} />
                <Route path="/signup" element={<SignUp />} />
+               <Route path="/support" element={<Support />} />
                <Route path="/portal" element={currentUser ? <UserPortal /> : <Navigate to="/login" replace />} />
                <Route path="/admin" element={<AdminDashboard />} />
                {/* Redirect unknown routes to home */}
