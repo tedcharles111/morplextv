@@ -24,21 +24,31 @@ const fileToBase64 = (file: File): Promise<string> => {
  * Analyzes a bank receipt image using Gemini 3 Flash to extract transaction details.
  */
 export const analyzeReceipt = async (file: File): Promise<ReceiptData | null> => {
+  if (!process.env.API_KEY) {
+    console.error("Gemini API Error: API_KEY is missing in process.env. Please verify your environment configuration.");
+    return null;
+  }
+
   try {
     // Initialize GoogleGenAI directly with the API key from environment variables.
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const base64Data = await fileToBase64(file);
+    
+    // Ensure we have a valid MIME type, default to jpeg if missing
+    const mimeType = file.type || 'image/jpeg';
 
     const prompt = `
-      Analyze this image of a bank transfer receipt or payment proof.
-      Extract the following information in JSON format:
-      1. transactionRef: The transaction reference number.
-      2. amount: The amount paid (as a number).
-      3. date: The date of transaction.
-      4. senderName: The name of the sender.
-      5. decoderCode: Look for a specific code labeled 'Decoder Code', 'Smart Card', 'IUC', or a pattern like 'MPX-' followed by alphanumerics. If written by hand, try to decipher it.
+      Analyze this image of a bank transfer receipt.
+      Extract the transaction details strictly in JSON format matching the schema.
       
-      If any field is not found, set it to null.
+      Fields to extract:
+      - transactionRef: The transaction reference/ID.
+      - amount: The numeric amount.
+      - date: Transaction date/time.
+      - senderName: Name of the sender.
+      - decoderCode: Look specifically for "Decoder", "IUC", "Smart Card", or "MPX-" codes.
+      
+      If a field is not visible, use null. Do not hallucinate data.
     `;
 
     // Using 'gemini-3-flash-preview' for efficient and accurate vision/text processing.
@@ -48,7 +58,7 @@ export const analyzeReceipt = async (file: File): Promise<ReceiptData | null> =>
         parts: [
           {
             inlineData: {
-              mimeType: file.type,
+              mimeType: mimeType,
               data: base64Data
             }
           },
@@ -87,15 +97,24 @@ export const analyzeReceipt = async (file: File): Promise<ReceiptData | null> =>
     });
 
     const textOutput = response.text;
-    if (textOutput) {
-        // Robustly clean the output in case markdown fences are included
-        const cleanedText = textOutput.replace(/```json\n?|```/g, '').trim();
-        return JSON.parse(cleanedText) as ReceiptData;
+    
+    if (!textOutput) {
+      console.warn("Gemini API returned empty text response. This might be due to safety filters or an unrecognized image.");
+      return null;
     }
-    return null;
+
+    try {
+      // Robustly clean the output in case markdown fences are included
+      const cleanedText = textOutput.replace(/```json\n?|```/g, '').trim();
+      const data = JSON.parse(cleanedText) as ReceiptData;
+      return data;
+    } catch (parseError) {
+      console.error("JSON Parsing Error. Raw output:", textOutput, parseError);
+      return null;
+    }
 
   } catch (error) {
-    console.error("OCR Analysis Error:", error);
+    console.error("OCR Analysis Critical Error:", error);
     // Gracefully handle API errors by returning null.
     return null;
   }
@@ -107,6 +126,11 @@ let chatSession: Chat | null = null;
 
 const getChatSession = () => {
   if (chatSession) return chatSession;
+  
+  if (!process.env.API_KEY) {
+     console.warn("Chat disabled: API_KEY missing.");
+     return null;
+  }
 
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
@@ -152,6 +176,8 @@ const getChatSession = () => {
 export const sendChatMessage = async (message: string): Promise<string> => {
   try {
     const session = getChatSession();
+    if (!session) return "I'm currently undergoing maintenance. Please contact support on WhatsApp.";
+    
     const response = await session.sendMessage({ message });
     return response.text || "I'm having a bit of trouble connecting. Could you say that again?";
   } catch (error) {
