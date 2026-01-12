@@ -456,7 +456,7 @@ const Home = () => (
             <div className="md:w-1/3">
                 <div className="relative group">
                     <div className="absolute -inset-4 bg-red-600 opacity-20 blur-3xl group-hover:opacity-40 transition"></div>
-                    <img src="https://picsum.photos/400/500?random=11" alt="Decoder Detail" className="relative z-10 rounded-3xl shadow-2xl" />
+                    <img src="https://freepressnews.com.ng/wp-content/uploads/2026/01/morree.jpg" alt="Decoder Detail" className="relative z-10 rounded-3xl shadow-2xl" />
                 </div>
             </div>
         </div>
